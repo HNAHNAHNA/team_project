@@ -1,0 +1,14 @@
+h3 {
+    font-size: 1.5rem;
+    text-align: right;
+    color: black;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+ul, li {
+    padding: 0;
+}

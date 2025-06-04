@@ -1,0 +1,45 @@
+@import "tailwindcss";
+body {
+  background-color: rgb(245,242,236) !important;
+}
+.mainContainer {
+  width: 90%;
+  max-width: 800px;
+  min-width: 320px;
+  margin: 0 auto;
+  min-height: 80vh;
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+h1 {
+  font-size: larger;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  display: none !important;
+}
+
+.no-drag {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+img {
+  -webkit-user-drag: none;
+}
+
+.swiper-pagination {
+  display: none !important;
+}
+
+.custom-navbar {
+  height: 10rem;
+}

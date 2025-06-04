@@ -1,0 +1,724 @@
+{
+  "hotels": [
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 141356,
+            "hotelName": "高濃度炭酸泉　八重桜の湯　スーパーホテルＰｒｅｍｉｅｒ東京駅八重洲中央口",
+            "latitude": 128433.61,
+            "longitude": 503183,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/141356/141356.jpg",
+            "reviewAverage": 4.38
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 20000
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 151302,
+            "hotelName": "京急ＥＸイン　秋葉原",
+            "latitude": 128514.56,
+            "longitude": 503201.54,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/151302/151302.jpg",
+            "reviewAverage": 4.21
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 8500
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 74637,
+            "hotelName": "アパホテル＆リゾート〈東京ベイ潮見〉",
+            "latitude": 128356.82,
+            "longitude": 503359.36,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/74637/74637.jpg",
+            "reviewAverage": 4.17
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 6700
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 153347,
+            "hotelName": "京急ＥＸイン　東銀座",
+            "latitude": 128390.22,
+            "longitude": 503184.69,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/153347/153347.jpg",
+            "reviewAverage": 4.26
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 10850
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 160960,
+            "hotelName": "京王プレッソイン東京駅八重洲",
+            "latitude": 128432.27,
+            "longitude": 503183.86,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/160960/160960.jpg",
+            "reviewAverage": 4.07
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 17195
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 18270,
+            "hotelName": "京王プレッソイン神田",
+            "latitude": 128489.39,
+            "longitude": 503180.65,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/18270/18270.jpg",
+            "reviewAverage": 3.72
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 10754
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 40780,
+            "hotelName": "京王プレッソイン大手町",
+            "latitude": 128465.28,
+            "longitude": 503183.54,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/40780/40780.jpg",
+            "reviewAverage": 4.03
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 12407
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 178446,
+            "hotelName": "京急ＥＸイン　東京・日本橋",
+            "latitude": 128431.64,
+            "longitude": 503212.47,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/178446/178446.jpg",
+            "reviewAverage": 4.36
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 10800
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 18164,
+            "hotelName": "ワシントンＲ＆Ｂホテル東日本橋",
+            "latitude": 128486.49,
+            "longitude": 503239.16,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/18164/18164.jpg",
+            "reviewAverage": 3.86
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 7900
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 161040,
+            "hotelName": "明神の湯ドーミーインＰＲＥＭＩＵＭ神田（ドーミーイン・御宿野乃　ホテルズグループ）",
+            "latitude": 128491.15,
+            "longitude": 503185.99,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/161040/161040.jpg",
+            "reviewAverage": 4.15
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 16600
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 5309,
+            "hotelName": "グランドセントラルホテル＜東京都＞",
+            "latitude": 128481.44,
+            "longitude": 503177.06,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/5309/5309.jpg",
+            "reviewAverage": 3.93
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 9100
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 39646,
+            "hotelName": "京王プレッソイン日本橋茅場町",
+            "latitude": 128439.21,
+            "longitude": 503221.16,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/39646/39646.jpg",
+            "reviewAverage": 3.95
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 11210
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 158347,
+            "hotelName": "伝馬の湯　ドーミーインＰＲＥＭＩＵＭ東京小伝馬町（ドーミーイン・御宿野乃　ホテルズグループ）",
+            "latitude": 128473.45,
+            "longitude": 503213.02,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/158347/158347.jpg",
+            "reviewAverage": 4.26
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 13000
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 1494,
+            "hotelName": "ホテル銀座ダイエー",
+            "latitude": 128403.95,
+            "longitude": 503181.72,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/1494/1494.jpg",
+            "reviewAverage": 4.21
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 6800
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 184244,
+            "hotelName": "オリンピックイン神田",
+            "latitude": 128484.63,
+            "longitude": 503198.08,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/184244/184244.jpg",
+            "reviewAverage": 3.81
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 11900
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 147713,
+            "hotelName": "ホテルサンルート銀座",
+            "latitude": 128413.11,
+            "longitude": 503183.09,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/147713/147713.jpg",
+            "reviewAverage": 3.96
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 17100
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 922,
+            "hotelName": "センターホテル東京",
+            "latitude": 128434.1,
+            "longitude": 503206.61,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/922/922.jpg",
+            "reviewAverage": 3.37
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 9250
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 167516,
+            "hotelName": "ベルケンホテル・神田",
+            "latitude": 128490.07,
+            "longitude": 503175.94,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/167516/167516.jpg",
+            "reviewAverage": 4.43
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 11100
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 16727,
+            "hotelName": "ホテルルートインＧｒａｎｄ東京東陽町",
+            "latitude": 128392.61,
+            "longitude": 503352.42,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/16727/16727.jpg",
+            "reviewAverage": 4.37
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 11550
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 149164,
+            "hotelName": "ダイワロイネットホテル銀座　ＰＲＥＭＩＥＲ",
+            "latitude": 128412.07,
+            "longitude": 503180.02,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/149164/149164.jpg",
+            "reviewAverage": 4.23
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 16700
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 40568,
+            "hotelName": "東急ステイ日本橋",
+            "latitude": 128472.35,
+            "longitude": 503202.33,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/40568/40568.jpg",
+            "reviewAverage": 3.84
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 16100
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 128268,
+            "hotelName": "ヴィアイン秋葉原（ＪＲ西日本グループ）",
+            "latitude": 128495.85,
+            "longitude": 503191.87,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/128268/128268.jpg",
+            "reviewAverage": 3.77
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 10200
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 52322,
+            "hotelName": "ワシントンＲ＆Ｂホテル東京東陽町",
+            "latitude": 128398.58,
+            "longitude": 503362.93,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/52322/52322.jpg",
+            "reviewAverage": 4.07
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 9900
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 176736,
+            "hotelName": "天然温泉　奥湯河原の湯　スーパーホテルＰｒｅｍｉｅｒ秋葉原",
+            "latitude": 128496.36,
+            "longitude": 503199.71,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/176736/176736.jpg",
+            "reviewAverage": 4.34
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 13100
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 129632,
+            "hotelName": "アパホテル〈人形町駅北〉（２０２４年１１月客室設備リニューアル）",
+            "latitude": 128466.17,
+            "longitude": 503225.37,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/129632/129632.jpg",
+            "reviewAverage": 4.2
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 7800
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 153207,
+            "hotelName": "相鉄フレッサイン　銀座七丁目",
+            "latitude": 128393.58,
+            "longitude": 503159.11,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/153207/153207.jpg",
+            "reviewAverage": 4.33
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 15480
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 165001,
+            "hotelName": "アパホテル〈ＴＫＰ東京西葛西〉",
+            "latitude": 128379.95,
+            "longitude": 503508.26,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/165001/165001.jpg",
+            "reviewAverage": 4.15
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 7200
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 50461,
+            "hotelName": "スマイルホテル東京西葛西",
+            "latitude": 128383.43,
+            "longitude": 503500.01,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/50461/50461.jpg",
+            "reviewAverage": 3.43
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 6200
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 178005,
+            "hotelName": "ホテル八重の翠東京",
+            "latitude": 128426.07,
+            "longitude": 503205.72,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/178005/178005.jpg",
+            "reviewAverage": 4.3
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 14250
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hotel": [
+        {
+          "hotelBasicInfo": {
+            "hotelNo": 167812,
+            "hotelName": "天然温泉　奥湯河原の湯　スーパーホテルＰｒｅｍｉｅｒ銀座",
+            "latitude": 128402.96,
+            "longitude": 503178.09,
+            "address1": "東京都",
+            "hotelImageUrl": "https://img.travel.rakuten.co.jp/share/HOTEL/167812/167812.jpg",
+            "reviewAverage": 4.06
+          }
+        },
+        {
+          "roomInfo": [
+            {
+              "dailyCharge": {
+                "total": 13200
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

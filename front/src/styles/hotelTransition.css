@@ -1,0 +1,23 @@
+/* .grid-item {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.grid-item.show {
+  opacity: 1;
+  transform: translateY(0);
+} */
+
+.swiper {
+  /* width: 240px !important;  w-60 = 15rem = 240px
+  height: 320px !important; h-80 = 20rem = 320px */
+  overflow: visible !important;
+}
+
+.swiper-slide {
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

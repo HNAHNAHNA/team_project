@@ -9,6 +9,8 @@ export function useAuth() {
   }, []);
 
   const isLoggedIn = !!user;
+  const isAdmin = user?.role === 'admin';
+  const isUser = user?.role === 'user';
 
-  return { user, isLoggedIn };
+  return { user, isLoggedIn, isAdmin, isUser };
 }

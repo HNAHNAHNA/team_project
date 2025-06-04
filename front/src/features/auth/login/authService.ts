@@ -1,6 +1,8 @@
 import userdummy from "../../../data/userdummy.json"
+import { useNavigate } from "react-router-dom";
 
 export function login (email: string, password: string) {
+
     const user = userdummy.find(
         (u) => u.email === email && u.password === password
     );
@@ -14,8 +16,10 @@ export function login (email: string, password: string) {
 
 }
 
-export function logout() {
+export function logout(navigate: (path: string) => void) {
+
     localStorage.removeItem('user');
+    navigate('/login')
 }
 
 export function getCurrentUser() {

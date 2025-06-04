@@ -1,4 +1,3 @@
-import React from 'react';
 import { createBrowserRouter } from "react-router-dom";
 import Home from "../pages/Home";
 import LoginPage from "../features/auth/login/LoginPage";
@@ -7,6 +6,7 @@ import DetailPage from "../pages/DetailPage";
 import hotels from "../data/hotels.json";
 import SearchPage from "../features/search_detail/SearchPage";
 import Layout from "../Layout";
+import MyPage from '../features/auth/MyPage';
 
 export const router = createBrowserRouter([
     {
@@ -38,6 +38,10 @@ export const router = createBrowserRouter([
             {
                 path: "/search",
                 element: <SearchPage />
+            },
+            {
+                path: "/mypage",
+                element: <MyPage />
             }
         ]
     },

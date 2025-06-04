@@ -1,10 +1,20 @@
 import Logo from "./Logo";
 // import SearchBar from "./searchbar/SearchBar";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Navbar as BsNavbar, Container, Offcanvas, Nav, NavDropdown } from "react-bootstrap";
-import { useState } from "react";
+import { Navbar as BsNavbar, Container, Offcanvas, Nav, NavDropdown, Button } from "react-bootstrap";
+import { useAuth } from "../../hooks/useAuth"
+import { logout } from '../auth/login/authService';
+import { useNavigate } from "react-router-dom";
 
 function Navigation() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout(navigate);
+  };
+
+  const { user, isLoggedIn, isAdmin, isUser } = useAuth();
+
   const expand = false;
 
   return (
@@ -27,7 +37,14 @@ function Navigation() {
             </Offcanvas.Header>
             <Offcanvas.Body>
               <Nav className="justify-content-end flex-grow-1 pe-3">
-                <Nav.Link href="/login">로그인</Nav.Link>
+                {isLoggedIn ? (
+                  <>
+                    <Nav.Link href="/mypage">마이페이지</Nav.Link>
+                    <Button onClick={handleLogout}>로그아웃</Button>
+                  </>
+                ) : (
+                  <Nav.Link href="/login">로그인</Nav.Link>
+                )}
                 <Nav.Link href="#action2">Link</Nav.Link>
                 <NavDropdown
                   title="Dropdown"

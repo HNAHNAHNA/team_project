@@ -1,11 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from './authService';
+import { isLoggedIn, isAdmin, useAuth } from '../../../hooks/useAuth'
 
 function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { isLoggedIn } = useAuth();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            alert('잘못된 접근입니다!');
+            navigate('/');
+        }
+    }, [isLoggedIn, navigate]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();

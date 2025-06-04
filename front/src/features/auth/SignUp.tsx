@@ -52,6 +52,6 @@ function SignUp() {
 
 export default SignUp
 
-// function onLogin(email: string, password: string) {
-//     throw new Error("Function not implemented.");
-// }
+function onLogin(email: string, password: string) {
+    throw new Error("Function not implemented.");
+}

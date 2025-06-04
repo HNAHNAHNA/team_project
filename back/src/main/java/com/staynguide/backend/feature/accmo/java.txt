@@ -1,3 +1,0 @@
-public void Byeongsin () {
-    system.out.println("안뇽!")
-}

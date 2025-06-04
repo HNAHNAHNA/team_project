@@ -1,20 +1,27 @@
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { login } from './authService';
 
-type LoginFormProps = {
-    onLogin: (email: string, password: string) => void;
-};
-
-function Login({ onLogin }: LoginFormProps) {
+function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onLogin(email, password);
+
+        const user = login(email, password);
+
+        if (user) {
+            alert(`${user.name}님 환영합니다!`);
+            navigate('/');
+        } else {
+            alert('이메일 또는 비밀번호가 틀렸습니다.');
+        }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="min-h-screen flex items-center justify-center bg-[rgb(245,242,236)]">
             <form
                 onSubmit={handleSubmit}
                 className="w-full max-w-sm p-6 bg-white rounded-xl shadow-md flex flex-col gap-4"
@@ -45,13 +52,15 @@ function Login({ onLogin }: LoginFormProps) {
                 >
                     로그인
                 </button>
-                <a href="/signup" className="text-sm text-blue-600 hover:underline text-center">
+                <Link
+                    to="/signup"
+                    className="text-sm text-blue-600 hover:underline text-center"
+                >
                     회원가입이 필요하신가요?
-                </a>
+                </Link>
             </form>
-
         </div>
     );
 }
 
-export default Login
+export default LoginPage;

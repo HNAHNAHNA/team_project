@@ -25,8 +25,7 @@ function SearchPage() {
                 })}
             </div>
 
-            <div className="w-2/3 p-4">
-                <h2 className="text-xl font-bold mb-4">Google Maps</h2>
+            <div className="w-2/3 p-4 overflow-auto">
                 <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
                     <p className="text-gray-500">지도 위치</p>
                 </div>

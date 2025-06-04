@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "role": "admin",
+    "name": "管理者",
+    "email": "admin@example.com",
+    "password": "admin1234!",
+    "phone": "090-1111-2222",
+    "address": "東京都千代田区千代田1-1"
+  },
+  {
+    "id": 2,
+    "role": "user",
+    "name": "山田太郎",
+    "email": "yamada@example.com",
+    "password": "yamada1234!",
+    "phone": "080-3333-4444",
+    "address": "大阪府大阪市北区梅田3-1-1"
+  },
+  {
+    "id": 3,
+    "role": "user",
+    "name": "佐藤花子",
+    "email": "sato@example.com",
+    "password": "sato1234!",
+    "phone": "070-5555-6666",
+    "address": "北海道札幌市中央区北5条西2丁目5"
+  }
+]

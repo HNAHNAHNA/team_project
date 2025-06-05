@@ -4,7 +4,6 @@ import { useState, useCallback } from "react"
 import MenuItem from "./MenuItem"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
-import userdummy from "../../data/userdummy.json"
 
 function UserMenu() {
     const [isOpen, setIsOpen] = useState(false)

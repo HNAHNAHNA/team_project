@@ -6,7 +6,7 @@ import { motion } from 'motion/react';
 function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { isLoggedIn, login } = useAuth();
+    const { login } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = (e: React.FormEvent) => {

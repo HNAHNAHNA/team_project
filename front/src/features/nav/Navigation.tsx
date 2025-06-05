@@ -2,25 +2,14 @@ import Logo from "./Logo";
 // import SearchBar from "./searchbar/SearchBar";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import { Navbar as BsNavbar, Container, Offcanvas, Nav, NavDropdown, Button } from "react-bootstrap";
-import { useAuth } from "../../contexts/AuthContext"
-import { useNavigate } from "react-router-dom";
 import Container from "./Container";
 import SearchBar from "./searchbar/SearchBar";
 import UserMenu from "./UserMenu";
 
-
 function Navigation() {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate("/");
-  };
-
-  const { user, isLoggedIn, isAdmin, isUser, logout } = useAuth();
 
   return (
-    <div className="fixed w-full bg-white z-10 shadow-sm">
+    <div id="nav-root" className="fixed w-full bg-white z-10 shadow-sm">
       <div
         className="
           py-4

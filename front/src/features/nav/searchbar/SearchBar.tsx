@@ -1,13 +1,87 @@
-import ParentComponent from "./ParentCalendarComponent"
-import VisitCountry from "./features/VisitCountry"
-import People from "./features/People"
+// import ParentComponent from "./ParentCalendarComponent"
+// import VisitCountry from "./features/VisitCountry"
+// import People from "./features/People"
+import { BiSearch } from 'react-icons/bi'
 
-function SearchBar () {
+function SearchBar() {
     return (
-        <div className="h-[64px] flex flex-row items-center justify-between border border-gray-100 rounded-full  ">
-            <VisitCountry />
-            <ParentComponent />
-            <People />
+        <div
+            className="
+                border-[1px]
+                w-full
+                md:w-auto
+                py-2
+                rounded-full
+                shadow-sm
+                hover:shadow-md
+                transition
+                cursor-pointer
+            ">
+            <div
+                className="
+                    flex
+                    flex-row
+                    items-center
+                    justify-center
+                ">
+                <div
+                    className="
+                        text-sm
+                        font-semibold
+                        px-6
+                    ">
+                        지역
+                </div>
+                <div
+                    className="
+                        hidden
+                        sm:block
+                        text-sm
+                        font-semibold
+                        px-6
+                        border-x-[1px]
+                        flex-1
+                        text-center
+                    ">
+                        넹!!!!
+                </div>
+                                <div
+                    className="
+                        hidden
+                        sm:block
+                        text-sm
+                        font-semibold
+                        px-6
+                        border-x-[1px]
+                        flex-1
+                        text-center
+                    ">
+                        넹!!!!
+                </div>
+                <div
+                    className="
+                        text-sm
+                        pl-6
+                        pr-2
+                        text-gray-600
+                        flex
+                        flex-row
+                        items-center
+                        gap-3
+                    ">
+                        <div className="hidden sm:block">넹넹넹!!</div>
+                        <div
+                            className="
+                                p-2
+                                bg-rose-500
+                                rounded-full
+                                text-white
+                            ">
+                                <BiSearch size={15} />
+                        </div>
+                </div>
+
+            </div>
         </div>
     )
 }

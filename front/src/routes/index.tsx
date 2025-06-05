@@ -7,7 +7,7 @@ import DetailPage from "../pages/DetailPage";
 import hotels from "../data/hotels.json";
 import SearchPage from "../features/search_detail/SearchPage";
 import Layout from "../Layout";
-import MyPage from '../features/auth/MyPage';
+import MyPage from '../pages/MyPage';
 import PublicOnlyRoute from "./PublicOnlyRoute";
 
 export const router = createBrowserRouter([

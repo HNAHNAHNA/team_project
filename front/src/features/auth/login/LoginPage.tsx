@@ -9,13 +9,6 @@ function LoginPage() {
     const { isLoggedIn, login } = useAuth();
     const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     if (isLoggedIn) {
-    //         alert('잘못된 접근입니다!');
-    //         navigate('/');
-    //     }
-    // }, [isLoggedIn, navigate]);
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 

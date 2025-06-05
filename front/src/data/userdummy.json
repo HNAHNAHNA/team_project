@@ -2,7 +2,7 @@
   {
     "id": 1,
     "role": "admin",
-    "name": "管理者",
+    "name": "한별",
     "email": "admin@example.com",
     "password": "admin1234!",
     "phone": "090-1111-2222",

@@ -2,7 +2,7 @@ import Logo from "./Logo";
 // import SearchBar from "./searchbar/SearchBar";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar as BsNavbar, Container, Offcanvas, Nav, NavDropdown, Button } from "react-bootstrap";
-import { useAuth } from "../../hooks/useAuth"
+import { useAuth } from "../../contexts/AuthContext"
 import { useNavigate } from "react-router-dom";
 
 function Navigation() {

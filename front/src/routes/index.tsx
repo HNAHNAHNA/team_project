@@ -1,4 +1,5 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext"
 import Home from "../pages/Home";
 import LoginPage from "../features/auth/login/LoginPage";
 import SignUp from "../features/auth/SignUp";
@@ -7,6 +8,7 @@ import hotels from "../data/hotels.json";
 import SearchPage from "../features/search_detail/SearchPage";
 import Layout from "../Layout";
 import MyPage from '../features/auth/MyPage';
+import PublicOnlyRoute from "./PublicOnlyRoute";
 
 export const router = createBrowserRouter([
     {
@@ -19,7 +21,11 @@ export const router = createBrowserRouter([
             },
             {
                 path: "/login",
-                element: <LoginPage />
+                element: (
+                    <PublicOnlyRoute>
+                        <LoginPage />
+                    </PublicOnlyRoute>
+                )
             },
             {
                 path: "/detail/:hotelNo",

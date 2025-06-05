@@ -3,17 +3,17 @@ import Logo from "./Logo";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar as BsNavbar, Container, Offcanvas, Nav, NavDropdown, Button } from "react-bootstrap";
 import { useAuth } from "../../hooks/useAuth"
-import { logout } from '../auth/login/authService';
 import { useNavigate } from "react-router-dom";
 
 function Navigation() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout(navigate);
+    logout();
+    navigate("/");
   };
 
-  const { user, isLoggedIn, isAdmin, isUser } = useAuth();
+  const { user, isLoggedIn, isAdmin, isUser, logout } = useAuth();
 
   const expand = false;
 

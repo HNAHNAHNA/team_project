@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { login } from './authService';
-import { isLoggedIn, isAdmin, useAuth } from '../../../hooks/useAuth'
+import { useAuth } from '../../../hooks/useAuth'
 
 function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { isLoggedIn } = useAuth();
+    const { isLoggedIn, login } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {

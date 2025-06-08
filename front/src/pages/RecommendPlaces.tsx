@@ -1,29 +1,79 @@
-import { useState,useEffect } from "react";
-import recommandeddata from "../data/recommandeddata.json"
+import { useState, useEffect } from "react";
+// import recommandeddata from "../data/recommandeddata.json"
 import { AnimatePresence, motion } from "motion/react";
-import Skeleton from 'react-loading-skeleton'
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css';
 
 function MyPage() {
     const [selectedData, setSelectedData] = useState(null);
     const [data, setData] = useState<any[]>([])
+    const [loading, setLoading] = useState(true)
+    const [skeletonCount, setSkeletonCount] = useState(10);
+
+    const hotel = {
+        name: "京王プレッソイン東京駅八重洲",
+        address: "東京都"
+    }
 
     useEffect(() => {
-        fetch('http://localhost:8080/api/places/search?q=${hotel.address} ${hotel.name}')
+        setLoading(true)
+        fetch(`http://localhost:8080/api/places/search?q=${hotel.address} ${hotel.name}`)
             .then(res => {
-                if (!res.ok) throw new Error ('요청 실패!')
+                if (!res.ok) throw new Error('요청 실패!')
                 return res.json()
             })
-            .then(data => setData(data))
-    },[])
+            .then(data => {
+                console.log(data)
+                setData(data)
+                setSkeletonCount(data.length)
+                setLoading(false)
+            })
+            .catch(err => {
+                console.error(err);
+                setLoading(false)
+            })
+    }, [])
+
+    const mockData = [
+        {
+            name: "테스트 호텔 1",
+            photoUrl: "https://via.placeholder.com/150",
+            rating: "4.5",
+            category: "비즈니스 호텔",
+            review: "좋은 위치에 있어요!"
+        },
+        {
+            name: "테스트 호텔 2",
+            photoUrl: "https://via.placeholder.com/150",
+            rating: "4.0",
+            category: "캡슐 호텔",
+            review: "깔끔하고 조용함"
+        }
+    ];
+    useEffect(() => {
+        setLoading(true);
+        setTimeout(() => {
+            setData(mockData);
+            setLoading(false);
+        }, 1500); // 로딩 효과를 보기 위해 일부러 지연
+    }, []);
+
 
     return (
         <div className="flex flex-row w-full h-screen">
             <div className="w-1/3 flex flex-wrap overflow-y-scroll">
-                {recommandeddata
-                    .map((data, idx) => (
+                {loading ? (
+                    Array.from({ length: skeletonCount }).map((_, idx) => (
+                        <div key={idx} className="w-[95%] m-x">
+                            <Skeleton height={100} className="rounded-xl" />
+                        </div>
+                    ))
+                ) : (
+
+                    data.map((da, idx) => (
                         <div
                             key={idx}
-                            onClick={() => setSelectedData(data)}
+                            onClick={() => setSelectedData(da)}
                             className="
                             flex
                             flex-row
@@ -38,7 +88,7 @@ function MyPage() {
                             hover:shadow-md
                         ">
                             <img
-                                src={data.photoUrl}
+                                src={da.photoUrl}
                                 className="
                                 rounded-xl
                                 m-4
@@ -58,23 +108,23 @@ function MyPage() {
                                         text-xl
                                         font-bold
                                     ">
-                                    {data.name}
+                                    {da.name}
                                 </div>
                                 <div
                                     className="
 
                                     ">
-                                    {data.rating}
+                                    {da.rating}
                                 </div>
                                 <div>
-                                    {data.category}
+                                    {da.category}
                                 </div>
                                 <div>
-                                    {data.review}
+                                    {da.review}
                                 </div>
                             </div>
                         </div>
-                    ))}
+                    )))}
             </div>
             <div className="w-2/3 bg-gray-500">
                 <div className="w-full h-full text-white flex items-center justify-center">
@@ -115,7 +165,7 @@ function MyPage() {
                             <p><strong>Rating:</strong> {selectedData.rating}</p>
                             <p><strong>Category:</strong> {selectedData.category}</p>
                             <p className="mt-2">{selectedData.review}</p>
-                            <div 
+                            <div
                                 className="
                                 
                                 ">

@@ -25,15 +25,14 @@ public class PlaceService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("X-Goog-Api-Key", apiKey);
         headers.set("X-Goog-FieldMask", String.join(",",
-                "places.location"
-        ));
+                "places.location"));
 
         String requestBody = String.format("""
-        {
-            "textQuery": "%s",
-            "languageCode": "ja"
-        }
-        """, textQuery);
+                {
+                    "textQuery": "%s",
+                    "languageCode": "ja"
+                }
+                """, textQuery);
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
         RestTemplate restTemplate = new RestTemplate();
@@ -61,8 +60,7 @@ public class PlaceService {
     private List<PlaceInfo> fetchPlacesByType(double lat, double lng, String type, int limit) {
         String url = String.format(
                 "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%f,%f&radius=3000&type=%s&key=%s",
-                lat, lng, type, apiKey
-        );
+                lat, lng, type, apiKey);
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
@@ -81,19 +79,22 @@ public class PlaceService {
             int count = 0;
 
             for (JsonNode node : places) {
-                if (count >= limit) break;
+                if (count >= limit)
+                    break;
 
                 // 숙소 관련 type은 제외
                 JsonNode typesNode = node.path("types");
                 boolean isLodging = false;
                 for (JsonNode t : typesNode) {
                     String typeText = t.asText();
-                    if (typeText.contains("lodging") || typeText.contains("hotel") || typeText.contains("guest_house") || typeText.contains("inn")) {
+                    if (typeText.contains("lodging") || typeText.contains("hotel") || typeText.contains("guest_house")
+                            || typeText.contains("inn")) {
                         isLodging = true;
                         break;
                     }
                 }
-                if (isLodging) continue;
+                if (isLodging)
+                    continue;
 
                 PlaceInfo info = new PlaceInfo();
 
@@ -110,8 +111,7 @@ public class PlaceService {
                     String photoRef = photoArray.get(0).path("photo_reference").asText();
                     String photoUrl = String.format(
                             "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=%s&key=%s",
-                            photoRef, apiKey
-                    );
+                            photoRef, apiKey);
                     info.setPhotoUrl(photoUrl);
                 }
 

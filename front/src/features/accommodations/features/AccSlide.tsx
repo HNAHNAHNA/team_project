@@ -54,8 +54,7 @@ function AccSlide({ hotelList }: hotelListProps) {
                                 <img
                                     src={hotel.hotelImageUrl}
                                     alt={hotel.hotelName}
-                                    className="h-[50%] w-full object-cover rounded-xl"
-                                />
+                                    className="h-[50%] w-full object-cover rounded-xl"/>
                             ) : (
                                 <div className="text-gray-400">イメージがありません</div>
                             )}

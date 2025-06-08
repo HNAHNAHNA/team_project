@@ -1,7 +1,4 @@
 import Logo from "./Logo";
-// import SearchBar from "./searchbar/SearchBar";
-// import 'bootstrap/dist/css/bootstrap.min.css';
-// import { Navbar as BsNavbar, Container, Offcanvas, Nav, NavDropdown, Button } from "react-bootstrap";
 import Container from "./Container";
 import SearchBar from "./searchbar/SearchBar";
 import UserMenu from "./UserMenu";

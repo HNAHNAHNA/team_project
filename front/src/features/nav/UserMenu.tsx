@@ -39,7 +39,14 @@ function UserMenu() {
                           transition
                           cursor-pointer  
                         ">
-                    {user?.name}さん！　こんいちは！
+                    {isLoggedIn ?
+                        <div>
+                            {user?.name}さん！　こんいちは！
+                        </div>
+                        : <div>
+                            ログインしてね！
+                        </div>}
+
                 </div>
                 <div
                     onClick={toggleOpen}
@@ -88,7 +95,7 @@ function UserMenu() {
                                         }}
                                         label="マイページ"
                                     />
-                                    <MenuItem 
+                                    <MenuItem
                                         onClick={handleLogout}
                                         label="ログアウト"
                                     />

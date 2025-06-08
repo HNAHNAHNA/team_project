@@ -1,9 +1,20 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import recommandeddata from "../data/recommandeddata.json"
 import { AnimatePresence, motion } from "motion/react";
+import Skeleton from 'react-loading-skeleton'
 
 function MyPage() {
     const [selectedData, setSelectedData] = useState(null);
+    const [data, setData] = useState<any[]>([])
+
+    useEffect(() => {
+        fetch('http://localhost:8080/api/places/search?q=${hotel.address} ${hotel.name}')
+            .then(res => {
+                if (!res.ok) throw new Error ('요청 실패!')
+                return res.json()
+            })
+            .then(data => setData(data))
+    },[])
 
     return (
         <div className="flex flex-row w-full h-screen">

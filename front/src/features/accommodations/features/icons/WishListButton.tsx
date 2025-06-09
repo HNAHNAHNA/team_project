@@ -1,4 +1,4 @@
-import { AiOutlineHeart } from "react-icons/ai"
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai"
 import users from "../../../../data/userdummy.json"
 import { useState } from "react";
 
@@ -13,7 +13,8 @@ function WishListButton({ hotelNo }: WishListButtonProps) {
 
     const [hasFavorite, setHasFavorite] = useState(initialFavorite);
 
-    const toggleFavorite = () => {
+    const toggleFavorite = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.stopPropagation(); // ⭐ 이 줄이 핵심
         setHasFavorite((prev) => !prev);
 
         if (hasFavorite) {
@@ -26,19 +27,18 @@ function WishListButton({ hotelNo }: WishListButtonProps) {
     return (
         <div
             onClick={toggleFavorite}
-            className="relative cursor-pointer hover:opacity-80"
+            className="relative cursor-pointer transition hover:opacity-60"
         >
-            {/* 바깥 흰색 테두리 */}
-            <AiOutlineHeart
-                size={28}
-                className="fill-white absolute top-0 right-0 z-0"
-            />
-            {/* 실제 상태에 따라 색상 변하는 하트 */}
-            <AiOutlineHeart
-                size={24}
-                className={`absolute top-[2px] right-[2px] z-10 ${hasFavorite ? "fill-rose-500" : "fill-neutral-500/20"
-                    }`}
-            />
+            {hasFavorite ?
+                <AiFillHeart
+                    size={29}
+                    className="fill-rose-500 -top-[2px] -right-[2px] absolute transition-all duration-300"
+                /> :
+                <AiOutlineHeart
+                    size={27}
+                    className="fill-black-500/70 transition-all duration-300"
+                />}
+
         </div>
     );
 }

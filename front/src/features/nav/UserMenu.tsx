@@ -119,6 +119,13 @@ function UserMenu() {
                                         }}
                                         label="マイページ"
                                     />
+                                    <MenuItem 
+                                        onClick={() => {
+                                            setIsOpen(false)
+                                            navigate('/mypage?tab=reservations')
+                                        }}
+                                        label="予約情報"
+                                    />
                                     <MenuItem
                                         onClick={handleLogout}
                                         label="ログアウト"

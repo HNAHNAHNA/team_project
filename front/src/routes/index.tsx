@@ -7,8 +7,9 @@ import DetailPage from "../pages/detailpage/DetailPage";
 import hotels from "../data/hotels.json";
 import SearchPage from "../features/search_detail/SearchPage";
 import Layout from "../Layout";
-import MyPage from '../pages/RecommendPlaces';
+import MyPageMain from '../pages/mypage/MyPageMain';
 import PublicOnlyRoute from "./PublicOnlyRoute";
+import RecommendPlaces from "../pages/mypage/RecommendPlaces";
 
 export const router = createBrowserRouter([
     {
@@ -47,7 +48,11 @@ export const router = createBrowserRouter([
             },
             {
                 path: "/mypage",
-                element: <MyPage />
+                element: <MyPageMain />
+            },
+            {
+                path: "/mypage/recommend",
+                element: <RecommendPlaces />
             }
         ]
     },

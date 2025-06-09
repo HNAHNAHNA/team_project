@@ -1,5 +1,5 @@
 import { useLoaderData, useParams } from "react-router-dom";
-import hotels from "../../data/hotels.json";
+// import hotels from "../../data/hotels.json";
 import type { HotelBasicInfo } from "../../types/HotelList";
 import Heading from "./Heading";
 import Container from "./Container";

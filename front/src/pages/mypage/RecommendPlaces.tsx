@@ -10,29 +10,29 @@ function MyPage() {
     const [loading, setLoading] = useState(true)
     const [skeletonCount, setSkeletonCount] = useState(10);
 
-    // const hotel = {
-    //     name: "京王プレッソイン東京駅八重洲",
-    //     address: "東京都"
-    // }
+    const hotel = {
+        name: "京王プレッソイン東京駅八重洲",
+        address: "東京都"
+    }
 
-    // useEffect(() => {
-    //     setLoading(true)
-    //     fetch(`http://localhost:8080/api/places/search?q=${hotel.address} ${hotel.name}`)
-    //         .then(res => {
-    //             if (!res.ok) throw new Error('요청 실패!')
-    //             return res.json()
-    //         })
-    //         .then(data => {
-    //             console.log(data)
-    //             setData(data)
-    //             setSkeletonCount(data.length)
-    //             setLoading(false)
-    //         })
-    //         .catch(err => {
-    //             console.error(err);
-    //             setLoading(false)
-    //         })
-    // }, [])
+    useEffect(() => {
+        setLoading(true)
+        fetch(`http://localhost:8080/api/places/search?q=${hotel.address} ${hotel.name}`)
+            .then(res => {
+                if (!res.ok) throw new Error('요청 실패!')
+                return res.json()
+            })
+            .then(data => {
+                console.log(data)
+                setData(data)
+                setSkeletonCount(data.length)
+                setLoading(false)
+            })
+            .catch(err => {
+                console.error(err);
+                setLoading(false)
+            })
+    }, [])
 
     const mockData = [
         {

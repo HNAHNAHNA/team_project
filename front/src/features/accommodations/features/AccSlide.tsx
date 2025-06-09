@@ -6,10 +6,11 @@ import { Autoplay } from "swiper/modules";
 import type { HotelList, HotelBasicInfo, AccSlideProps } from "../../../types/HotelList";
 import ReviewAverage from "./icons/reviewAverage";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import SkeletonCard from "./SkeletonCard";
 import WishListButton from "./icons/WishListButton";
+import type SwiperCore from 'swiper';
 
 function AccSlide({ hotelList }: AccSlideProps) {
     const navigate = useNavigate();
@@ -17,6 +18,16 @@ function AccSlide({ hotelList }: AccSlideProps) {
     const [data, setData] = useState<any[]>([])
     const [skeletonCount, setSkeletonCount] = useState(5)
     const slideCount = 5;
+
+    const swiperRef = useRef<SwiperCore | null>(null); // Swiper 인스턴스 담을 ref
+
+    const handleMouseEnter = () => {
+        swiperRef.current?.autoplay?.stop();
+    };
+
+    const handleMouseLeave = () => {
+        swiperRef.current?.autoplay?.start();
+    };
 
     useEffect(() => {
         setLoading(true);
@@ -45,13 +56,18 @@ function AccSlide({ hotelList }: AccSlideProps) {
         })
         .filter((h): h is HotelBasicInfo & { totalCharge: number | null } => !!h);
     return (
-        <div className="w-full p-3 bg-rgb(245,242,236) rounded-xl overflow-hidden">
+        <div 
+            className="w-full p-3 bg-rgb(245,242,236) rounded-xl overflow-hidden"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            >
             <Swiper
+                onSwiper={(swiper) => (swiperRef.current = swiper)}
                 slidesPerView={5}
                 spaceBetween={10}
                 loop={true}
                 modules={[Autoplay]}
-                autoplay={{ delay: 3000, disableOnInteraction: false }}
+                autoplay={{ delay: 2500, disableOnInteraction: false }}
                 className="w-full h-full"
             >
                 {loading
@@ -68,11 +84,11 @@ function AccSlide({ hotelList }: AccSlideProps) {
                         >
                             <div className="flex flex-col justify-center max-w-[220px] items-center h-[80%] w-full rounded-xl no-drag hover:shadow-xl">
                                 {hotel.hotelImageUrl ? (
-                                    <div className="relative w-full">
+                                    <div className="relative w-full h-60 overflow-hidden rounded-xl">
                                         <img
                                             src={hotel.hotelImageUrl}
                                             alt={hotel.hotelName}
-                                            className="h-60 w-full object-cover rounded-xl" />
+                                            className="w-full h-full object-cover" />
                                         <div className="absolute top-3 right-3 z-10">
                                             <WishListButton hotelNo={hotel.hotelNo} />
                                         </div>

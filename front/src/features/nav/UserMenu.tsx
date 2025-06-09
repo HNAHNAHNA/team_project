@@ -1,12 +1,14 @@
 import { AiOutlineMenu } from "react-icons/ai"
 import Avatar from "./Avatar"
-import { useState, useCallback } from "react"
+import { useState, useCallback, useRef, useEffect } from "react"
 import MenuItem from "./MenuItem"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
 
 function UserMenu() {
     const [isOpen, setIsOpen] = useState(false)
+    const menuRef = useRef<HTMLDivElement>(null);
+    const buttonRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -20,6 +22,25 @@ function UserMenu() {
     const toggleOpen = useCallback(() => {
         setIsOpen((value) => !value)
     }, [])
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            const target = event.target as Node;
+            if (
+                menuRef.current &&
+                buttonRef.current &&
+                !menuRef.current.contains(target) &&
+                !buttonRef.current.contains(target)
+            ) {
+                setIsOpen((value) => !value);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isOpen]);
 
     return (
         <div className="relative">
@@ -49,6 +70,7 @@ function UserMenu() {
 
                 </div>
                 <div
+                    ref={buttonRef}
                     onClick={toggleOpen}
                     className="
                             md:py-1
@@ -73,6 +95,7 @@ function UserMenu() {
 
             {isOpen && (
                 <div
+                    ref={menuRef}
                     className="
                         absolute
                         rounded-xl
@@ -91,6 +114,7 @@ function UserMenu() {
                                 <>
                                     <MenuItem
                                         onClick={() => {
+                                            setIsOpen(false)
                                             navigate('/mypage')
                                         }}
                                         label="マイページ"

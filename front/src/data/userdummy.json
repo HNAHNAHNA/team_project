@@ -6,7 +6,8 @@
     "email": "admin@example.com",
     "password": "admin1234!",
     "phone": "090-1111-2222",
-    "address": "東京都千代田区千代田1-1"
+    "address": "東京都千代田区千代田1-1",
+    "favorite": [151302, 160960, 74637]
   },
   {
     "id": 2,

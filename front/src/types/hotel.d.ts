@@ -16,3 +16,7 @@ export interface HotelWrapper {
 export interface HotelListJson {
   hotels: HotelWrapper[];
 };
+
+export interface HotelName {
+  hotelName: HotelName;
+}

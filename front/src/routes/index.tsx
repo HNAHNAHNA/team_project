@@ -3,7 +3,7 @@ import { useAuth } from "../contexts/AuthContext"
 import Home from "../pages/Home";
 import LoginPage from "../features/auth/login/LoginPage";
 import SignUp from "../features/auth/SignUp";
-import DetailPage from "../pages/DetailPage";
+import DetailPage from "../pages/detailpage/DetailPage";
 import hotels from "../data/hotels.json";
 import SearchPage from "../features/search_detail/SearchPage";
 import Layout from "../Layout";

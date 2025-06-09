@@ -1,6 +1,5 @@
-@import "tailwindcss";
-
 @import url("https://fonts.googleapis.com/css2?family=Hachi+Maru+Pop&family=Kiwi+Maru&family=Zen+Maru+Gothic&display=swap");
+@import "tailwindcss";
 
 body {
   background-color: rgb(245, 242, 236) !important;

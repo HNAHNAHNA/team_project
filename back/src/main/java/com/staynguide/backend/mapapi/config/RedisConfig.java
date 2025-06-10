@@ -1,4 +1,4 @@
-package com.staynguide.backend.placeapi.src.main.java.com.example.placeapi.config;
+package com.staynguide.backend.mapapi.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

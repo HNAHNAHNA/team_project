@@ -1,9 +1,9 @@
-package com.staynguide.backend.placeapi.src.main.java.com.example.placeapi.controller;
+package com.staynguide.backend.mapapi.controller;
 
-import com.example.placeapi.dto.PlaceInfo;
-import com.example.placeapi.entity.Place;
-import com.example.placeapi.repository.PlaceRepository;
-import com.example.placeapi.service.PlaceService;
+import com.staynguide.backend.mapapi.dto.PlaceInfo;
+import com.staynguide.backend.mapapi.entity.Place;
+import com.staynguide.backend.mapapi.repository.PlaceRepository;
+import com.staynguide.backend.mapapi.service.PlaceService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

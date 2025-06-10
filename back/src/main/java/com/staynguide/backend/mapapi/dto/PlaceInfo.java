@@ -1,4 +1,5 @@
-package com.staynguide.backend.placeapi.src.main.java.com.example.placeapi.dto;
+package com.staynguide.backend.mapapi.dto;
+
 
 public class PlaceInfo {
     private String name;

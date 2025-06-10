@@ -1,4 +1,4 @@
-package com.staynguide.backend.placeapi.src.main.java.com.example.placeapi;
+package com.staynguide.backend.mapapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

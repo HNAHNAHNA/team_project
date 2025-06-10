@@ -1,10 +1,10 @@
-package com.staynguide.backend.placeapi.src.main.java.com.example.placeapi.service;
+package com.staynguide.backend.mapapi.service;
 
-import com.example.placeapi.dto.PlaceInfo;
-import com.example.placeapi.entity.Place;
-import com.example.placeapi.entity.Recommendation;
-import com.example.placeapi.repository.PlaceRepository;
-import com.example.placeapi.repository.RecommendationRepository;
+import com.staynguide.backend.mapapi.dto.PlaceInfo;
+import com.staynguide.backend.mapapi.entity.Place;
+import com.staynguide.backend.mapapi.entity.Recommendation;
+import com.staynguide.backend.mapapi.repository.PlaceRepository;
+import com.staynguide.backend.mapapi.repository.RecommendationRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;

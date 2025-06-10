@@ -1,6 +1,6 @@
-package com.staynguide.backend.placeapi.src.main.java.com.example.placeapi.repository;
+package com.staynguide.backend.mapapi.repository;
 
-import com.example.placeapi.entity.Recommendation;
+import com.staynguide.backend.mapapi.entity.Recommendation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

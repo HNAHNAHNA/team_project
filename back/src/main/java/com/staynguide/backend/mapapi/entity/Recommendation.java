@@ -1,4 +1,4 @@
-package com.staynguide.backend.placeapi.src.main.java.com.example.placeapi.entity;
+package com.staynguide.backend.mapapi.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

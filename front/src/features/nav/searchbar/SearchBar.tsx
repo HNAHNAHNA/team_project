@@ -1,6 +1,3 @@
-// import ParentComponent from "./ParentCalendarComponent"
-// import VisitCountry from "./features/VisitCountry"
-// import People from "./features/People"
 import { useState } from 'react'
 import { BiSearch, BiMap } from 'react-icons/bi'
 import AnimeSearchBar from './features/AnimeSearchBar';
@@ -19,6 +16,7 @@ function SearchBar() {
             <div
                 onClick={handleSearchClick}
                 className="
+                
                 border-[1px]
                 w-full
                 md:w-auto
@@ -63,7 +61,11 @@ function SearchBar() {
                         items-center
                         gap-3
                     ">
-                        <div className="hidden sm:block">Search</div>
+                        <div 
+                            className="hidden sm:block"
+                            >
+                                Search onClick
+                            </div>
                         <div
                             className="
                                 p-2

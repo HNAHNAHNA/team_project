@@ -15,24 +15,24 @@ function MyPage() {
         address: "東京都"
     }
 
-    useEffect(() => {
-        setLoading(true)
-        fetch(`http://localhost:8080/api/places/search?q=${hotel.address} ${hotel.name}`)
-            .then(res => {
-                if (!res.ok) throw new Error('요청 실패!')
-                return res.json()
-            })
-            .then(data => {
-                console.log(data)
-                setData(data)
-                setSkeletonCount(data.length)
-                setLoading(false)
-            })
-            .catch(err => {
-                console.error(err);
-                setLoading(false)
-            })
-    }, [])
+    // useEffect(() => {
+    //     setLoading(true)
+    //     fetch(`http://localhost:8080/api/places/search?q=${hotel.address} ${hotel.name}`)
+    //         .then(res => {
+    //             if (!res.ok) throw new Error('요청 실패!')
+    //             return res.json()
+    //         })
+    //         .then(data => {
+    //             console.log(data)
+    //             setData(data)
+    //             setSkeletonCount(data.length)
+    //             setLoading(false)
+    //         })
+    //         .catch(err => {
+    //             console.error(err);
+    //             setLoading(false)
+    //         })
+    // }, [])
 
     const mockData = [
         {

@@ -5,11 +5,11 @@ import LoginPage from "../features/auth/login/LoginPage";
 import SignUp from "../features/auth/SignUp";
 import DetailPage from "../pages/detailpage/DetailPage";
 import hotels from "../data/hotels.json";
-import SearchPage from "../features/search_detail/SearchPage";
 import Layout from "../Layout";
 import MyPageMain from '../pages/mypage/MyPageMain';
 import PublicOnlyRoute from "./PublicOnlyRoute";
 import RecommendPlaces from "../pages/mypage/RecommendPlaces";
+import SearchResults from "../features/search_detail/SearchResults";
 
 export const router = createBrowserRouter([
     {
@@ -44,7 +44,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: "/search",
-                element: <SearchPage />
+                element: <SearchResults />
             },
             {
                 path: "/mypage",

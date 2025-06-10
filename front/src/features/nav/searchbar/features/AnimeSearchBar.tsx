@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion'
 import React, { useEffect, useRef, useState } from 'react'
-import { BiSearch } from 'react-icons/bi';
+import { BiSearch, BiX } from 'react-icons/bi';
 import { REGION_MAP } from '../../../../constants/regionMap';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
     onClose: () => void
@@ -10,8 +11,7 @@ interface Props {
 const AnimeSearchBar: React.FC<Props> = ({ onClose }) => {
     const modalRef = useRef<HTMLDivElement>(null);
     const [searchText, setSearchText] = useState("");
-
-
+    const navigate = useNavigate();
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -30,6 +30,17 @@ const AnimeSearchBar: React.FC<Props> = ({ onClose }) => {
         name.includes(searchText)
     )
 
+    const handleRegionClick = (name: string) => {
+        setSearchText(name);
+    };
+
+    const handleSearch = () => {
+        if (searchText.trim()) {
+            navigate(`/search?search=${encodeURIComponent(searchText.trim())}`);
+            onClose();
+        }
+    };
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
             <motion.div
@@ -39,7 +50,7 @@ const AnimeSearchBar: React.FC<Props> = ({ onClose }) => {
                 transition={{ duration: 0.3 }}
                 className="bg-white p-6 rounded-xl shadow-xl w-[90%] max-w-md"
             >
-                <div ref={modalRef} className="bg-white p-6 rounded-xl shadow-xl">
+                <div ref={modalRef} className="bg-white p-6 rounded-xl ">
                     <div
                         className="
                                 border-[1px]
@@ -47,9 +58,7 @@ const AnimeSearchBar: React.FC<Props> = ({ onClose }) => {
                                 md:w-auto
                                 rounded-full
                                 shadow-sm
-                                hover:shadow-md
                                 transition
-                                cursor-pointer
                                 overflow-x-auto
                                 whitespace-nowrap
                             ">
@@ -68,11 +77,11 @@ const AnimeSearchBar: React.FC<Props> = ({ onClose }) => {
                                         h-full
                                         text-sm
                                         font-semibold
-                                        px-6
+                                        px-4
                                         text-center
                                         border-r-[1px]
                                     ">
-                                <div className="text-sm font-semibold text-center">
+                                <div className="text-sm font-semibold text-center flex flex-row">
                                     <input
                                         type="text"
                                         value={searchText}
@@ -80,26 +89,42 @@ const AnimeSearchBar: React.FC<Props> = ({ onClose }) => {
                                         className="outline-none border-none bg-transparent focus:ring-0 placeholder-gray-400"
                                         placeholder="どこに行きますか？"
                                     />
+                                    {searchText && (
+                                        <button
+                                            onClick={() => setSearchText("")}
+                                            className="text-gray-400 hover:text-gray-600 p-1 cursor-pointer"
+                                        >
+                                            <BiX size={20} />
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                             <div
+                                onClick={handleSearch}
                                 className="
                                         text-sm
                                         pl-6
                                         pr-2
-                                        text-gray-600
+                                         text-gray-600
                                         flex
                                         flex-row
                                         items-center
                                         gap-3
+                                        transition-all
+                                        duration-200
+                                        group
+                                        cursor-pointer
                                     ">
-                                <div className="hidden sm:block">Search</div>
+                                <div className="hidden sm:block group-hover:scale-105 transition-transform duration-200 will-change-transform">Search</div>
                                 <div
                                     className="
                                             p-2
                                              bg-rose-500
-                                            rounded-full
+                                             rounded-full
                                              text-white
+                                            transition-transform
+                                            duration-200
+                                            group-hover:scale-110
                                             ">
                                     <BiSearch size={15} />
                                 </div>
@@ -111,10 +136,9 @@ const AnimeSearchBar: React.FC<Props> = ({ onClose }) => {
                             filteredRegions.map(([key, name]) => (
                                 <div
                                     key={key}
-                                    className="px-4 py-2  hover:bg-gray-200 cursor-pointer text-sm"
+                                    className="px-5 py-2  hover:bg-gray-200 cursor-pointer text-sm"
                                     onClick={() => {
-                                        setSearchText(name)
-                                        onClose()
+                                        handleRegionClick(name)
                                     }}
                                 >
                                     {name}

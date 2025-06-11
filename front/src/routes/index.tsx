@@ -1,12 +1,15 @@
-import React from 'react';
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext"
 import Home from "../pages/Home";
 import LoginPage from "../features/auth/login/LoginPage";
 import SignUp from "../features/auth/SignUp";
-import DetailPage from "../pages/DetailPage";
+import DetailPage from "../pages/detailpage/DetailPage";
 import hotels from "../data/hotels.json";
-import SearchPage from "../features/search_detail/SearchPage";
 import Layout from "../Layout";
+import MyPageMain from '../pages/mypage/MyPageMain';
+import PublicOnlyRoute from "./PublicOnlyRoute";
+import RecommendPlaces from "../pages/mypage/RecommendPlaces";
+import SearchResults from "../features/search_detail/SearchResults";
 
 export const router = createBrowserRouter([
     {
@@ -19,7 +22,11 @@ export const router = createBrowserRouter([
             },
             {
                 path: "/login",
-                element: <LoginPage />
+                element: (
+                    <PublicOnlyRoute>
+                        <LoginPage />
+                    </PublicOnlyRoute>
+                )
             },
             {
                 path: "/detail/:hotelNo",
@@ -37,7 +44,15 @@ export const router = createBrowserRouter([
             },
             {
                 path: "/search",
-                element: <SearchPage />
+                element: <SearchResults />
+            },
+            {
+                path: "/mypage",
+                element: <MyPageMain />
+            },
+            {
+                path: "/mypage/recommend",
+                element: <RecommendPlaces />
             }
         ]
     },

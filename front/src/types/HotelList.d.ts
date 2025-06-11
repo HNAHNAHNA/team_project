@@ -47,3 +47,15 @@ export interface FlatRoom {
 export interface FlatRoomList {
   rooms: FlatRoom[];
 }
+
+
+export type HotelWrapper = {
+  hotel: Array<{
+    hotelBasicInfo?: HotelBasicInfo;
+    roomInfo?: Array<{ dailyCharge: { total: number } }>;
+  }>;
+};
+
+export type AccSlideProps = {
+  hotelList: HotelWrapper[];
+}

@@ -13,7 +13,9 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -36,7 +38,7 @@ public class PlaceService {
         this.recommendationRepository = recommendationRepository;
     }
 
-
+    @SuppressWarnings("unchecked")
     public List<PlaceInfo> getRecommendations(Integer placeId) {
         String key = "recommendations:" + placeId;
 
@@ -96,12 +98,11 @@ public class PlaceService {
         return result;
     }
 
-
     // 🔁 Google API 공통 호출 함수
     private List<PlaceInfo> fetchFromGoogleApi(Integer placeId, String textQuery) {
         try {
             Place place = placeRepository.findById(placeId)
-                    .orElseThrow(() -> new RuntimeException("해당 장소 없음"));
+                    .orElseThrow(() -> new RuntimeException("해당 장소 없음: " + placeId));
 
             double lat = place.getLatitude();
             double lng = place.getLongitude();
@@ -113,7 +114,7 @@ public class PlaceService {
             headers.set("X-Goog-Api-Key", apiKey);
             headers.set("X-Goog-FieldMask", "*");
 
-            String body = """
+            String body = String.format("""
                     {
                       "textQuery": "%s",
                       "locationBias": {
@@ -128,7 +129,7 @@ public class PlaceService {
                       "languageCode": "ja",
                       "regionCode": "JP"
                     }
-            """.formatted(textQuery, lat, lng);
+                    """, textQuery, lat, lng);
 
             HttpEntity<String> entity = new HttpEntity<>(body, headers);
             RestTemplate restTemplate = new RestTemplate();

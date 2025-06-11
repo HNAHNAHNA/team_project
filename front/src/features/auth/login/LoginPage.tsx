@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { login } from './authService';
+import { useAuth } from '../../../contexts/AuthContext'
+import { motion } from 'motion/react';
 
 function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { login } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -13,53 +15,57 @@ function LoginPage() {
         const user = login(email, password);
 
         if (user) {
-            alert(`${user.name}님 환영합니다!`);
+            alert(`${user.name}さん！こんいちは！`);
             navigate('/');
         } else {
-            alert('이메일 또는 비밀번호가 틀렸습니다.');
+            alert('e-mailとpasswordを確認してください！');
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[rgb(245,242,236)]">
-            <form
-                onSubmit={handleSubmit}
-                className="w-full max-w-sm p-6 bg-white rounded-xl shadow-md flex flex-col gap-4"
-            >
-                <h2 className="text-xl font-bold text-center">로그인</h2>
-
-                <input
-                    type="email"
-                    placeholder="이메일"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="border px-4 py-2 rounded-lg"
-                    required
-                />
-
-                <input
-                    type="password"
-                    placeholder="비밀번호"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="border px-4 py-2 rounded-lg"
-                    required
-                />
-
-                <button
-                    type="submit"
-                    className="bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition"
-                >
-                    로그인
-                </button>
-                <Link
-                    to="/signup"
-                    className="text-sm text-blue-600 hover:underline text-center"
-                >
-                    회원가입이 필요하신가요?
-                </Link>
-            </form>
-        </div>
+        <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-[rgb(245,242,236)] bg-opacity-50"
+        >
+            <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-sm">
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                    <h2 className="text-xl font-bold text-center">ログイン</h2>
+                    <input
+                        type="email"
+                        placeholder="e-mail"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="border px-4 py-2 rounded-lg"
+                        required
+                    />
+                    <input
+                        type="password"
+                        placeholder="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="border px-4 py-2 rounded-lg"
+                        required
+                    />
+                    <button
+                        type="submit"
+                        className="bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition"
+                    >
+                        完了！
+                    </button>
+                    
+                    <Link
+                        to="/signup"
+                        className="text-sm text-blue-600 hover:underline text-center"
+                    >
+                        アカウントを作ろう！
+                    </Link>
+                </form>
+                <a href="/" className="block text-center mt-2 text-sm text-gray-600 hover:underline">帰る</a>
+            </div>
+        </motion.div>
     );
 }
 

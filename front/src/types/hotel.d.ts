@@ -1,4 +1,4 @@
-export type HotelBasicInfo = {
+export interface HotelBasicInfo {
   hotelNo: number;
   hotelName?: string;
   hotelImageUrl: string;
@@ -7,13 +7,16 @@ export type HotelBasicInfo = {
   telephoneNo?: string;
 };
 
-export type HotelWrapper = {
+export interface HotelWrapper {
   hotel?: {
     hotelBasicInfo: HotelBasicInfo;
-    // 다른 메타 정보가 있다면 여기에 추가
   }[];
 };
 
-export type HotelListJson = {
+export interface HotelListJson {
   hotels: HotelWrapper[];
 };
+
+export interface HotelName {
+  hotelName: HotelName;
+}

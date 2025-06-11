@@ -18,14 +18,9 @@ export interface HotelBasicInfo {
   hotelNo: number;
   hotelName: string;
   hotelImageUrl?: string;
-  // 필요한 경우 아래 필드들 추가 가능
-  hotelInformationUrl?: string;
-  planListUrl?: string;
-  dpPlanListUrl?: string;
-  reviewUrl?: string;
   address1?: string;
   address2?: string;
-  // ...
+  reviewAverage: number;
 }
 
 export interface FlatRoom {
@@ -58,4 +53,5 @@ export type HotelWrapper = {
 
 export type AccSlideProps = {
   hotelList: HotelWrapper[];
+  onHotelClick?: (hotel: HotelBasicInfo & {totalCharge?: number}) => void;
 }

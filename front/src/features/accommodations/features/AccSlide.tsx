@@ -3,17 +3,14 @@ import "swiper/css";
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { Autoplay } from "swiper/modules";
-import type { HotelList, HotelBasicInfo, AccSlideProps } from "../../../types/HotelList";
+import type { HotelBasicInfo, AccSlideProps } from "../../../types/HotelList";
 import ReviewAverage from "./icons/reviewAverage";
-import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import Skeleton from "react-loading-skeleton";
 import SkeletonCard from "./SkeletonCard";
 import WishListButton from "./icons/WishListButton";
 import type SwiperCore from 'swiper';
 
 function AccSlide({ hotelList }: AccSlideProps) {
-    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState<any[]>([])
     const [skeletonCount, setSkeletonCount] = useState(5)
@@ -80,7 +77,7 @@ function AccSlide({ hotelList }: AccSlideProps) {
                         <SwiperSlide
                             key={hotel?.hotelNo ?? idx}
                             className="flex justify-center items-center cursor-pointer"
-                            onClick={() => navigate(`/detail/${hotel.hotelNo}`)}
+                            // onClick={() => navigate(`/detail/${hotel.hotelNo}`)}
                         >
                             <div className="flex flex-col justify-center max-w-[220px] items-center h-[80%] w-full rounded-xl no-drag hover:shadow-xl">
                                 {hotel.hotelImageUrl ? (

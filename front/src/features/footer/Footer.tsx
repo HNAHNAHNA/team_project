@@ -1,5 +1,5 @@
-import Logo from "../features/nav/Logo"
-import "../styles/footer.css"
+import Logo from "../../features/nav/Logo"
+import "../../styles/footer.css"
 
 function Footer() {
     return (

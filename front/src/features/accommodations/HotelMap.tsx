@@ -3,24 +3,27 @@ import "swiper/css"
 import "swiper/css/effect-cards"
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import hotelsData from "../../data/hotels.json"
 import "../../styles/hotelTransition.css";
 import AccSlide from "./features/AccSlide";
+import { locations } from './locations'
+import { useState } from 'react'
+import type { HotelBasicInfo } from "../../types/HotelList";
+import { useNavigate } from "react-router-dom";
+import HotelModal from "./features/HotelModal";
 
 function HotelMap() {
-    const locationNames = ['東京都', '大阪', '京都', '福岡', '札幌'];
-    const allHotels = hotelsData.hotels;
+    const navigate = useNavigate();
+    const [selectedData, setSelectedData] = useState<HotelBasicInfo | null>(null);
 
-    const locations = locationNames.map(name => {
-        return {
-            title: `${name}のおすすめホテル`,
-            hotels: allHotels.filter(wrapper => {
-                const basicInfo = wrapper.hotel.find(item => item.hotelBasicInfo);
-                return basicInfo && basicInfo.hotelBasicInfo?.address1 === name;
-            })
-        };
-    });
-
+    const handleDetailButtonClick = () => {
+        navigate(`/detail/${selectedData?.hotelNo}`)
+    }
+    const handleHotelClick = (hotel: HotelBasicInfo) => {
+        setSelectedData(hotel);
+    }
+    const handleCloseModal = () => {
+        setSelectedData(null);
+    }
     return (
         <div className="kiwi bg-slate-100 p-4 sm:p-8">
             <div className="flex flex-col gap-8">
@@ -33,6 +36,12 @@ function HotelMap() {
                     </div>
                 ))}
             </div>
+            {selectedData && (
+                <HotelModal 
+                    selectedData={selectedData} 
+                    setSelectedData={setSelectedData} 
+                    handleDetailButtonClick={handleDetailButtonClick}/>
+            )}
         </div>
     );
 }

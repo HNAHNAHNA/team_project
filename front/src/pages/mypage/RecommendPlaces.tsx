@@ -4,9 +4,25 @@ import { AnimatePresence, motion } from "motion/react";
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css';
 
+type PlaceInfo = {
+    name: string
+    address: string
+    latitude: number
+    longitude: number
+    rating: number
+    photoUrl: string
+    category: string
+    review: string
+}
+
+type ApiResponse = {
+    restaurants: PlaceInfo[]
+    attractions: PlaceInfo[]
+}
+
 function MyPage() {
     const [selectedData, setSelectedData] = useState(null);
-    const [data, setData] = useState<any[]>([])
+    const [data, setData] = useState<ApiResponse | null>(null)
     const [loading, setLoading] = useState(true)
     const [skeletonCount, setSkeletonCount] = useState(10);
 
@@ -15,49 +31,49 @@ function MyPage() {
         address: "東京都"
     }
 
-    // useEffect(() => {
-    //     setLoading(true)
-    //     fetch(`http://localhost:8080/api/places/search?q=${hotel.address} ${hotel.name}`)
-    //         .then(res => {
-    //             if (!res.ok) throw new Error('요청 실패!')
-    //             return res.json()
-    //         })
-    //         .then(data => {
-    //             console.log(data)
-    //             setData(data)
-    //             setSkeletonCount(data.length)
-    //             setLoading(false)
-    //         })
-    //         .catch(err => {
-    //             console.error(err);
-    //             setLoading(false)
-    //         })
-    // }, [])
-
-    const mockData = [
-        {
-            name: "테스트 호텔 1",
-            photoUrl: "https://via.placeholder.com/150",
-            rating: "4.5",
-            category: "비즈니스 호텔",
-            review: "좋은 위치에 있어요!"
-        },
-        {
-            name: "테스트 호텔 2",
-            photoUrl: "https://via.placeholder.com/150",
-            rating: "4.0",
-            category: "캡슐 호텔",
-            review: "깔끔하고 조용함"
-        }
-    ];
     useEffect(() => {
-        setLoading(true);
-        setSkeletonCount(mockData.length)
-        setTimeout(() => {
-            setData(mockData);
-            setLoading(false);
-        }, 1500); // 로딩 효과를 보기 위해 일부러 지연
-    }, []);
+        setLoading(true)
+        fetch(`http://localhost:8091/api/places/recommendations?hotelName=${encodeURIComponent(hotel.name)}&region=${encodeURIComponent(hotel.address)}`)
+            .then(res => {
+                if (!res.ok) throw new Error('요청 실패!')
+                return res.json()
+            })
+            .then(data => {
+                console.log(data)
+                setData(data)
+                setSkeletonCount(data.length)
+                setLoading(false)
+            })
+            .catch(err => {
+                console.error(err);
+                setLoading(false)
+            })
+    }, [])
+
+    // const mockData = [
+    //     {
+    //         name: "테스트 호텔 1",
+    //         photoUrl: "https://via.placeholder.com/150",
+    //         rating: "4.5",
+    //         category: "비즈니스 호텔",
+    //         review: "좋은 위치에 있어요!"
+    //     },
+    //     {
+    //         name: "테스트 호텔 2",
+    //         photoUrl: "https://via.placeholder.com/150",
+    //         rating: "4.0",
+    //         category: "캡슐 호텔",
+    //         review: "깔끔하고 조용함"
+    //     }
+    // ];
+    // useEffect(() => {
+    //     setLoading(true);
+    //     setSkeletonCount(mockData.length)
+    //     setTimeout(() => {
+    //         setData(mockData);
+    //         setLoading(false);
+    //     }, 1500); // 로딩 효과를 보기 위해 일부러 지연
+    // }, []);
 
 
     return (
@@ -70,12 +86,13 @@ function MyPage() {
                         </div>
                     ))
                 ) : (
-
-                    data.map((da, idx) => (
-                        <div
-                            key={idx}
-                            onClick={() => setSelectedData(da)}
-                            className="
+                    <div>
+                        <h2>🍽 추천 음식점</h2>
+                        {data?.restaurants?.map((d, idx) => (
+                            <div
+                                key={idx}
+                                onClick={() => setSelectedData(d)}
+                                className="
                             flex
                             flex-row
                             items-start
@@ -88,44 +105,45 @@ function MyPage() {
                             hover:bg-neutral-100
                             hover:shadow-md
                         ">
-                            <img
-                                src={da.photoUrl}
-                                className="
-                                rounded-xl
-                                m-4
-                                object-cover
-                                w-24
-                                h-24
-                            ">
-                            </img>
-                            <div
-                                className="
-                                flex
-                                flex-col
-                                m-2
-                            ">
+                                <img
+                                    src={d.photoUrl}
+                                    className="
+                                    rounded-xl
+                                    m-4
+                                    object-cover
+                                    w-24
+                                    h-24
+                                "></img>
                                 <div
                                     className="
-                                        text-xl
-                                        font-bold
-                                    ">
-                                    {da.name}
-                                </div>
-                                <div
-                                    className="
+            flex
+            flex-col
+            m-2
+        ">
+                                    <div
+                                        className="
+                    text-xl
+                    font-bold
+                ">
+                                        {d.name}
+                                    </div>
+                                    <div
+                                        className="
 
-                                    ">
-                                    {da.rating}
-                                </div>
-                                <div>
-                                    {da.category}
-                                </div>
-                                <div>
-                                    {da.review}
+                ">
+                                        {d.rating}
+                                    </div>
+                                    <div>
+                                        {d.category}
+                                    </div>
+                                    <div>
+                                        {d.review}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    )))}
+                        ))}
+                    </div>
+                )}
             </div>
             <div className="w-2/3 bg-gray-500">
                 <div className="w-full h-full text-white flex items-center justify-center">
@@ -183,50 +201,30 @@ function MyPage() {
 export default MyPage
 
 
-// <motion.div
-//     initial={{ opacity: 0, scale: 0.8 }}
-//     animate={{ opacity: 1, scale: 1 }}
-//     exit={{ opacity: 0, scale: 0.8 }}
-//     transition={{ duration: 0.3 }}
-//     className="fixed inset-0 z-50 flex items-center justify-center bg-[rgb(245,242,236)] bg-opacity-50"
-// >
-
-
-
-
-// const [places, setPlaces] = useState<any[]>([]);
-// const [error, setError] = useState<string | null>(null);
-
-
-// const hotel = {
-//     name: "京急ＥＸイン　秋葉原",
-//     address: "東京都"
-// }
-// useEffect(() => {
-//     fetch(`http://localhost:8080/api/places/search?q=${hotel.address} ${hotel.name}`)
-//         .then(res => {
-//             if (!res.ok) throw new Error("API 요청 실패");
-//             return res.json();
-//         })
-//         .then(data => setPlaces(data))
-//         .catch(err => {
-//             console.error("에러:", err);
-//             setError(err.message);
-//         });
-// }, []);
-
-{/* <div>
-    <h2>장소 검색 결과</h2>
-    {error && <p>에러: {error}</p>}
-    {places.length === 0 ? (
-        <p>결과가 없습니다.</p>
-    ) : (
-        <ul>
-            {places.map((place, idx) => (
-                <li key={idx}>
-                    <strong>{place.name}</strong> — {place.address}
-                </li>
-            ))}
-        </ul>
-    )}
-</div> */}
+// data.map((da, idx) => (
+//     <div
+//         key={idx}
+//         onClick={() => setSelectedData(da)}
+//         className="
+//         flex
+//         flex-row
+//         items-start
+//         border-[1px]
+//         rounded-xl
+//         w-[95%]
+//         gap-4
+//         m-2
+//         cursor-pointer
+//         hover:bg-neutral-100
+//         hover:shadow-md
+//     ">
+//         <img
+//             src={da.photoUrl}
+//             className="
+//             rounded-xl
+//             m-4
+//             object-cover
+//             w-24
+//             h-24
+//         ">
+//         </img>

@@ -19,5 +19,7 @@ public class Recommendation {
     private double longitude;
     private double rating;
     private Integer reviewcount;
+    @Column(length = 1000)
     private String website;
+    private String hotelName;
 }

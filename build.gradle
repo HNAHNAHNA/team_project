@@ -1,0 +1,47 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0' // Spring Boot 버전 (현재 스크린샷 기준으로 3.2.0 또는 최신 안정 버전)
+    id 'io.spring.dependency-management' version '1.1.4' // Spring Dependency Management 플러그인 버전
+}
+
+group = 'com.staynguide.backend' // 프로젝트 그룹 ID
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17' // Java 17 사용 시
+
+
+
+java {
+    sourceCompatibility = '17' // Java 17 사용
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral() // Maven Central Repository 사용
+}
+
+dependencies {
+    // Spring Boot Starter Web (웹 애플리케이션 개발에 필요한 기본 의존성)
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    // Spring Boot Starter Data JPA (JPA, Hibernate 사용을 위한 의존성)
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // MySQL Connector (MySQL 데이터베이스 연결을 위한 드라이버)
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    // Lombok (Getter, Setter 등을 자동으로 생성해주는 라이브러리)
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    // Spring Boot Starter Test (테스트 관련 의존성)
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // H2 Database (개발 및 테스트용 인메모리 데이터베이스)
+    runtimeOnly 'com.h2database:h2' // 임시 DB로 H2를 추가합니다. 필요에 따라 제거 가능.
+    testImplementation 'org.projectlombok:lombok' // test에서도 lombok 사용
+    testAnnotationProcessor 'org.projectlombok:lombok' // test에서도 lombok 사용
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

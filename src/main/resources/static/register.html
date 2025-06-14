@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .register-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        .form-check-label {
+            font-weight: normal;
+        }
+        .password-match-feedback, .email-feedback {
+            font-size: 0.875em;
+            margin-top: 0.25rem;
+        }
+        .text-success {
+            color: #28a745 !important;
+        }
+        .text-danger {
+            color: #dc3545 !important;
+        }
+        .text-info {
+            color: #17a2b8 !important; /* Bootstrap info color for loading messages */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="register-container">
+            <h2 class="text-center mb-4">회원가입</h2>
+            <form id="registerForm" novalidate> <div class="mb-3">
+                    <label for="email" class="form-label">이메일 (아이디)</label>
+                    <div class="input-group">
+                        <input type="email" class="form-control" id="email" name="email" required placeholder="example@staynguide.com">
+                        <button class="btn btn-outline-secondary" type="button" id="checkEmailBtn">중복 확인</button>
+                    </div>
+                    <div id="emailFeedback" class="email-feedback"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">비밀번호</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                    <div class="form-text">영문 대소문자, 숫자, 특수문자를 포함하여 8~20자리여야 합니다.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="passwordConfirm" class="form-label">비밀번호 확인</label>
+                    <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" required>
+                    <div id="passwordMatchFeedback" class="password-match-feedback"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="username" class="form-label">이름 또는 닉네임</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="phoneNumber" class="form-label">전화번호</label>
+                    <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="010-XXXX-XXXX">
+                    <div class="form-text">형식: 010-XXXX-XXXX</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="zipcode" class="form-label">우편번호</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="zipcode" name="zipcode" placeholder="우편번호" readonly>
+                        <button class="btn btn-outline-secondary" type="button" id="searchAddressBtn">주소 찾기</button>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="addressMain" class="form-label">기본 주소</label>
+                    <input type="text" class="form-control" id="addressMain" name="addressMain" placeholder="도로명 또는 지번 주소" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="addressDetail" class="form-label">상세 주소</label>
+                    <input type="text" class="form-control" id="addressDetail" name="addressDetail" placeholder="건물, 아파트 동/호수 등">
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100" id="submitBtn">회원가입</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+    <script>
+        const registerForm = document.getElementById('registerForm');
+        const emailInput = document.getElementById('email');
+        const emailFeedback = document.getElementById('emailFeedback');
+        const checkEmailBtn = document.getElementById('checkEmailBtn');
+        const passwordInput = document.getElementById('password');
+        const passwordConfirmInput = document.getElementById('passwordConfirm');
+        const passwordMatchFeedback = document.getElementById('passwordMatchFeedback');
+        const searchAddressBtn = document.getElementById('searchAddressBtn');
+        const zipcodeOutput = document.getElementById('zipcode');
+        const addressMainOutput = document.getElementById('addressMain');
+        const addressDetailOutput = document.getElementById('addressDetail');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // 이메일 유효성 상태를 추적하는 변수 (기본값: 미확인)
+        let isEmailValidAndUnique = false;
+
+        // --- 비밀번호 일치 확인 실시간 체크 ---
+        function checkPasswordMatch() {
+            const password = passwordInput.value;
+            const passwordConfirm = passwordConfirmInput.value;
+
+            if (passwordConfirm === "") {
+                passwordMatchFeedback.textContent = "";
+                passwordMatchFeedback.className = "password-match-feedback";
+                passwordConfirmInput.classList.remove('is-valid', 'is-invalid');
+                return false;
+            }
+
+            if (password === passwordConfirm) {
+                passwordMatchFeedback.textContent = "비밀번호가 일치합니다.";
+                passwordMatchFeedback.className = "password-match-feedback text-success";
+                passwordConfirmInput.classList.remove('is-invalid');
+                passwordConfirmInput.classList.add('is-valid');
+                return true;
+            } else {
+                passwordMatchFeedback.textContent = "비밀번호가 일치하지 않습니다.";
+                passwordMatchFeedback.className = "password-match-feedback text-danger";
+                passwordConfirmInput.classList.remove('is-valid');
+                passwordConfirmInput.classList.add('is-invalid');
+                return false;
+            }
+        }
+
+        passwordInput.addEventListener('keyup', checkPasswordMatch);
+        passwordConfirmInput.addEventListener('keyup', checkPasswordMatch);
+
+
+        // --- 이메일 중복 확인 ---
+        checkEmailBtn.addEventListener('click', async () => {
+            const email = emailInput.value;
+            isEmailValidAndUnique = false; // 중복 확인 버튼 누를 때마다 초기화
+            emailInput.classList.remove('is-valid', 'is-invalid');
+            emailFeedback.textContent = "";
+
+            if (!email) {
+                emailFeedback.textContent = "이메일을 입력해주세요.";
+                emailFeedback.className = "email-feedback text-danger";
+                emailInput.classList.add('is-invalid');
+                return;
+            }
+
+            // 간단한 이메일 형식 검증 (백엔드에서도 유효성 검증함)
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                emailFeedback.textContent = "유효한 이메일 형식이 아닙니다.";
+                emailFeedback.className = "email-feedback text-danger";
+                emailInput.classList.add('is-invalid');
+                return;
+            }
+
+            emailFeedback.textContent = "이메일 중복을 확인 중입니다...";
+            emailFeedback.className = "email-feedback text-info"; // 로딩 메시지
+            checkEmailBtn.disabled = true; // 중복 확인 버튼 비활성화
+
+            try {
+                // 백엔드의 이메일 중복 체크 API 호출
+                const response = await fetch(`/api/v1/users/check-email?email=${encodeURIComponent(email)}`);
+                const message = await response.text(); // 응답 본문 텍스트 (이전 방식)
+
+                if (response.status === 200) { // 사용 가능
+                    emailFeedback.textContent = message;
+                    emailFeedback.className = "email-feedback text-success";
+                    emailInput.classList.remove('is-invalid');
+                    emailInput.classList.add('is-valid');
+                    isEmailValidAndUnique = true; // 유효하고 중복 아님
+                } else if (response.status === 409) { // 중복
+                    emailFeedback.textContent = message;
+                    emailFeedback.className = "email-feedback text-danger";
+                    emailInput.classList.remove('is-valid');
+                    emailInput.classList.add('is-invalid');
+                } else { // 기타 오류 (예: 500 Internal Server Error)
+                    emailFeedback.textContent = "이메일 중복 확인 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+                    emailFeedback.className = "email-feedback text-danger";
+                    emailInput.classList.remove('is-valid');
+                    emailInput.classList.add('is-invalid');
+                    console.error('Error during email check:', response.status, message);
+                    alert("이메일 중복 확인 중 예상치 못한 오류가 발생했습니다. 개발자 콘솔을 확인해주세요."); // alert으로 대체
+                }
+            } catch (error) { // 네트워크 요청 자체의 실패
+                console.error('Network error during email check:', error);
+                emailFeedback.textContent = "서버와 통신 중 오류가 발생했습니다. 네트워크 연결을 확인해주세요.";
+                emailFeedback.className = "email-feedback text-danger";
+                emailInput.classList.remove('is-valid');
+                emailInput.classList.add('is-invalid');
+                alert("이메일 중복 확인 중 서버와 통신 문제가 발생했습니다. 인터넷 연결을 확인해주세요."); // alert으로 대체
+            } finally {
+                checkEmailBtn.disabled = false; // 버튼 다시 활성화
+            }
+        });
+
+        // 이메일 입력 필드 변경 시 중복 확인 상태 초기화
+        emailInput.addEventListener('input', () => {
+            isEmailValidAndUnique = false;
+            emailInput.classList.remove('is-valid', 'is-invalid');
+            emailFeedback.textContent = "";
+        });
+
+
+        // --- 다음 주소 찾기 API 연동 ---
+        searchAddressBtn.addEventListener('click', () => {
+            new daum.Postcode({
+                oncomplete: function(data) {
+                    let addr = ''; // 주소 변수
+                    // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                    if (data.userSelectedType === 'R') { // 도로명 주소를 선택했을 경우
+                        addr = data.roadAddress;
+                    } else { // 지번 주소를 선택했을 경우(J)
+                        addr = data.jibunAddress;
+                    }
+
+                    // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                    zipcodeOutput.value = data.zonecode;
+                    addressMainOutput.value = addr;
+                    // 커서를 상세주소 필드로 이동한다.
+                    addressDetailOutput.focus();
+                }
+            }).open();
+        });
+
+
+        // --- 폼 제출 (회원가입 요청) ---
+        registerForm.addEventListener('submit', async (event) => {
+            event.preventDefault(); // 기본 폼 제출 동작 방지
+
+            // 클라이언트 측 유효성 검사 (필수 필드 및 비밀번호 일치)
+            if (!registerForm.checkValidity()) { // HTML5 form validation
+                event.stopPropagation(); // 이벤트 전파 중지
+                registerForm.classList.add('was-validated'); // Bootstrap 유효성 검사 스타일 적용
+                alert("필수 정보를 모두 입력하거나 올바른 형식으로 입력해주세요."); // alert으로 대체
+                return;
+            }
+
+            // 비밀번호 일치 여부 최종 검증
+            if (!checkPasswordMatch()) {
+                alert("비밀번호와 비밀번호 확인이 일치하지 않습니다."); // alert으로 대체
+                passwordConfirmInput.focus();
+                return;
+            }
+
+            // 이메일 중복 확인 상태 최종 검증
+            if (!isEmailValidAndUnique) {
+                alert("이메일 중복 확인을 완료하고, 사용 가능한 이메일을 입력해주세요."); // alert으로 대체
+                emailInput.focus();
+                return;
+            }
+
+            // 폼 데이터 수집
+            const formData = new FormData(registerForm);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            // 빈 문자열 필드를 null로 변환 (백엔드 DTO의 @Pattern 처리 위함)
+            if (data.phoneNumber === "") { data.phoneNumber = null; }
+            if (data.zipcode === "") { data.zipcode = null; }
+            if (data.addressMain === "") { data.addressMain = null; }
+            if (data.addressDetail === "") { data.addressDetail = null; }
+
+
+            submitBtn.disabled = true; // 제출 버튼 비활성화
+            submitBtn.textContent = "회원가입 중..."; // 로딩 메시지
+
+            try {
+                const response = await fetch('/api/v1/users/join', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) { // HTTP 상태 코드가 2xx (성공) 범위인 경우
+                    const message = await response.text();
+                    alert(message); // alert으로 대체
+                    registerForm.reset(); // 폼 초기화
+                    isEmailValidAndUnique = false; // 상태 초기화
+                    emailInput.classList.remove('is-valid', 'is-invalid'); // 스타일 초기화
+                    passwordConfirmInput.classList.remove('is-valid', 'is-invalid');
+                    registerForm.classList.remove('was-validated'); // 유효성 검사 스타일 제거
+                    emailFeedback.textContent = ""; // 이메일 피드백 초기화
+                    passwordMatchFeedback.textContent = ""; // 비밀번호 피드백 초기화
+
+                    // 성공 후 로그인 페이지로 리다이렉트 (필요시)
+                    // window.location.href = '/login';
+                } else {
+                    const errorText = await response.text(); // 백엔드에서 보낸 오류 메시지
+                    alert(`회원가입 실패: ${errorText}`); // alert으로 대체
+                    console.error('회원가입 실패 응답:', response.status, errorText);
+                }
+            } catch (error) { // 네트워크 요청 자체의 실패
+                console.error('회원가입 요청 중 네트워크 오류 발생:', error);
+                alert("회원가입 요청 중 네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요."); // alert으로 대체
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "회원가입";
+            }
+        });
+
+    </script>
+</body>
+</html>

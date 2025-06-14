@@ -1,1 +1,17 @@
 application.properties
+# Python
+__pycache__/
+*.pyc
+venv/
+
+# Node
+node_modules/
+dist/
+
+# IDE/에디터
+.idea/
+.vscode/
+.settings/
+.project
+.classpath
+bin/

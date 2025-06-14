@@ -55,7 +55,7 @@ function UserMenu() {
                           font-semibold
                           py-3
                           px-4
-                          rounded-full
+                          rounded-full 
                           hover:bg-neutral-100
                           transition
                           cursor-pointer  

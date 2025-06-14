@@ -32,7 +32,10 @@ function HotelMap() {
                         <h2 className="text-2xl font-bold text-gray-700 mb-4">
                             {location.title}
                         </h2>
-                        <AccSlide hotelList={location.hotels} />
+                        <AccSlide 
+                            hotelList={location.hotels} 
+                            onHotelClick={(hotel) => setSelectedData(hotel)}
+                            />
                     </div>
                 ))}
             </div>

@@ -1,9 +1,7 @@
 package com.staynguide.backend.mapapi.service;
 
 import com.staynguide.backend.mapapi.dto.PlaceInfo;
-import com.staynguide.backend.mapapi.entity.Place;
 import com.staynguide.backend.mapapi.entity.Recommendation;
-import com.staynguide.backend.mapapi.repository.PlaceRepository;
 import com.staynguide.backend.mapapi.repository.RecommendationRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,12 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class PlaceService {
 
-    private final PlaceRepository placeRepository;
     private final RedisTemplate<String, Object> redisTemplate;
     private final RecommendationRepository recommendationRepository;
 
@@ -27,79 +23,111 @@ public class PlaceService {
     private String apiKey;
 
     public PlaceService(
-            PlaceRepository placeRepository,
             RedisTemplate<String, Object> redisTemplate,
             RecommendationRepository recommendationRepository
     ) {
-        this.placeRepository = placeRepository;
         this.redisTemplate = redisTemplate;
         this.recommendationRepository = recommendationRepository;
     }
 
-
-    public List<PlaceInfo> getRecommendations(Integer placeId) {
-        String key = "recommendations:" + placeId;
-
-        // 1. Redis 캐시 확인
-        List<PlaceInfo> cached = (List<PlaceInfo>) redisTemplate.opsForValue().get(key);
-        if (cached != null) {
-            System.out.println("✅ Redis 캐시에서 반환됨");
-            return cached;
+    // 🚩 호텔명+지역 → 맛집·관광지 10개씩 반환
+    public Map<String, List<PlaceInfo>> getSplitRecommendations(String hotelName, String region) {
+        // 1. 호텔 위도/경도 얻기 (텍스트 검색)
+        PlaceInfo hotelInfo = findHotelLocation(hotelName, region);
+        if (hotelInfo == null) {
+            Map<String, List<PlaceInfo>> empty = new HashMap<>();
+            empty.put("restaurants", Collections.emptyList());
+            empty.put("attractions", Collections.emptyList());
+            return empty;
         }
 
-        // 2. DB 조회
-        List<Recommendation> stored = recommendationRepository.findByPlaceId(placeId);
-        if (!stored.isEmpty()) {
-            System.out.println("📦 DB에서 불러옴");
-            List<PlaceInfo> converted = stored.stream().map(r -> {
-                PlaceInfo info = new PlaceInfo();
-                info.setName(r.getName());
-                info.setAddress(r.getAddress());
-                info.setLatitude(r.getLatitude());
-                info.setLongitude(r.getLongitude());
-                info.setRating(r.getRating());
-                info.setReviewCount(r.getReviewcount());
-                info.setWebsite(r.getWebsite());
-                return info;
-            }).toList();
+        double lat = hotelInfo.getLatitude();
+        double lng = hotelInfo.getLongitude();
 
-            redisTemplate.opsForValue().set(key, converted, 7, TimeUnit.DAYS);
-            return converted;
-        }
+        // 2. 주변 맛집 10개
+        List<PlaceInfo> restaurants = searchNearby(lat, lng, "restaurant", 10);
 
-        List<PlaceInfo> restaurants = fetchFromGoogleApi(placeId, "restaurant");
-        List<PlaceInfo> attractions = fetchFromGoogleApi(placeId, "観光地");
-    private List<PlaceInfo> fetchFromGoogleApi(Integer placeId, String textQuery) {
+        // 3. 주변 관광지 10개
+        List<PlaceInfo> attractions = searchNearby(lat, lng, "tourist_attraction", 10);
+
+        Map<String, List<PlaceInfo>> result = new HashMap<>();
+        result.put("restaurants", restaurants);
+        result.put("attractions", attractions);
+
+        return result;
+    }
+
+    // 호텔 위치를 검색해서 PlaceInfo로 반환
+    private PlaceInfo findHotelLocation(String hotelName, String region) {
+        String textQuery = hotelName + " " + region;
         try {
-            Place place = placeRepository.findById(placeId)
-                    .orElseThrow(() -> new RuntimeException("해당 장소 없음"));
-
-            double lat = place.getLatitude();
-            double lng = place.getLongitude();
-
             String url = "https://places.googleapis.com/v1/places:searchText";
-
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.set("X-Goog-Api-Key", apiKey);
             headers.set("X-Goog-FieldMask", "*");
 
-            String body = """
+            String body = String.format("""
                     {
                       "textQuery": "%s",
-                      "locationBias": {
+                      "languageCode": "ja",
+                      "regionCode": "JP",
+                      "maxResultCount": 1
+                    }
+                    """, textQuery);
+
+            HttpEntity<String> entity = new HttpEntity<>(body, headers);
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
+
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(response.getBody());
+            JsonNode places = root.path("places");
+            if (!places.isArray() || places.size() == 0) return null;
+
+            JsonNode hotel = places.get(0);
+            PlaceInfo info = new PlaceInfo();
+            info.setName(hotel.path("displayName").path("text").asText(""));
+            info.setAddress(hotel.path("formattedAddress").asText(""));
+            info.setLatitude(hotel.path("location").path("latitude").asDouble());
+            info.setLongitude(hotel.path("location").path("longitude").asDouble());
+            info.setRating(hotel.path("rating").asDouble(0));
+            info.setReviewCount(hotel.path("userRatingCount").asInt(0));
+            info.setWebsite(hotel.path("websiteUri").asText(""));
+            return info;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // Nearby Search API로 장소 검색 (type: "restaurant" or "tourist_attraction")
+    private List<PlaceInfo> searchNearby(double lat, double lng, String type, int limit) {
+        try {
+            String url = "https://places.googleapis.com/v1/places:searchNearby";
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("X-Goog-Api-Key", apiKey);
+            headers.set("X-Goog-FieldMask", "*");
+
+            String body = String.format("""
+                    {
+                      "includedTypes": ["%s"],
+                      "locationRestriction": {
                         "circle": {
                           "center": {
                             "latitude": %f,
                             "longitude": %f
                           },
-                          "radius": 5000.0
+                          "radius": 1000
                         }
                       },
                       "languageCode": "ja",
-                      "regionCode": "JP"
+                      "regionCode": "JP",
+                      "maxResultCount": %d
                     }
-            """.formatted(textQuery, lat, lng);
+                    """, type, lat, lng, limit);
 
             HttpEntity<String> entity = new HttpEntity<>(body, headers);
             RestTemplate restTemplate = new RestTemplate();
@@ -110,20 +138,26 @@ public class PlaceService {
             JsonNode places = root.path("places");
 
             List<PlaceInfo> results = new ArrayList<>();
-            for (JsonNode node : places) {
-                PlaceInfo info = new PlaceInfo();
-                info.setName(node.path("displayName").path("text").asText(""));
-                info.setAddress(node.path("formattedAddress").asText(""));
-                info.setLatitude(node.path("location").path("latitude").asDouble());
-                info.setLongitude(node.path("location").path("longitude").asDouble());
-                info.setRating(node.path("rating").asDouble(0));
-                info.setReviewCount(node.path("userRatingCount").asInt(0));
-                info.setWebsite(node.path("websiteUri").asText(""));
-                results.add(info);
+            if (places.isArray()) {
+                for (JsonNode node : places) {
+                    // 호텔명과 정확히 일치하는 것은 제외
+                    String placeName = node.path("displayName").path("text").asText("");
+                    if (placeName.contains("ホテル") || placeName.toLowerCase().contains("hotel")) continue;
+
+                    PlaceInfo info = new PlaceInfo();
+                    info.setName(placeName);
+                    info.setAddress(node.path("formattedAddress").asText(""));
+                    info.setLatitude(node.path("location").path("latitude").asDouble());
+                    info.setLongitude(node.path("location").path("longitude").asDouble());
+                    info.setRating(node.path("rating").asDouble(0));
+                    info.setReviewCount(node.path("userRatingCount").asInt(0));
+                    info.setWebsite(node.path("websiteUri").asText(""));
+                    results.add(info);
+
+                    if (results.size() >= limit) break;
+                }
             }
-
             return results;
-
         } catch (Exception e) {
             e.printStackTrace();
             return Collections.emptyList();

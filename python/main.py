@@ -1,10 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import accommodations_insert
+from app.routers.accommodationRouter import router as accommodationRouter
 
 app = FastAPI()
-
-app.include_router(accommodations_insert.router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -14,6 +13,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# app.include_router(accommodations_insert.router)
+app.include_router(accommodationRouter)
+
 @app.get("/test")
 def test():
     return {"message": "Hello FastAPI"}
+

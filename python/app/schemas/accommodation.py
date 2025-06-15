@@ -13,8 +13,8 @@ from pydantic import BaseModel
 from datetime import datetime
 
 class AccommodationOut(BaseModel):
-    id: int
-    host_id: int
+    accommodation_id: int
+    host_user_id: int
     name: str
     address: str | None = None
     description: str | None = None

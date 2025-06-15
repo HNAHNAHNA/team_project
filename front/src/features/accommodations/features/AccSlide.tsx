@@ -12,7 +12,7 @@ import SkeletonCard from "./SkeletonCard";
 import WishListButton from "./icons/WishListButton";
 
 function AccSlide({ hotelList, onHotelClick }: AccSlideProps) {
-    const [loading, setLoading] = useState(true);
+    // const [loading, setLoading] = useState(true);
     const [data, setData] = useState<AccommodationOut[]>([]);
     const swiperRef = useRef<SwiperCore | null>(null);
     const slideCount = 5;
@@ -22,8 +22,10 @@ function AccSlide({ hotelList, onHotelClick }: AccSlideProps) {
 
     useEffect(() => {
         setData(hotelList);
-        setLoading(false); 
+        // setLoading(false); 
     }, [hotelList]);
+
+    const showSkeleton = data.length === 0;
 
     return (
         <div
@@ -40,7 +42,7 @@ function AccSlide({ hotelList, onHotelClick }: AccSlideProps) {
                 autoplay={{ delay: 2500, disableOnInteraction: false }}
                 className="w-full h-full"
             >
-                {loading
+                {showSkeleton // data.length가 0일 때 스켈레톤 표시
                     ? Array.from({ length: slideCount }).map((_, idx) => (
                         <SwiperSlide key={idx} className="flex justify-center items-center cursor-pointer">
                             <SkeletonCard />
@@ -65,17 +67,19 @@ function AccSlide({ hotelList, onHotelClick }: AccSlideProps) {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="text-gray-400">イメージがありません</div>
+                                    <div className="relative w-full h-60 overflow-hidden rounded-xl bg-gray-200 flex items-center justify-center">
+                                        <div className="text-gray-400">イメージがありません</div>
+                                    </div>
                                 )}
                                 <div className="flex flex-col items-center gap-1 p-2 text-center">
                                     <span className="genmaru font-bold text-black text-sm">
                                         {hotel.address}のホテル
                                     </span>
                                     <div className="text-sm text-gray-700">
-                                        <ReviewAverage /> {hotel.review_average}
+                                        <ReviewAverage /> {hotel.review_average?.toFixed(2) ?? 'N/A'}
                                     </div>
                                     <div className="text-sm text-gray-700">
-                                        ¥{hotel.charge?.toLocaleString() ?? "不明"} /1泊の料金
+                                        ¥{hotel.charge.toLocaleString()} /1泊の料金
                                     </div>
                                 </div>
                             </div>

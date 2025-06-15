@@ -1,27 +1,4 @@
-export interface HotelList {
-  pagingInfo: {
-    recordCount: number;
-    pageCount: number;
-    page: number;
-    first: number;
-    last: number;
-  };
-  hotels: {
-    hotel?: {
-      hotelBasicInfo: HotelBasicInfo;
-      hotelRatingInfo?: any;
-    }[];
-  }[];
-}
-
-export interface HotelBasicInfo {
-  hotelNo: number;
-  hotelName: string;
-  hotelImageUrl?: string;
-  address1?: string;
-  address2?: string;
-  reviewAverage: number;
-}
+export type HotelBasicInfo = AccommodationOut;
 
 export interface FlatRoom {
   roomBasicInfo: {
@@ -51,7 +28,33 @@ export type HotelWrapper = {
   }>;
 };
 
-export type AccSlideProps = {
-  hotelList: HotelWrapper[];
-  onHotelClick?: (hotel: HotelBasicInfo & {totalCharge?: number}) => void;
+export interface AccSlideProps {
+  hotelList: AccommodationOut[];
+  onHotelClick?: (hotel: AccommodationOut) => void;
+}
+
+export interface AccommodationOut {
+  id: number;
+  host_id: number;
+  name: string;
+  address: string | null;
+  description: string | null;
+  image_url: string | null;
+  created_at: string | null;
+  host_user_id: number | null;
+  charge: number;
+  latitude: number;
+  longitude: number;
+  review_count: number | null;
+  review_average: number | null;
+  checkin_time: string;
+  checkout_time: string;
+  telephone: string | null;
+  hotel_no: number;
+  charge: number;
+};
+
+export interface LocationData {
+    title: string;
+    keyword: string;
 }

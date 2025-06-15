@@ -16,7 +16,7 @@ from app.database.connection import Base
 class Accommodation(Base):
     __tablename__ = "accommodations"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    accommodation_id = Column(Integer, primary_key=True, autoincrement=True)
     host_user_id = Column(BigInteger, nullable=True)
     name = Column(String(255), nullable=False)
     address = Column(String(255), nullable=True)

@@ -1,18 +1,29 @@
-package com.staynguide.backend.user.controller; // 컨트롤러는 별도의 'controller' 패키지에 위치합니다.
+package com.staynguide.backend.user.controller; 
 
-import com.staynguide.backend.user.dto.UserJoinRequest; // DTO import
-import com.staynguide.backend.user.service.UserService;   // Service import
-import jakarta.validation.Valid; // @Valid 어노테이션 사용을 위해 import
+import com.staynguide.backend.user.dto.UserJoinRequest; 
+import com.staynguide.backend.user.dto.UserResponseDto;
+import com.staynguide.backend.user.dto.UserUpdateRequest;
+import com.staynguide.backend.user.dto.UserPasswordUpdateRequest;
+import com.staynguide.backend.user.dto.UserWithdrawalRequest;
+import com.staynguide.backend.user.entity.User;
+import com.staynguide.backend.user.service.UserService;   
+import com.staynguide.backend.user.service.CustomUserDetails;
+import jakarta.validation.Valid; 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus; // HTTP 상태 코드
 import org.springframework.http.ResponseEntity; // HTTP 응답 객체
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping; // 아이디 중복 체크를 위한 GetMapping
+import org.springframework.web.bind.annotation.PutMapping; 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam; // 쿼리 파라미터 받기 위함
 
+@Slf4j
 @RestController // REST API를 위한 컨트롤러임을 명시
 @RequestMapping("/api/v1/users") // 기본 URL 경로 설정
 @RequiredArgsConstructor // final 필드를 이용한 생성자 자동 생성 (의존성 주입)
@@ -47,51 +58,7 @@ public class UserController {
     public ResponseEntity<String> checkEmailDuplicate(@RequestParam("email") String email) {
         // @RequestParam: 쿼리 파라미터에서 'email' 값을 받음
 
-        // UserRepository를 직접 사용하거나, UserService에 별도의 중복 체크 메서드를 추가할 수 있습니다.
-        // 여기서는 서비스 계층에 existsByEmail 메서드를 추가한다고 가정합니다.
-        // 실제로는 UserRepository를 주입받아 직접 사용하는 것이 더 일반적일 수 있습니다.
-        // 하지만 서비스 계층에서 유효성 검증 또는 추가 비즈니스 로직이 있다면 서비스 메서드를 호출하는 것이 좋습니다.
-
-        // TODO: UserService에 existsByEmail 메서드를 추가하여 사용하거나,
-        // 현재는 UserRepository를 직접 주입받아 사용하는 것으로 임시 처리합니다.
-        // 의존성 주입을 위해 UserService 대신 UserRepository를 주입받거나, UserService에 checkEmailExists 메서드 추가 필요.
-        // 여기서는 UserService에 이메일 중복 체크 메서드를 추가한다고 가정하겠습니다.
-
-        // 아래 코드는 UserService에 checkEmailExists(String email) 메서드가 있다고 가정한 것입니다.
-        // 만약 UserService에 이메일 중복 체크 메서드를 따로 만들지 않고 UserRepository를 직접 사용하고 싶다면
-        // UserController에 UserRepository를 주입받아 사용해야 합니다.
-        // 예: private final UserRepository userRepository;
-
         try {
-            // Service에 중복 체크 로직을 위임 (Service 메서드 추가 예정)
-            // 현재 UserService에는 join만 있으므로, 이메일 중복 체크용 메서드를 UserService에 추가해야 합니다.
-            // 일단은 아래에 임시로 로직을 구현해두겠습니다.
-            // (실제 프로젝트에서는 UserService에 existsByEmail 메서드를 추가하는 것이 좋습니다.)
-
-            // 임시: UserRepository를 주입받아 직접 사용
-            // private final UserRepository userRepository; 를 추가해야 합니다.
-            // if (userRepository.existsByEmail(email)) {
-            //    return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용 중인 이메일입니다.");
-            // } else {
-            //    return ResponseEntity.ok("사용 가능한 이메일입니다.");
-            // }
-
-            // UserService에 existsByEmail(String email) 메서드를 추가했다고 가정하고 사용
-            // return userService.checkEmailExists(email); // 이메일이 존재하면 true, 없으면 false
-            // 위 메서드가 true/false를 반환하면 아래와 같이 응답 처리
-            // if (userService.isEmailExists(email)) { // isEmailExists라는 메서드를 UserService에 추가한다고 가정
-            //     return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용 중인 이메일입니다.");
-            // } else {
-            //     return ResponseEntity.ok("사용 가능한 이메일입니다.");
-            // }
-
-            // 가장 간단하게, UserService가 이미 이메일 중복 체크 로직을 가지고 있으므로,
-            // 별도의 API는 클라이언트가 직접 이메일 필드에 입력할 때 비동기적으로 호출하는 용도로 사용하고,
-            // 실제 회원가입 시에는 서비스 내부에서 최종 검증을 하는 것이 좋습니다.
-
-            // 일단 Service에 직접 중복 체크 메서드를 추가하는 것으로 진행하겠습니다.
-            // 아래에 `isEmailExists` 메서드를 UserService 인터페이스 및 구현체에 추가할 것입니다.
-
             // 서비스 계층에 email 중복 체크 메서드를 위임 (아래 UserService 수정 참고)
             boolean isExists = userService.isEmailExists(email);
             if (isExists) {
@@ -99,9 +66,93 @@ public class UserController {
             } else {
                 return ResponseEntity.ok("사용 가능한 이메일입니다.");
             }
-
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이메일 중복 확인 중 오류가 발생했습니다.");
         }
+    }
+    
+    /**
+     * 로그인된 사용자 본인의 정보를 조회합니다.
+     * @param user 현재 로그인된 사용자 객체 (Access Token 기반으로 Security Context에서 주입)
+     * @return 조회된 사용자 정보를 담은 UserResponseDto DTO
+     */
+    @GetMapping("/me") // <<< 이 메서드를 추가합니다. GET /api/v1/users/me 요청 처리
+    public ResponseEntity<UserResponseDto> getMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) { 
+        // @AuthenticationPrincipal User user: Spring Security Context에 저장된 UserDetails (우리의 User 엔티티) 객체를 직접 주입받음
+        // SecurityConfig에서 "/api/v1/users/me"를 .authenticated()로 설정하면 Access Token이 필수로 필요
+
+        if (customUserDetails == null) {
+            // 이 코드는 사실상 호출될 일이 거의 없음. Access Token이 없으면 JwtAuthenticationFilter에서 이미 401 반환.
+            // 만약 CustomUserDetails를 썼다면 null 체크를 해야 하지만, User 엔티티 직접 쓰므로 인증 실패 시 User 객체 자체가 주입되지 않음
+            log.warn("인증되지 않은 사용자가 /api/v1/users/me 접근 시도.");
+            throw new IllegalArgumentException("인증된 사용자만 접근할 수 있습니다."); // GlobalExceptionHandler에서 처리됨
+        }
+
+        log.info("사용자 정보 조회 요청: {}", customUserDetails.getUsername());
+        UserResponseDto userInfo = userService.getUserInfo(customUserDetails.getUsername()); 
+        return ResponseEntity.ok(userInfo);
+    }
+    
+    /**
+     * 로그인된 사용자 본인의 정보를 수정합니다.
+     * @param customUserDetails 현재 로그인된 사용자 객체 (Access Token 기반으로 Security Context에서 주입)
+     * @param request 수정할 정보를 담은 UserUpdateRequest DTO
+     * @return 수정된 사용자 정보를 담은 UserResponseDto DTO
+     */
+    @PutMapping("/me") // <<< 이 메서드를 추가합니다. PUT /api/v1/users/me 요청 처리
+    public ResponseEntity<UserResponseDto> updateMyInfo(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @Valid @RequestBody UserUpdateRequest request) { // <<< @Valid와 UserUpdateRequest 사용
+        
+        if (customUserDetails == null) {
+            log.warn("인증되지 않은 사용자가 /api/v1/users/me (PUT) 접근 시도.");
+            throw new IllegalArgumentException("인증된 사용자만 접근할 수 있습니다.");
+        }
+
+        log.info("사용자 정보 수정 요청: {}", customUserDetails.getUsername());
+        UserResponseDto updatedUserInfo = userService.updateUserInfo(customUserDetails.getUsername(), request);
+        return ResponseEntity.ok(updatedUserInfo);
+    }
+    
+    /**
+     * 로그인된 사용자의 비밀번호를 변경합니다.
+     * @param customUserDetails 현재 로그인된 사용자 객체 (Access Token 기반으로 Security Context에서 주입)
+     * @param request 비밀번호 변경 요청 DTO
+     * @return 성공 메시지
+     */
+    @PutMapping("/password")
+    public ResponseEntity<String> updatePassword(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @Valid @RequestBody UserPasswordUpdateRequest request) { 
+    	
+        if (customUserDetails == null) {
+            log.warn("인증되지 않은 사용자가 /api/v1/users/password 접근 시도.");
+            throw new IllegalArgumentException("인증된 사용자만 접근할 수 있습니다.");
+        }
+
+        log.info("사용자 비밀번호 변경 요청: {}", customUserDetails.getUsername());
+        userService.updatePassword(customUserDetails.getUsername(), request);
+        return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
+    }
+    
+    /**
+     * 로그인된 사용자의 계정을 탈퇴(삭제)합니다.
+     * @param customUserDetails 현재 로그인된 사용자 객체 (Access Token 기반으로 Security Context에서 주입)
+     * @param request 탈퇴 확인을 위한 비밀번호를 담은 UserWithdrawalRequest DTO
+     * @return 성공 메시지
+     */
+    @DeleteMapping("/me") // <<< 이 메서드를 추가합니다. DELETE /api/v1/users/me 요청 처리
+    public ResponseEntity<String> withdrawUser(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @Valid @RequestBody UserWithdrawalRequest request) { // <<< @Valid와 UserWithdrawalRequest 사용
+        
+        if (customUserDetails == null) {
+            log.warn("인증되지 않은 사용자가 /api/v1/users/me (DELETE) 접근 시도.");
+            throw new IllegalArgumentException("인증된 사용자만 접근할 수 있습니다.");
+        }
+
+        log.info("회원 탈퇴 요청: {}", customUserDetails.getUsername());
+        userService.withdrawUser(customUserDetails.getUsername(), request); // 서비스 호출
+        return ResponseEntity.ok("회원 탈퇴가 성공적으로 완료되었습니다.");
     }
 }

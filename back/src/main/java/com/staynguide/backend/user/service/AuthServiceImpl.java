@@ -34,14 +34,12 @@ public class AuthServiceImpl implements AuthService {
     @Value("${jwt.refresh-token-expiration-in-days}")
     private long refreshTokenExpirationInDays;
 
-
     @Override
     @Transactional
     public UserLoginResponse login(UserLoginRequest request) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-            );
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -62,6 +60,12 @@ public class AuthServiceImpl implements AuthService {
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
                     .expiresIn(expiresInSeconds)
+                    .user(UserLoginResponse.UserInfo.builder()
+                        .id(user.getUserId()) // ✅ userId가 맞음
+                        .email(user.getEmail())
+                        .name(user.getUsername()) // ✅ username 필드임 (주의: getName() 아님)
+                        .role(user.getRole().name()) // ✅ Enum이므로 name() 호출
+                        .build())
                     .build();
 
         } catch (AuthenticationException e) {
@@ -89,7 +93,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    @Transactional 
+    @Transactional
     public UserLoginResponse reissueToken(TokenReissueRequest request) {
         // --- 여기부터 디버그 로그 추가 시작 ---
         log.debug("DEBUG: [Reissue] reissueToken 메서드 시작. 요청 Refresh Token: {}", request.getRefreshToken());
@@ -113,7 +117,8 @@ public class AuthServiceImpl implements AuthService {
         log.debug("DEBUG: [Reissue] DB에서 사용자 정보 조회 완료. 사용자 ID: {}", user.getUserId());
 
         if (user.getRefreshToken() == null || !user.getRefreshToken().equals(refreshToken)) {
-            log.warn("DB와 일치하지 않는 Refresh Token으로 재발급 시도 (사용자: {}). DB: {}, 요청: {}", email, user.getRefreshToken(), refreshToken);
+            log.warn("DB와 일치하지 않는 Refresh Token으로 재발급 시도 (사용자: {}). DB: {}, 요청: {}", email, user.getRefreshToken(),
+                    refreshToken);
             throw new IllegalArgumentException("저장된 Refresh Token과 일치하지 않습니다. 다시 로그인해주세요.");
         }
         log.debug("DEBUG: [Reissue] DB 저장 Refresh Token 일치 확인 통과.");
@@ -129,8 +134,7 @@ public class AuthServiceImpl implements AuthService {
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 customUserDetails,
                 null,
-                customUserDetails.getAuthorities()
-        );
+                customUserDetails.getAuthorities());
 
         String newAccessToken = jwtTokenProvider.generateAccessToken(authentication);
         String newRefreshToken = jwtTokenProvider.generateRefreshToken(authentication);
@@ -139,11 +143,11 @@ public class AuthServiceImpl implements AuthService {
         // 새로 발급된 Refresh Token으로 DB 업데이트
         user.setRefreshToken(newRefreshToken);
         user.setTokenExpiryDate(LocalDateTime.now().plusDays(refreshTokenExpirationInDays));
-        
+
         // --- 이 두 줄의 로그가 핵심입니다. ---
-        log.debug("DEBUG: [Reissue] user 엔티티 Refresh Token 및 만료일자 업데이트 직전. 새 토큰: {}", newRefreshToken); 
+        log.debug("DEBUG: [Reissue] user 엔티티 Refresh Token 및 만료일자 업데이트 직전. 새 토큰: {}", newRefreshToken);
         userRepository.save(user); // <<< 이 라인!
-        log.debug("DEBUG: [Reissue] user 엔티티 저장 완료. UPDATE 쿼리 발생 확인!"); 
+        log.debug("DEBUG: [Reissue] user 엔티티 저장 완료. UPDATE 쿼리 발생 확인!");
         // ------------------------------------
 
         log.info("Access Token 재발급 완료 (사용자: {})", email);

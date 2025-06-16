@@ -11,13 +11,12 @@ function UserMenu() {
     const buttonRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        setIsOpen(false);
-        logout();
-        navigate("/");
-    };
+    const handleLogout = async () => {
+        await logout();
+        navigate('/');
+    }
 
-    const { user, isLoggedIn, isAdmin, isUser, logout, login } = useAuth();
+    const { user, isLoggedIn, logout } = useAuth();
 
     const toggleOpen = useCallback(() => {
         setIsOpen((value) => !value)
@@ -119,7 +118,7 @@ function UserMenu() {
                                         }}
                                         label="マイページ"
                                     />
-                                    <MenuItem 
+                                    <MenuItem
                                         onClick={() => {
                                             setIsOpen(false)
                                             navigate('/mypage?tab=reservations')

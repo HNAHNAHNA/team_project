@@ -1,3 +1,4 @@
+from pydantic import ConfigDict
 from pydantic_settings import BaseSettings
 from dotenv import load_dotenv
 
@@ -14,7 +15,11 @@ class Settings(BaseSettings):
     application_Secret: str
     affiliate_ID: str
 
-    class Config:
-        env_file = ".env"
+    SECRET_KEY: str
+
+    model_config = ConfigDict(
+        env_file=".env",
+        extra="ignore",       # 선언되지 않은 env 변수는 무시하도록
+    )
 
 settings = Settings()

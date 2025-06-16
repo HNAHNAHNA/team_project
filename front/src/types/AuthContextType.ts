@@ -2,13 +2,14 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  password: string;
-  role: 'admin' | 'user';
+  role: 'ADMIN' | 'USER' | 'HOST';
 }
 
 export interface AuthContextType {
   user: User | null;
   isLoggedIn: boolean;
-  login: (email: string, password: string) => User | null;
-  logout: () => void;
+  isAdmin: boolean;
+  isUser: boolean;
+  login: (email: string, password: string) => Promise<User | null>;
+  logout: () => Promise<void>;
 }

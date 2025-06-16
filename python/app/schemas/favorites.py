@@ -9,11 +9,15 @@
 from pydantic import BaseModel
 from datetime import datetime
 
-class favoritesOut (BaseModel):
+class FavoriteCreate(BaseModel):
+    user_id: int
+    accommodation_id: int
+
+class FavoriteOut(BaseModel):
     favorite_id: int
     user_id: int
     accommodation_id: int
-    created_at: datetime | None = None
-    
-    class config:
-        orm_mode = True
+    created_at: datetime
+
+    class Config:
+        from_attributes = True

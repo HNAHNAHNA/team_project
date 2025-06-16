@@ -1,59 +1,55 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { REGION_MAP } from '../../constants/regionMap';
 import Container from './Container';
-import hotelList from '../../data/hotels.json';
 import { useEffect, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { AnimatePresence, motion } from 'motion/react';
-
-interface SelectedHotel {
-    hotelNo: number;
-    name: string;
-    photoUrl: string;
-    rating: number;
-    charge: string | number;
-    review: string;
-}
-
+import type { AccommodationOut, SelectedHotel } from '../../types/HotelList';
 
 const SearchResults = () => {
+    const [allAccommodations, setAllAccommodations] = useState<AccommodationOut[]>([]);
     const [loading, setLoading] = useState(true);
-    const [skeletonCount, setSkeletonCount] = useState(5);
+    const [skeletonCount] = useState(5);
     const [selectedData, setSelectedData] = useState<SelectedHotel | null>(null);
     const [searchParams] = useSearchParams();
-    const search = searchParams.get("search");
-    const navigator = useNavigate();
-
-    const region = Object.entries(REGION_MAP).filter(([_, name]) =>
-        name.includes(search || "")
-    );
-
-    const allHotelList = hotelList.hotels;
-
-    const locationHotelLists = allHotelList.filter(wrapper => {
-        const basicInfo = wrapper.hotel.find(item => item.hotelBasicInfo);
-        if (!basicInfo) return false;
-
-        return region.some(([_, regionName]) =>
-            basicInfo.hotelBasicInfo?.address1.includes(regionName)
-        );
-    });
+    const search = searchParams.get("search") || "";
+    const navigate = useNavigate();
 
     useEffect(() => {
-        setSkeletonCount(locationHotelLists.length || 5);
-        const timeout = setTimeout(() => {
-            setLoading(false);
-        }, 1500);
-        return () => clearTimeout(timeout);
-    }, [search]);
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                const res = await fetch("http://localhost:8000/accommodations");
+                if (!res.ok) throw new Error("숙소 데이터를 불러오지 못했습니다.");
+
+                const accommodations = await res.json();
+                setAllAccommodations(accommodations);
+            } catch (err) {
+                console.error("숙소 로딩 실패:", err);
+                setAllAccommodations([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const regionKeywords = Object.entries(REGION_MAP)
+        .filter(([_, name]) => name.includes(search))
+        .map(([_, name]) => name);
+
+    const filteredHotels = allAccommodations.filter(hotel =>
+        hotel.address && regionKeywords.some(regionName => hotel.address.includes(regionName))
+    );
 
     const handleCardClick = (hotel: SelectedHotel) => {
         setSelectedData(hotel);
     };
 
     const handleDetailButtonClick = (hotelNo: number) => {
-        navigator(`/detail/${hotelNo}`)
-    }
+        navigate(`/detail/${hotelNo}`);
+    };
 
     const sidebarContent = loading ? (
         <div className="p-4">
@@ -66,50 +62,46 @@ const SearchResults = () => {
     ) : (
         <div className="p-4">
             <h2 className="text-lg font-bold mb-2">「{search}」の検索結果</h2>
-            {locationHotelLists.map((hotelWrapper, index) => {
-                const basicInfo = hotelWrapper.hotel.find(h => h.hotelBasicInfo)?.hotelBasicInfo;
-                const roomsInfo = hotelWrapper.hotel.find(h => h.roomInfo)?.roomInfo?.[0];
-                if (!basicInfo) return null;
 
-                const hotel: SelectedHotel = {
-                    hotelNo: basicInfo.hotelNo,
-                    name: basicInfo.hotelName,
-                    photoUrl: basicInfo.hotelImageUrl,
-                    rating: basicInfo.reviewAverage,
-                    charge: roomsInfo?.dailyCharge?.total || '카테고리 없음',
-                };
-
-                return (
+            {filteredHotels.length === 0 ? (
+                <div className="text-gray-500 text-sm">該当するホテルがありません。</div>
+            ) : (
+                filteredHotels.map((hotel, index) => (
                     <div
                         key={index}
-                        onClick={() => handleCardClick(hotel)}
+                        onClick={() =>
+                            handleCardClick({
+                                hotelNo: hotel.hotel_no,
+                                name: hotel.name,
+                                photoUrl: hotel.image_url || "",
+                                rating: hotel.review_average || 0,
+                                charge: hotel.charge,
+                                review: "", // 필요시 백엔드 추가
+                            })
+                        }
                         className="flex flex-row items-start border rounded-xl w-[95%] gap-4 m-2 cursor-pointer hover:bg-neutral-100 hover:shadow-md"
                     >
                         <img
-                            src={hotel.photoUrl}
+                            src={hotel.image_url || "/no-image.png"}
                             className="rounded-xl m-4 object-cover w-24 h-24"
                             alt={hotel.name}
                         />
                         <div className="flex flex-col m-2">
                             <div className="text-xl font-bold">{hotel.name}</div>
-                            <div>{hotel.rating}</div>
-                            <div>{roomsInfo?.dailyCharge?.total?.toLocaleString()}￥</div>
+                            <div>{hotel.review_average ?? "N/A"}</div>
+                            <div>{hotel.charge.toLocaleString()}￥</div>
                         </div>
                     </div>
-                );
-            })}
+                ))
+            )}
         </div>
     );
-    const mapContent = (
-        <div className="text-white text-center">지도 표시 영역</div>
-    );
+
+    const mapContent = <div className="text-white text-center">지도 표시 영역</div>;
 
     return (
         <div>
-            <Container
-                hotelList={sidebarContent}
-                mapArea={mapContent}
-            />
+            <Container hotelList={sidebarContent} mapArea={mapContent} />
             <AnimatePresence>
                 {selectedData && (
                     <motion.div
@@ -134,7 +126,6 @@ const SearchResults = () => {
                             >
                                 ❌
                             </button>
-
                             <h2 className="text-2xl font-bold mb-3">{selectedData.name}</h2>
                             <img
                                 src={selectedData.photoUrl}
@@ -143,10 +134,8 @@ const SearchResults = () => {
                             />
                             <p><strong>Rating:</strong> {selectedData.rating}</p>
                             <p><strong>charge:</strong> {selectedData.charge}￥</p>
-                            <p className="mt-2">{selectedData.review}</p>
-                            <button
-                                onClick={() => handleDetailButtonClick(selectedData.hotelNo)}>
-                                    자세히 보려면 클릭!
+                            <button onClick={() => handleDetailButtonClick(selectedData.hotelNo)}>
+                                자세히 보려면 클릭!
                             </button>
                         </motion.div>
                     </motion.div>

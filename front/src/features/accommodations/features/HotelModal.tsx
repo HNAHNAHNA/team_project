@@ -40,17 +40,17 @@ function HotelModal({ selectedData, setSelectedData, handleDetailButtonClick }: 
                             </button>
                             <div className='flex flex-row gap-4'>
                                 <img
-                                    src={selectedData.hotelImageUrl}
-                                    alt={selectedData.hotelName}
+                                    src={selectedData.image_url}
+                                    alt={selectedData.name}
                                     className="w-1/2 h-1/2 max-h object-cover rounded mb-4"
                                 />
                                 <div className='flex flex-col gap-4'>
-                                    <h2 className="text-2xl font-bold mb-3">{selectedData.hotelName}</h2>
-                                    <p><strong>Rating:</strong> {selectedData.reviewAverage}</p>
+                                    <h2 className="text-2xl font-bold mb-3">{selectedData.name}</h2>
+                                    <p><strong>Rating:</strong> {selectedData.review_average}</p>
                                     <p><strong>charge:</strong> {selectedData.totalCharge}￥</p>
                                     <button
                                         className=''
-                                        onClick={() => handleDetailButtonClick(selectedData.hotelNo)}>
+                                        onClick={() => handleDetailButtonClick(selectedData.accommodation_id)}>
                                         자세히 보려면 클릭!
                                     </button>
                                 </div>

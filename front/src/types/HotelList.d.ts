@@ -35,7 +35,7 @@ export interface AccSlideProps {
 
 export interface AccommodationOut {
   id: number;
-  host_id: number;
+  accommodation_id: number;
   name: string;
   address: string | null;
   description: string | null;
@@ -53,6 +53,14 @@ export interface AccommodationOut {
   hotel_no: number;
   charge: number;
 };
+
+interface SelectedHotel {
+  hotelNo: number;
+  name: string;
+  photoUrl: string | null;
+  rating: number | null;
+  charge: string | number;
+}
 
 export interface LocationData {
     title: string;

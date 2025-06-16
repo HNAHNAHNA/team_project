@@ -10,9 +10,9 @@ import type SwiperCore from "swiper";
 import ReviewAverage from "./icons/reviewAverage";
 import SkeletonCard from "./SkeletonCard";
 import WishListButton from "./icons/WishListButton";
+import { useAuth } from "../../../contexts/AuthContext";
 
 function AccSlide({ hotelList, onHotelClick }: AccSlideProps) {
-    // const [loading, setLoading] = useState(true);
     const [data, setData] = useState<AccommodationOut[]>([]);
     const swiperRef = useRef<SwiperCore | null>(null);
     const slideCount = 5;
@@ -20,10 +20,104 @@ function AccSlide({ hotelList, onHotelClick }: AccSlideProps) {
     const handleMouseEnter = () => swiperRef.current?.autoplay?.stop();
     const handleMouseLeave = () => swiperRef.current?.autoplay?.start();
 
+    const { validateAccessToken, isLoggedIn, user } = useAuth();
+    const [favoriteMap, setFavoriteMap] = useState<Record<number, boolean>>({});
+
+    useEffect(() => {
+        if (!isLoggedIn || !user) return;
+        if (!hotelList || hotelList.length === 0) return;
+
+        const checkFavorites = async () => {
+            await validateAccessToken();
+
+            const results: Record<number, boolean> = {};
+            for (const hotel of hotelList) {
+                if (!hotel.id) continue;
+                try {
+                    const res = await fetch(
+                        `http://localhost:8000/api/v1/favorites/check/${hotel.id}?user_id=${user.id}`
+                    );
+                    results[hotel.id] = res.ok && (await res.json()) === true;
+                } catch (err) {
+                    console.error("찜 상태 확인 실패:", err);
+                }
+            }
+
+            setFavoriteMap(results);
+        };
+
+        checkFavorites();
+    }, [hotelList, isLoggedIn, user, validateAccessToken]);
+
     useEffect(() => {
         setData(hotelList);
-        // setLoading(false); 
     }, [hotelList]);
+
+    const toggleFavorite = async (hotelId: number) => {
+        if (!isLoggedIn || !user) return;
+
+        try {
+            await validateAccessToken();
+
+            const isCurrentlyFavorite = favoriteMap[hotelId] === true;
+
+            if (isCurrentlyFavorite) {
+                // 찜 해제
+                const res = await fetch(
+                    `http://localhost:8000/api/v1/favorites/delete?user_id=${user.id}&accommodation_id=${hotelId}`,
+                    { method: "DELETE" }
+                );
+                if (!res.ok) throw new Error("찜 해제 실패");
+
+                setFavoriteMap((prev) => ({
+                    ...prev,
+                    [hotelId]: false,
+                }));
+            } else {
+                // 찜 등록
+                const res = await fetch("http://localhost:8000/api/v1/favorites", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        user_id: user.id,
+                        accommodation_id: hotelId,
+                    }),
+                });
+                if (!res.ok) throw new Error("찜 등록 실패");
+
+                setFavoriteMap((prev) => ({
+                    ...prev,
+                    [hotelId]: true,
+                }));
+            }
+        } catch (err) {
+            console.error("찜 처리 중 오류:", err);
+        }
+    };
+
+    useEffect(() => {
+        const fetchFavoriteMap = async () => {
+            if (!user || !isLoggedIn) return;
+
+            try {
+                await validateAccessToken();
+                const res = await fetch(`http://localhost:8000/api/v1/favorites/user/${user.id}`);
+                const data = await res.json();
+
+                const map: Record<number, boolean> = {};
+                data.forEach((fav: { accommodation_id: number }) => {
+                    map[fav.accommodation_id] = true;
+                });
+                setFavoriteMap(map);
+            } catch (e) {
+                console.error("찜 여부 로딩 실패:", e);
+            }
+        };
+
+        fetchFavoriteMap();
+    }, [user, isLoggedIn, validateAccessToken]);
 
     const showSkeleton = data.length === 0;
 
@@ -42,7 +136,7 @@ function AccSlide({ hotelList, onHotelClick }: AccSlideProps) {
                 autoplay={{ delay: 2500, disableOnInteraction: false }}
                 className="w-full h-full"
             >
-                {showSkeleton // data.length가 0일 때 스켈레톤 표시
+                {showSkeleton
                     ? Array.from({ length: slideCount }).map((_, idx) => (
                         <SwiperSlide key={idx} className="flex justify-center items-center cursor-pointer">
                             <SkeletonCard />
@@ -63,7 +157,14 @@ function AccSlide({ hotelList, onHotelClick }: AccSlideProps) {
                                             className="w-full h-full object-cover"
                                         />
                                         <div className="absolute top-3 right-3 z-10">
-                                            <WishListButton hotelNo={hotel.id} />
+                                            <WishListButton
+                                                hotelId={hotel.accommodation_id}
+                                                isFavorite={favoriteMap[hotel.accommodation_id]}
+                                                onToggle={(id) => {
+                                                    console.log("호텔 ID:", id);
+                                                    toggleFavorite(id);
+                                                }}
+                                            />
                                         </div>
                                     </div>
                                 ) : (

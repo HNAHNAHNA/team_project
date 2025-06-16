@@ -63,7 +63,83 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setAccessToken(null);
     setUser(null);
   };
-  
+
+  // 토근 유효성 검사 (없으면 refresh) 
+  const validateAccessToken = async (): Promise<string | null> => {
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      // DEBUG: accessToken 없음 → 로그인 안된 상태
+      console.log("DEBUG: accessToken 없음. 로그아웃 처리");
+      logout();
+      return null;
+    }
+
+    function parseJwt(token: string): any {
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split('')
+            .map(c => '%' + c.charCodeAt(0).toString(16).padStart(2, '0'))
+            .join('')
+        );
+        return JSON.parse(jsonPayload);
+      } catch (e) {
+        console.error("DEBUG: JWT 파싱 실패", e); // DEBUG
+        return {};
+      }
+    }
+
+    const decoded = parseJwt(token);
+    const now = Date.now() / 1000;
+
+    if (!decoded.exp || decoded.exp < now) {
+      // DEBUG: accessToken 만료됨 → refresh 시도
+      console.log("DEBUG: accessToken 만료. refreshToken으로 재발급 시도");
+
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (!refreshToken) {
+        // DEBUG: refreshToken 없음 → 완전 만료
+        console.log("DEBUG: refreshToken 없음. 로그아웃 처리");
+        logout();
+        return null;
+      }
+
+      try {
+        const res = await fetch("http://localhost:8000/refresh", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refreshToken: refreshToken }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          // DEBUG: 토큰 재발급 성공
+          console.log("DEBUG: 토큰 재발급 성공", data);
+          localStorage.setItem("accessToken", data.accessToken);
+          localStorage.setItem("refreshToken", data.refreshToken);
+          setAccessToken(data.accessToken);
+          return data.accessToken;
+        } else {
+          // DEBUG: refreshToken 유효하지 않음 → 로그아웃
+          console.log("DEBUG: refreshToken 유효하지 않음. 로그아웃 처리");
+          logout();
+          return null;
+        }
+      } catch (err) {
+        console.error("DEBUG: 토큰 재발급 실패", err);
+        logout();
+        return null;
+      }
+    }
+
+    // DEBUG: accessToken 유효함
+    console.log("DEBUG: accessToken 유효함");
+    return token;
+  };
+
   return (
     <AuthContext.Provider value={{
       user,
@@ -71,7 +147,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       isAdmin: user?.role === 'ADMIN',
       isUser: user?.role === 'USER',
       login,
-      logout
+      logout,
+      validateAccessToken
     }}>
       {children}
     </AuthContext.Provider>

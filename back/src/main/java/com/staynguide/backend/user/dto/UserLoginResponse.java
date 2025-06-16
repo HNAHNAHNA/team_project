@@ -3,6 +3,7 @@ package com.staynguide.backend.user.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.AllArgsConstructor;
 
 @Getter
@@ -21,6 +22,7 @@ public class UserLoginResponse {
     private UserInfo user;
 
     @Getter
+    @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder

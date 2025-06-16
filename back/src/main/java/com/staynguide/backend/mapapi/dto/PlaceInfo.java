@@ -9,6 +9,7 @@ public class PlaceInfo {
     private double rating;
     private Integer reviewcount;
     private String website;
+    private String imageurl;
 
 
     public PlaceInfo() {
@@ -70,5 +71,13 @@ public class PlaceInfo {
 
     public void setWebsite(String website) {
         this.website = website;
+    }
+
+    public String getImageurl() {
+        return imageurl;
+    }
+
+    public void setImageurl(String imageurl) {
+        this.imageurl = imageurl;
     }
 }

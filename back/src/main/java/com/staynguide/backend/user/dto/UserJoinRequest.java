@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import com.staynguide.backend.user.enums.Role;
 
 @Getter
 @Setter
@@ -38,4 +39,6 @@ public class UserJoinRequest {
     private String zipcode;        // 우편번호 (u_zipcode)
     private String addressMain;    // 기본 주소 (u_address_main)
     private String addressDetail;  // 상세 주소 (u_address_detail)
+    
+    private Role role;	// 사용자가 선택한 역할 (GUEST, HOST)
 }

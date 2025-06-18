@@ -39,16 +39,31 @@ public class UserServiceImpl implements UserService {
 		if (request.getPhoneNumber() != null && userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
 			throw new IllegalArgumentException("이미 사용 중인 전화번호입니다.");
 		}
+		
+		// 사용자 역할 설정 및 ADMIN 권한 가입 방지
+        Role selectedRole = request.getRole();
+        if (selectedRole == null) {
+            log.warn("회원가입 시 역할이 선택되지 않았습니다. 기본값 GUEST로 설정합니다. 이메일: {}", request.getEmail());
+            selectedRole = Role.GUEST; // 기본값은 GUEST
+        } else if (selectedRole == Role.ADMIN) {
+            // 중요: ADMIN 역할로는 직접 회원가입할 수 없도록 막습니다.
+            log.warn("ADMIN 역할로의 회원가입 시도가 감지되었습니다. 이메일: {}", request.getEmail());
+            throw new IllegalArgumentException("ADMIN 역할로는 회원가입할 수 없습니다.");
+        }
 
 		// 비밀번호 암호화
 		String encodedPassword = passwordEncoder.encode(request.getPassword());
 
 		// 새 사용자 엔티티 생성
-		User newUser = User.builder().email(request.getEmail()).passwordHash(encodedPassword)
-				.username(request.getUsername()).phoneNumber(request.getPhoneNumber()).zipcode(request.getZipcode())
-				.addressMain(request.getAddressMain()).addressDetail(request.getAddressDetail()).role(Role.GUEST) // 기본
-																													// 역할은
-																													// GUEST
+		User newUser = User.builder()
+				.email(request.getEmail())
+				.passwordHash(encodedPassword)
+				.username(request.getUsername())
+				.phoneNumber(request.getPhoneNumber())
+				.zipcode(request.getZipcode())
+				.addressMain(request.getAddressMain())
+				.addressDetail(request.getAddressDetail())
+				.role(selectedRole) 
 				.status(UserStatus.ACTIVE) // 기본 상태는 ACTIVE
 				.build();
 

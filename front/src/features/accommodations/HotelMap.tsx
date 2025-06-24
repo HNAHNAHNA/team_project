@@ -134,7 +134,7 @@ function HotelMap() {
         <HotelModal
           selectedData={selectedData}
           setSelectedData={setSelectedData}
-          handleDetailButtonClick={() => navigate(`/detail/${selectedData.id}`)}
+          handleDetailButtonClick={() => navigate(`/detail/${selectedData.hotel_no}`)}
         />
       )}
     </div>

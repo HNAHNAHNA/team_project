@@ -14,12 +14,13 @@ params = {
     "format": "json",
     "applicationId": settings.application_ID,
     "largeClassCode": "japan",
-    "middleClassCode": "tokyo",
-    "smallClassCode": "tokyo",
+    "middleClassCode": "hokkaido",
+    "smallClassCode": "sapporo",
     "detailClassCode": "A",
     "searchPattern": 0,
     "responseType": "large",
-    "elements": "hotelNo,hotelName,address1,address2,hotelSpecial,reviewCount,checkinTime,checkoutTime,telephoneNo,latitude,longitude,hotelImageUrl,reviewAverage,hotelMinCharge"
+    "elements": "hotelNo,hotelName,address1,address2,hotelSpecial,reviewCount,checkinTime,checkoutTime,telephoneNo,latitude,longitude,hotelImageUrl,reviewAverage,hotelMinCharge",
+    "datumType": 1
 }
 
 def parse_hotel_data(basic: dict, detail: dict) -> Accommodation:
@@ -38,6 +39,15 @@ def parse_hotel_data(basic: dict, detail: dict) -> Accommodation:
         telephone=basic.get("telephoneNo"),
         hotel_no=int(basic.get("hotelNo"))
     )
+
+@router.get("/get-hotels")
+def get_hotels():
+    response = requests.get(RAKUTEN_API_URL, params=params)
+    if response.status_code != 200:
+        return {"error": f"{response.status_code}"}
+    data = response.json()
+    print(data)
+    return data
 
 @router.post("/import-hotels")
 def import_hotels(db: Session = Depends(get_db)):
@@ -61,6 +71,7 @@ def import_hotels(db: Session = Depends(get_db)):
             db.add(hotel)
             count += 1
             print(f"✅ inserted hotelNo={basic['hotelNo']}")
+            print(json.dumps(data, indent=2, ensure_ascii=False))
 
         except Exception as e:
             print(f"❌ Error parsing hotelNo={basic.get('hotelNo')}: {e}")

@@ -11,7 +11,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # 개발 중이면 *도 가능
+    allow_origins=["http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -27,8 +27,3 @@ app.include_router(jwtvalidate)
 app.include_router(refreshToken)
 # 즐겨찾기 추가 로직
 app.include_router(favo)
-
-@app.get("/test")
-def test():
-    return {"message": "Hello FastAPI"}
-

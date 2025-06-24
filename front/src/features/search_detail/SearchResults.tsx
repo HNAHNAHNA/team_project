@@ -5,11 +5,15 @@ import { useEffect, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { AnimatePresence, motion } from 'motion/react';
 import type { AccommodationOut, SelectedHotel } from '../../types/HotelList';
+import MapComponent from '../map/mapComponent';
+import createPriceMarker from "../map/PriceMarker";
 
 const SearchResults = () => {
     const [allAccommodations, setAllAccommodations] = useState<AccommodationOut[]>([]);
+    const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
     const [loading, setLoading] = useState(true);
     const [skeletonCount] = useState(5);
+    const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
     const [selectedData, setSelectedData] = useState<SelectedHotel | null>(null);
     const [searchParams] = useSearchParams();
     const search = searchParams.get("search") || "";
@@ -35,6 +39,39 @@ const SearchResults = () => {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        if (!mapInstance) return;
+
+        // 기존 마커 제거
+        markers.forEach(marker => marker.setMap(null));
+
+        const newMarkers: google.maps.Marker[] = [];
+
+        allAccommodations.forEach(hotel => {
+            if (!hotel.latitude || !hotel.longitude) return;
+
+            createPriceMarker(hotel, mapInstance!, (hotel) => {
+                handleCardClick({
+                    hotelNo: hotel.hotel_no,
+                    name: hotel.name,
+                    photoUrl: hotel.image_url || "",
+                    rating: hotel.review_average || 0,
+                    charge: hotel.charge,
+                    review: "^0^",
+                });
+            });
+        });
+
+        // 새로운 마커 저장
+        setMarkers(newMarkers);
+        console.log(allAccommodations.map(h => ({
+            name: h.name,
+            lat: h.latitude,
+            lng: h.longitude
+        })));
+
+    }, [mapInstance, allAccommodations]);
+
     const regionKeywords = Object.entries(REGION_MAP)
         .filter(([_, name]) => name.includes(search))
         .map(([_, name]) => name);
@@ -51,6 +88,11 @@ const SearchResults = () => {
         navigate(`/detail/${hotelNo}`);
     };
 
+    const firstHotel = filteredHotels[0];
+    const defaultCenter = firstHotel
+        ? { lat: firstHotel.latitude, lng: firstHotel.longitude }
+        : { lat: 35.6812, lng: 139.7671 }; // fallback: 도쿄역
+
     const sidebarContent = loading ? (
         <div className="p-4">
             {Array.from({ length: skeletonCount }).map((_, idx) => (
@@ -61,7 +103,6 @@ const SearchResults = () => {
         </div>
     ) : (
         <div className="p-4">
-            <h2 className="text-lg font-bold mb-2">「{search}」の検索結果</h2>
 
             {filteredHotels.length === 0 ? (
                 <div className="text-gray-500 text-sm">該当するホテルがありません。</div>
@@ -76,10 +117,10 @@ const SearchResults = () => {
                                 photoUrl: hotel.image_url || "",
                                 rating: hotel.review_average || 0,
                                 charge: hotel.charge,
-                                review: "", // 필요시 백엔드 추가
+                                review: "^0^", // 필요시 백엔드 추가
                             })
                         }
-                        className="flex flex-row items-start border rounded-xl w-[95%] gap-4 m-2 cursor-pointer hover:bg-neutral-100 hover:shadow-md"
+                        className="flex flex-row items-start border rounded-xl bg-white w-[95%] gap-4 m-2 cursor-pointer hover:bg-neutral-100 hover:shadow-md"
                     >
                         <img
                             src={hotel.image_url || "/no-image.png"}
@@ -97,7 +138,9 @@ const SearchResults = () => {
         </div>
     );
 
-    const mapContent = <div className="text-white text-center">지도 표시 영역</div>;
+    const mapContent = <MapComponent center={defaultCenter} onMapLoad={(map => {
+        setMapInstance(map);
+    })} />
 
     return (
         <div>
@@ -109,7 +152,7 @@ const SearchResults = () => {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-50"
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
                         onClick={() => setSelectedData(null)}
                     >
                         <motion.div

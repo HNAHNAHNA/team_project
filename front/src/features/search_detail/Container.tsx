@@ -15,7 +15,7 @@ const Container: React.FC<ContainerProps> = ({ hotelList, mapArea }) => {
             w-full
         '>
             <div className='
-                bg-white
+                bg-gray-300
                 mr-4
                 w-1/3
                 rounded-xl
@@ -26,7 +26,7 @@ const Container: React.FC<ContainerProps> = ({ hotelList, mapArea }) => {
             </div>
             <div className="w-2/3 bg-gray-500">
                 <div className="w-full h-full text-white flex items-center justify-center">
-                    dd
+                    {mapArea}
                 </div>
             </div>
         </div>

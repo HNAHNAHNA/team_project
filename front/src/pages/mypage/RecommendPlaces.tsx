@@ -50,32 +50,6 @@ function MyPage() {
             })
     }, [])
 
-    // const mockData = [
-    //     {
-    //         name: "테스트 호텔 1",
-    //         photoUrl: "https://via.placeholder.com/150",
-    //         rating: "4.5",
-    //         category: "비즈니스 호텔",
-    //         review: "좋은 위치에 있어요!"
-    //     },
-    //     {
-    //         name: "테스트 호텔 2",
-    //         photoUrl: "https://via.placeholder.com/150",
-    //         rating: "4.0",
-    //         category: "캡슐 호텔",
-    //         review: "깔끔하고 조용함"
-    //     }
-    // ];
-    // useEffect(() => {
-    //     setLoading(true);
-    //     setSkeletonCount(mockData.length)
-    //     setTimeout(() => {
-    //         setData(mockData);
-    //         setLoading(false);
-    //     }, 1500); // 로딩 효과를 보기 위해 일부러 지연
-    // }, []);
-
-
     return (
         <div className="flex flex-row w-full h-screen">
             <div className="w-1/3 flex flex-wrap overflow-y-scroll">

@@ -31,6 +31,8 @@ export type HotelWrapper = {
 export interface AccSlideProps {
   hotelList: AccommodationOut[];
   onHotelClick?: (hotel: AccommodationOut) => void;
+  favoriteMap: Record<number, boolean>;
+  onToggleFavorite: (hotelId: number) => void;
 }
 
 export interface AccommodationOut {
@@ -63,6 +65,6 @@ interface SelectedHotel {
 }
 
 export interface LocationData {
-    title: string;
-    keyword: string;
+  title: string;
+  keyword: string;
 }

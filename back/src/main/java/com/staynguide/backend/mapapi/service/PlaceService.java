@@ -140,7 +140,6 @@ public class PlaceService {
             List<PlaceInfo> results = new ArrayList<>();
             if (places.isArray()) {
                 for (JsonNode node : places) {
-                    // 호텔명과 정확히 일치하는 것은 제외
                     String placeName = node.path("displayName").path("text").asText("");
                     if (placeName.contains("ホテル") || placeName.toLowerCase().contains("hotel")) continue;
 
@@ -152,11 +151,25 @@ public class PlaceService {
                     info.setRating(node.path("rating").asDouble(0));
                     info.setReviewCount(node.path("userRatingCount").asInt(0));
                     info.setWebsite(node.path("websiteUri").asText(""));
-                    results.add(info);
 
+                    JsonNode photos = node.path("photos");
+                    if (photos.isArray() && photos.size() > 0) {
+                        String photoReference = photos.get(0).path("name").asText();
+                        if (!photoReference.isEmpty()) {
+                            String photoUrl = String.format(
+                                    "https://places.googleapis.com/v1/%s/media?key=%s&maxHeightPx=400",
+                                    photoReference,
+                                    apiKey
+                            );
+                            info.setImageurl(photoUrl);
+                        }
+                    }
+
+                    results.add(info);
                     if (results.size() >= limit) break;
                 }
             }
+
             return results;
         } catch (Exception e) {
             e.printStackTrace();

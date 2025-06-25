@@ -5,6 +5,7 @@ from app.routers.accommodationRouter import router as accommodationRouter
 from app.routers.jwtValidate import router as jwtvalidate
 from app.routers.refreshAccessToken import router as refreshToken
 from app.routers.favoritesRouter import router as favo
+from app.routers.user_reservation import router as reservations
 from app.models import *
 
 app = FastAPI()
@@ -27,3 +28,5 @@ app.include_router(jwtvalidate)
 app.include_router(refreshToken)
 # 즐겨찾기 추가 로직
 app.include_router(favo)
+# 유저 예약
+app.include_router(reservations)

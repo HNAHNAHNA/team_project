@@ -8,6 +8,7 @@
 # +------------------+----------+------+-----+-------------------+-------------------+
 from pydantic import BaseModel
 from datetime import datetime
+from app.schemas.accommodation import AccommodationOut
 
 class FavoriteCreate(BaseModel):
     user_id: int
@@ -16,8 +17,13 @@ class FavoriteCreate(BaseModel):
 class FavoriteOut(BaseModel):
     favorite_id: int
     user_id: int
-    accommodation_id: int
+    accommodation: AccommodationOut
     created_at: datetime
+    
+class FavoriteWithAccommodation(BaseModel):
+    favorite_id: int
+    created_at: datetime
+    accommodation: AccommodationOut
 
     class Config:
         from_attributes = True

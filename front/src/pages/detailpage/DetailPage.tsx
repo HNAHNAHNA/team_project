@@ -1,11 +1,73 @@
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate, useParams } from "react-router-dom";
 import type { AccommodationOut } from "../../types/HotelList";
 import Container from "./Container";
 import StayButton from "../../components/StayButton";
+import DebugButton from "../../components/DebugButton";
+import { useEffect, useState } from "react";
 
 function DetailPage() {
+  const { hotelNo } = useParams();
   const hotel = useLoaderData() as AccommodationOut;
-  console.log("🔥 hotel data from backend:", hotel); // 꼭 찍어봐!
+  const navigate = useNavigate();
+  const [checkInDate, setCheckInDate] = useState("");
+  const [checkOutDate, setCheckOutDate] = useState("");
+  const [hotelId, setHotelId] = useState<number | null>(null);
+
+  // useEffect(() => {
+  //   if (!hotelNo) return;
+
+  //   const fetchHotelId = async () => {
+  //     try {
+  //       const res = await fetch(`http://localhost:8000/get-hotel-id?hotelNo=${hotelNo}`);
+  //       const data = await res.json();
+
+  //       if (res.ok) {
+  //         setHotelId(data.hotel_id);
+  //       } else {
+  //         console.error("❌ hotel_id 조회 실패:", data.detail);
+  //       }
+  //     } catch (err) {
+  //       console.error("❌ 호텔 ID 요청 실패", err);
+  //     }
+  //   };
+
+  //   fetchHotelId();
+  // }, [hotelNo]);
+  const reservationButtonHandler = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    if (!accessToken) {
+      alert("로그인이 필요합니다.")
+      return navigate("/login")
+    }
+
+    if (!hotelId || !checkInDate || !checkOutDate) {
+      alert("입력값이 부족합니다.");
+      return;
+    }
+
+    const res = await fetch("http://localhost:8000/reservations", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        hotel_id: hotelId,
+        user_id: user.id,
+        check_in_date: checkInDate,
+        check_out_date: checkOutDate,
+      }),
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      alert("✅ 예약 완료");
+    } else {
+      console.error("예약 실패:", data);
+      alert("❌ 예약 실패");
+    }
+  };
 
   return (
     <Container>
@@ -19,9 +81,21 @@ function DetailPage() {
           <div className="flex flex-col justify-between mr-10 w-1/2">
             <p><strong>{hotel.name}</strong></p>
             <p>{hotel.address}</p>
+            <div className="my-4 flex flex-col gap-2">
+              <label>チェックイン日</label>
+              <input type="date" className="border p-2 rounded" onChange={(e) => setCheckInDate(e.target.value)} />
+
+              <label>チェックアウト日</label>
+              <input type="date" className="border p-2 rounded" onChange={(e) => setCheckOutDate(e.target.value)} />
+            </div>
             <div className="flex flex-row justify-center gap-5 mt-auto">
-              <StayButton buttonName="予約する" colorClass="bg-neutral-100 hover:bg-gray-300/50" />
+              <StayButton
+                buttonName="予約する"
+                colorClass="bg-neutral-100 hover:bg-gray-300/50"
+                onClick={reservationButtonHandler}
+              />
               <StayButton buttonName="相談したい" colorClass="bg-slate-400/70 hover:bg-gray-300/50" />
+              <DebugButton />
             </div>
           </div>
         </div>

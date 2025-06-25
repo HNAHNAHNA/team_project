@@ -1,8 +1,9 @@
 import traceback
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app.database.connection import get_db
+from app.models.accommodation import Accommodation
 from app.models.favorites import Favorite
 from app.schemas.favorites import FavoriteCreate, FavoriteOut
 
@@ -49,3 +50,13 @@ def delete_favorite(
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=f"찜 삭제 중 오류 발생: {e}")
+    
+@router.get("/favorites/{user_id}", response_model=list[FavoriteOut])
+def get_favorites(user_id: int, db: Session = Depends(get_db)):
+    favorites = (
+        db.query(Favorite)
+        .filter(Favorite.user_id == user_id)
+        .options(joinedload(Favorite.accommodation))
+        .all()
+    )
+    return favorites

@@ -1,32 +1,11 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import type { PaymentRecord } from "../../types/PaymentRecord";
 
 function PaymentHistory() {
   const { user } = useAuth();
   const [payments, setPayments] = useState<PaymentRecord[]>([]);
 
-  useEffect(() => {
-    if (user) {
-      const dummyPayments: PaymentRecord[] = [
-        {
-          id: 1,
-          hotelName: "도쿄 시티 호텔",
-          date: "2025-06-01",
-          amount: 12800,
-          status: "결제완료",
-        },
-        {
-          id: 2,
-          hotelName: "오사카 그랜드 인",
-          date: "2025-05-20",
-          amount: 17500,
-          status: "결제완료",
-        },
-      ];
-      setPayments(dummyPayments);
-    }
-  }, [user]);
+
 
   return (
     <div className="p-4">

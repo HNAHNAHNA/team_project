@@ -10,3 +10,7 @@ router = APIRouter()
 @router.get("/accommodations", response_model=List[AccommodationOut])
 def get_all_accommodations(db: Session = Depends(get_db)):
     return db.query(Accommodation).all()
+
+@router.get("/hotels/all", response_model=List[AccommodationOut])
+def get_all_hotels(db: Session = Depends(get_db)):
+    return db.query(Accommodation).all()

@@ -19,7 +19,7 @@ const MapComponent = ({
     return (
         <GoogleMap
             center={center}
-            zoom={15}
+            zoom={14}
             mapContainerStyle={{ width: "100%", height: "100%" }}
             onLoad={onMapLoad}
             options={{ gestureHandling: "greedy" }}

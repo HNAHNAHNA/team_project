@@ -5,6 +5,7 @@ import EditUserInfo from "./EditUserInfo";
 import RecommendPlaces from "./RecommendPlaces";
 import PaymentHistory from "./PaymentHistory";
 import UserFavorites from "./UserFavorites";
+import ReservationAccommodations from "./ReservationAccommodations";
 
 function MyPageMain() {
   const location = useLocation();
@@ -62,7 +63,7 @@ function MyPageMain() {
       </div>
 
       <div className="flex border-b mb-4">
-        {["profile", "reservations", "favorites", "payments"].map(tab => (
+        {["profile", "reservations", "favorites", "RecommandedPlace","payments"].map(tab => (
           <button
             key={tab}
             className={`px-4 py-2 text-sm font-semibold ${activeTab === tab
@@ -74,6 +75,7 @@ function MyPageMain() {
             {tab === "profile" && "정보수정"}
             {tab === "reservations" && "예약 내역"}
             {tab === "favorites" && "いいね！"}
+            {tab === "RecommandedPlace" && "추천지역"}
             {tab === "payments" && "결제 내역"}
           </button>
         ))}
@@ -89,13 +91,19 @@ function MyPageMain() {
         {activeTab === "reservations" && (
           <>
             <h3 className="text-lg font-bold mb-4">예약 내역</h3>
-            <RecommendPlaces />
+            <ReservationAccommodations />
           </>
         )}
         {activeTab === "favorites" && (
           <>
             <h3 className="text-lg font-bold mb-4">いいね！</h3>
-            <UserFavorites />
+            <UserFavorites userId={user.id} />
+          </>
+        )}
+        {activeTab === "RecommandedPlace" && (
+          <>
+            <h3 className="text-lg font-bold mb-4">추천지역</h3>
+            <RecommendPlaces />
           </>
         )}
         {activeTab === "payments" && (

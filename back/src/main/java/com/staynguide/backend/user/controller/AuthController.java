@@ -13,6 +13,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -90,11 +93,17 @@ public class AuthController {
 
 	// 다른 백엔드 서버에서 JWT Token 유효성 검사하는 로직입니다 수정 ㄴㄴㄴㄴㄴㄴ
 	@GetMapping("/validate")
-	public ResponseEntity<String> validate(@AuthenticationPrincipal
-	CustomUserDetails userDetails) {
-	if (userDetails == null) {
-	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 유효하지 않거나 만료됨");
-	}
-	return ResponseEntity.ok("토큰 유효. 사용자: " + userDetails.getUsername());
+	public ResponseEntity<Map<String, Object>> validate(@AuthenticationPrincipal CustomUserDetails userDetails) {
+		if (userDetails == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+					.body(Map.of("message", "토큰이 유효하지 않거나 만료됨"));
+		}
+
+		Map<String, Object> response = new HashMap<>();
+		response.put("user_id", userDetails.getUserId());
+		response.put("email", userDetails.getUsername());
+		response.put("role", userDetails.getRole());
+
+		return ResponseEntity.ok(response);
 	}
 }

@@ -61,7 +61,9 @@ def get_reservation_data(
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user)
 ):
+    print("✅ current_user:", current_user)
     user_id = current_user["user_id"]
+    print("✅ user_id:", user_id)
 
     reservations = (
         db.query(UserReservation)
@@ -69,5 +71,18 @@ def get_reservation_data(
         .filter(UserReservation.user_id == user_id)
         .all()
     )
+
+    result = []
+    for r in reservations:
+        result.append({
+            "check_in_date": r.check_in_date.isoformat(),
+            "check_out_date": r.check_out_date.isoformat(),
+            "hotel": {
+                "accommodation_id": r.accommodation.accommodation_id,
+                "name": r.accommodation.name,
+                "image_url": r.accommodation.image_url,
+            }
+        })
+
 
     return reservations

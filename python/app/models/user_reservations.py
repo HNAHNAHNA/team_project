@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, BigInteger, String, ForeignKey, DateTime
 from sqlalchemy.sql import func
 from app.database.connection import Base
+from sqlalchemy.orm import relationship
 
 
 class UserReservation(Base):
@@ -13,3 +14,4 @@ class UserReservation(Base):
     check_in_date = Column(String(20))
     check_out_date = Column(String(20))
     user_id = Column(BigInteger, ForeignKey("users.u_user_id"), nullable=False)
+    accommodation = relationship("Accommodation", backref="reservations")

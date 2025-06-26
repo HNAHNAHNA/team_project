@@ -13,26 +13,26 @@ function DetailPage() {
   const [checkOutDate, setCheckOutDate] = useState("");
   const [hotelId, setHotelId] = useState<number | null>(null);
 
-  // useEffect(() => {
-  //   if (!hotelNo) return;
+  useEffect(() => {
+    if (!hotelNo) return;
 
-  //   const fetchHotelId = async () => {
-  //     try {
-  //       const res = await fetch(`http://localhost:8000/get-hotel-id?hotelNo=${hotelNo}`);
-  //       const data = await res.json();
+    const fetchHotelId = async () => {
+      try {
+        const res = await fetch(`http://localhost:8000/get-hotel-id?hotelNo=${hotelNo}`);
+        const data = await res.json();
 
-  //       if (res.ok) {
-  //         setHotelId(data.hotel_id);
-  //       } else {
-  //         console.error("❌ hotel_id 조회 실패:", data.detail);
-  //       }
-  //     } catch (err) {
-  //       console.error("❌ 호텔 ID 요청 실패", err);
-  //     }
-  //   };
+        if (res.ok) {
+          setHotelId(data.hotel_id);
+        } else {
+          console.error("❌ hotel_id 조회 실패:", data.detail);
+        }
+      } catch (err) {
+        console.error("❌ 호텔 ID 요청 실패", err);
+      }
+    };
 
-  //   fetchHotelId();
-  // }, [hotelNo]);
+    fetchHotelId();
+  }, [hotelNo]);
   const reservationButtonHandler = async () => {
     const accessToken = localStorage.getItem("accessToken");
     const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -40,7 +40,7 @@ function DetailPage() {
       alert("로그인이 필요합니다.")
       return navigate("/login")
     }
-
+    console.log("입력정보 >>>>>> ",hotelId,checkInDate,checkOutDate)
     if (!hotelId || !checkInDate || !checkOutDate) {
       alert("입력값이 부족합니다.");
       return;

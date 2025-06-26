@@ -1,7 +1,7 @@
 function Avatar () {
     return (
         <img
-            src="https://i.namu.wiki/i/KgEe6nU2GzM88i1I6XAy8tfCZuHfL0U94tmH7o5OhKQ7Bfgw3HuOXtcVnX7-7d204V5Ty7iFNr9xjLjhC1jryqLzXyPhTyyMBmf_YwyD6kBkOzL102uIdoaxE6wYhO2MfSJyQDHms8p03rrGaWqpmA.webp"
+            src="https://i.namu.wiki/i/MFaPvvK3NyWEjjzEvm0sZXSjCZPrwXtCt2azFVwg4CPiMiw7n8qkcGAhWeHhkFvShg6DB3x-3nGUNorl8VYydJhVkWR5OM8VmcJStAaZ3T48fWwrxrDq_HeX1I5iNRVziZAB5PY1hQX1FmE7nIyJcw.webp"
             className="
                 rounded-full
                 w-10

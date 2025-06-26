@@ -13,12 +13,19 @@ const locationsData: LocationData[] = [
   { title: "札幌のホテル", keyword: "北海" },
 ];
 
+interface FavoriteOut {
+  accommodation: {
+    accommodation_id: number;
+  };
+}
+
 function HotelMap() {
   const navigate = useNavigate();
   const { user, isLoggedIn, validateAccessToken } = useAuth();
   const [selectedData, setSelectedData] = useState<HotelBasicInfo | null>(null);
   const [allAccommodations, setAllAccommodations] = useState<AccommodationOut[]>([]);
   const [favoriteMap, setFavoriteMap] = useState<Record<number, boolean>>({});
+  const [favoritesLoaded, setFavoritesLoaded] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -50,15 +57,20 @@ function HotelMap() {
       try {
         const res = await fetch(`http://localhost:8000/api/v1/favorites/user/${user.id}`);
         const data = await res.json();
-
+        console.log("📦 받아온 favorites 데이터:", data);
         const map: Record<number, boolean> = {};
-        data.forEach((fav: { accommodation_id: number }) => {
-          map[fav.accommodation_id] = true;
+        (data as FavoriteOut[]).forEach((fav) => {
+          const accId = fav.accommodation?.accommodation_id;
+          if (accId !== undefined) {
+            map[accId] = true;
+          }
         });
 
         setFavoriteMap(map);
       } catch (err) {
         console.error("찜 목록 불러오기 실패:", err);
+      } finally {
+        setFavoritesLoaded(true); // ✅ 이게 중요
       }
     };
 
@@ -107,28 +119,28 @@ function HotelMap() {
   return (
     <div className="kiwi bg-slate-100 p-4 sm:p-8">
       <div className="flex flex-col gap-8">
-        {loading
+        {loading || !favoritesLoaded
           ? Array.from({ length: locationsData.length }).map((_, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-md">
-                <h2 className="text-2xl font-bold text-gray-700 mb-4">
-                  {locationsData[index].title}
-                </h2>
-                <AccSlide hotelList={[]} favoriteMap={{}} onToggleFavorite={toggleFavorite} />
-              </div>
-            ))
+            <div key={index} className="bg-white p-6 rounded-lg shadow-md">
+              <h2 className="text-2xl font-bold text-gray-700 mb-4">
+                {locationsData[index].title}
+              </h2>
+              <AccSlide hotelList={[]} favoriteMap={{}} onToggleFavorite={toggleFavorite} />
+            </div>
+          ))
           : locationsData.map((location, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-md">
-                <h2 className="text-2xl font-bold text-gray-700 mb-4">
-                  {location.title}
-                </h2>
-                <AccSlide
-                  hotelList={getFilteredHotelsByLocation(location.keyword)}
-                  favoriteMap={favoriteMap}
-                  onToggleFavorite={toggleFavorite}
-                  onHotelClick={handleHotelClick}
-                />
-              </div>
-            ))}
+            <div key={index} className="bg-white p-6 rounded-lg shadow-md">
+              <h2 className="text-2xl font-bold text-gray-700 mb-4">
+                {location.title}
+              </h2>
+              <AccSlide
+                hotelList={getFilteredHotelsByLocation(location.keyword)}
+                favoriteMap={favoriteMap}
+                onToggleFavorite={toggleFavorite}
+                onHotelClick={handleHotelClick}
+              />
+            </div>
+          ))}
       </div>
       {selectedData && (
         <HotelModal

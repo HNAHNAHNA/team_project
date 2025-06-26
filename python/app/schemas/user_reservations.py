@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import date, datetime
 from app.schemas.accommodation import AccommodationOut
 
 class UserReservationOUT(BaseModel):
@@ -7,10 +7,10 @@ class UserReservationOUT(BaseModel):
     u_booking_id: int
     hotel_id: int
     reserved_at: datetime 
-    check_in_date: str
-    check_out_date: str
+    check_in_date: date
+    check_out_date: date
     user_id: int
-    hotel: AccommodationOut
+    accommodation: AccommodationOut
 
 class ReservationRequest(BaseModel):
     user_id: int

@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react"
-import type { Favorite } from "../../types/favorites";
+import { useEffect, useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
+import type { UserReservations } from "../../types/Reservation";
 import Skeleton from "react-loading-skeleton";
 import { AnimatePresence, motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 
-const UserFavorites = ({ userId }: { userId: number }) => {
-    const [favorites, setFavorites] = useState<Favorite[]>([]);
+function ReservationAccommodations() {
+    const [reservationHotels, setReservationHotels] = useState<UserReservations[]>([]);
     const [loading, setLoading] = useState(false);
     const [skeletonCount, setSkeletonCount] = useState(5);
     const [selectedData, setSelectedData] = useState(null);
+    const { validateAccessToken } = useAuth();
     const navigate = useNavigate();
 
     const favoriteModalToDetailPage = async () => {
@@ -20,45 +22,40 @@ const UserFavorites = ({ userId }: { userId: number }) => {
     }
 
     useEffect(() => {
-        const fetchFavorites = async () => {
-            setLoading(true);
-            try {
-                const res = await fetch(`http://localhost:8000/favorites/${userId}`);
-                if (!res.ok) throw new Error("찜 목록 불러오기 실패");
+        const fetchReservations = async () => {
+            setLoading(true)
+            const token = await validateAccessToken(); // ✅ 만료되었으면 재발급도 자동
+            if (!token) {
+                console.warn("로그인 정보 없음 또는 토큰 만료");
+                return;
+            }
 
-                const data: Favorite[] = await res.json();
-                setFavorites(data);
-                setSkeletonCount(data.length);
+            try {
+                const res = await fetch("http://localhost:8000/get-user-reservation-data", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`, // ✅ 핵심
+                    },
+                });
+
+                if (!res.ok) throw new Error(`서버 오류: ${res.status}`);
+                const data = await res.json();
+                setReservationHotels(data);
+                setSkeletonCount(data.length)
+                setLoading(false)
+                console.log("우왕 불러오기 완룡!!")
             } catch (err) {
-                console.error("❌ 에러:", err);
-            } finally {
-                setLoading(false);
+                console.error("예약 정보 가져오기 실패:", err);
             }
         };
-        fetchFavorites();
-    }, [userId]);
 
-    const deleteFavoriteButtonClickHandler = async (userId, selectedData) => {
-        try {
-            const res = await fetch(`http://localhost:8000/api/v1/favorites/delete?user_id=${userId}&accommodation_id=${selectedData.accommodation.accommodation_id}`,
-                { method: "DELETE" }
-            );
-            if (!res.ok) throw new Error("削除失敗！")
-
-            alert("削除完了！")
-            setFavorites(prev =>
-                prev.filter(fav => fav.accommodation.accommodation_id !== selectedData.accommodation.accommodation_id)
-            );
-            setSelectedData(null);
-
-        } catch (err) {
-            console.error("에러발생!!!!", err)
-        }
-    }
+        fetchReservations();
+    }, [validateAccessToken]);
 
     return (
         <div>
-            <h2>내 찜한 숙소</h2>
+            <h2>예약한 숙소 목록</h2>
             {loading ? (
                 Array.from({ length: skeletonCount }).map((_, idx) => (
                     <div key={idx} className="w-[95%] mb-4">
@@ -67,21 +64,27 @@ const UserFavorites = ({ userId }: { userId: number }) => {
                 ))
             ) : (
                 <div className="max-h-[70vh] overflow-y-auto pr-2">
-                    {favorites.map(fav => (
-                        <div key={fav.favorite_id} onClick={() => setSelectedData(fav)}>
-                            <div className="flex flex-row bg-gray-300 cursor-pointer m-2 gap-4 hover:bg-neutral-300 rounded-xl border-1 justify-between items-center p-4 ">
-                                <div className="w-[40%] min-w-[120px] rounded-xl p-2 overflow-hidden">
-                                    <img src={fav.accommodation.image_url}
-                                        className="w-full h-[160px] object-cover rounded-xl" />
-                                </div>
-                                <div className="text-right mr-5">
-                                    <h3>{fav.accommodation.name}</h3>
-                                    <p>{fav.accommodation.address}</p>
-                                    <p>いいね！押した日 : {new Date(fav.created_at).toLocaleDateString("ja-JP")}</p>
+                    {reservationHotels.map(hotel => {
+                        return (
+                            <div key={hotel.reservation_id} onClick={() => setSelectedData(hotel)}>
+                                <div className="">
+                                    <div className="flex flex-row bg-gray-300 cursor-pointer m-2 gap-4 hover:bg-neutral-300 rounded-xl border-1 justify-between items-center p-4 ">
+                                        <div className="w-[40%] min-w-[120px] rounded-xl p-2 overflow-hidden">
+                                            <img src={hotel.accommodation.image_url}
+                                                className="w-full h-[160px] object-cover rounded-xl" />
+                                        </div>
+                                        <div className="text-right mr-5 space-y-2">
+                                            <h3>{hotel.accommodation.name}</h3>
+                                            <p>{hotel.accommodation.address}</p>
+                                            <p><b>チェックイン</b> : {hotel.check_in_date}</p>
+                                            <p><b>チェックアウト</b> : {hotel.check_out_date}</p>
+                                            <p><b>予約ID</b> : {hotel.u_booking_id}</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        )
+                    })}
                 </div>
             )}
             <div>
@@ -122,20 +125,15 @@ const UserFavorites = ({ userId }: { userId: number }) => {
                                         if (selectedData) favoriteModalToDetailPage();
                                     }}
                                 >
-                                    자세히보기
-                                </div>
-                                <div
-                                    onClick={() => deleteFavoriteButtonClickHandler(userId, selectedData)}
-                                >
-                                    削除
+                                    ホテル情報
                                 </div>
                             </motion.div>
                         </motion.div>
                     )}
                 </AnimatePresence>
             </div>
-        </div>
+        </div >
     );
 }
 
-export default UserFavorites;
+export default ReservationAccommodations;

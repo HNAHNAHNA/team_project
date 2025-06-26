@@ -1,6 +1,7 @@
 import traceback
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, Query
+from pydantic import BaseModel
 from sqlalchemy.orm import Session, joinedload
 from app.database.connection import get_db
 from app.models.accommodation import Accommodation
@@ -60,3 +61,22 @@ def get_favorites(user_id: int, db: Session = Depends(get_db)):
         .all()
     )
     return favorites
+
+class HotelNoResponse(BaseModel):
+    hotel_no: int
+
+@router.get("/api/v1/favorites/hotel-no", response_model=HotelNoResponse)
+def get_hotel_number(
+    accommodation_id: int = Query(..., description="숙소 ID"),
+    db: Session = Depends(get_db)
+):
+    try:
+        accommodation = db.query(Accommodation).filter_by(accommodation_id=accommodation_id).first()
+
+        if not accommodation:
+            raise HTTPException(status_code=404, detail="해당 숙소를 찾을 수 없습니다.")
+
+        return {"hotel_no": accommodation.hotel_no}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"호텔 번호 조회 중 오류 발생: {e}")

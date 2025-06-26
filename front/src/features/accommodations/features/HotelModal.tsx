@@ -21,7 +21,7 @@ function HotelModal({ selectedData, setSelectedData, handleDetailButtonClick }: 
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-gray-500/70"
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
                         onClick={() => setSelectedData(null)}
                     >
                         <motion.div

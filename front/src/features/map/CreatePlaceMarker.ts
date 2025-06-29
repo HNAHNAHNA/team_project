@@ -1,26 +1,26 @@
-import type { AccommodationOut } from "../../types/HotelList";
+import type { PlaceInfo } from "../../types/Recommendation";
 
 let GoogleOverlayView: typeof google.maps.OverlayView;
 
-export default function createPriceMarker(
-    hotel: AccommodationOut,
+export default function createPlaceMarker(
+    place: PlaceInfo,
     map: google.maps.Map,
-    onClick: (hotel: AccommodationOut) => void
+    onClick: (place: PlaceInfo) => void
 ) {
     if (!GoogleOverlayView) {
         GoogleOverlayView = class extends window.google.maps.OverlayView { };
     }
 
-    class PriceMarker extends GoogleOverlayView {
+    class PlaceMarker extends GoogleOverlayView {
         div: HTMLDivElement | null = null;
 
         onAdd() {
             this.div = document.createElement("div");
             this.div.className = "price-marker";
-            this.div.innerText = `${hotel.charge.toLocaleString()}￥`;
+            this.div.innerText = place.name;
 
             this.div.addEventListener("click", () => {
-                onClick(hotel);
+                onClick(place);
             });
 
             const panes = this.getPanes();
@@ -31,7 +31,7 @@ export default function createPriceMarker(
             if (!this.div) return;
 
             const point = this.getProjection().fromLatLngToDivPixel(
-                new window.google.maps.LatLng(hotel.latitude, hotel.longitude)
+                new window.google.maps.LatLng(place.latitude, place.longitude)
             );
 
             if (point && this.div.style) {
@@ -50,7 +50,6 @@ export default function createPriceMarker(
         }
     }
 
-    const marker = new PriceMarker();
+    const marker = new PlaceMarker();
     marker.setMap(map);
-    return marker;
 }

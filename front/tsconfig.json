@@ -9,7 +9,16 @@
     }
   ],
   "compilerOptions": {
-    "composite": true
+    "composite": true,
+    "target": "ES2017",
+    "lib": [
+      "DOM",
+      "ES2017",
+      "DOM.Iterable"
+    ],
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node"
   },
   "include": [
     "src",

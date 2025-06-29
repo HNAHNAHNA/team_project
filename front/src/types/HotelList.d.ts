@@ -26,7 +26,7 @@ export type HotelWrapper = {
     hotelBasicInfo?: HotelBasicInfo;
     roomInfo?: Array<{ dailyCharge: { total: number } }>;
   }>;
-};
+}
 
 export interface AccSlideProps {
   hotelList: AccommodationOut[];
@@ -53,8 +53,7 @@ export interface AccommodationOut {
   checkout_time: string;
   telephone: string | null;
   hotel_no: number;
-  charge: number;
-};
+}
 
 interface SelectedHotel {
   hotelNo: number;
@@ -62,6 +61,7 @@ interface SelectedHotel {
   photoUrl: string | null;
   rating: number | null;
   charge: string | number;
+  review?: string;
 }
 
 export interface LocationData {

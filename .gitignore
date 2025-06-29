@@ -1,9 +1,10 @@
-application.properties
+0application.properties
 # Python
 __pycache__/
 *.pyc
 venv/
 .env
+
 
 # Node
 node_modules/
@@ -16,3 +17,8 @@ dist/
 .project
 .classpath
 bin/
+# 으앙
+*.tsbuildinfo
+# Auto-generated type files
+*.d.ts
+!src/types/*.d.ts

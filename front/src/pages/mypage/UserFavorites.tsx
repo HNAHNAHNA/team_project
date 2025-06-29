@@ -8,12 +8,15 @@ const UserFavorites = ({ userId }: { userId: number }) => {
     const [favorites, setFavorites] = useState<Favorite[]>([]);
     const [loading, setLoading] = useState(false);
     const [skeletonCount, setSkeletonCount] = useState(5);
-    const [selectedData, setSelectedData] = useState(null);
+    const [selectedData, setSelectedData] = useState<Favorite | null>(null);
     const navigate = useNavigate();
 
     const favoriteModalToDetailPage = async () => {
         console.log("👉 selectedData:", selectedData);
         console.log("👉 accommodation_id:", selectedData?.accommodation?.accommodation_id);
+
+        if (!selectedData) return;
+        
         const res = await fetch(`http://localhost:8000/api/v1/favorites/hotel-no?accommodation_id=${selectedData.accommodation.accommodation_id}`);
         const data = await res.json();
         navigate(`/detail/${data.hotel_no}`);
@@ -38,7 +41,7 @@ const UserFavorites = ({ userId }: { userId: number }) => {
         fetchFavorites();
     }, [userId]);
 
-    const deleteFavoriteButtonClickHandler = async (userId, selectedData) => {
+    const deleteFavoriteButtonClickHandler = async (userId: number, selectedData: Favorite) => {
         try {
             const res = await fetch(`http://localhost:8000/api/v1/favorites/delete?user_id=${userId}&accommodation_id=${selectedData.accommodation.accommodation_id}`,
                 { method: "DELETE" }

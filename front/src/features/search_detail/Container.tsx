@@ -2,6 +2,7 @@ import React from 'react';
 
 interface ContainerProps {
     hotelList: React.ReactNode;
+    mapArea: React.ReactNode;
 }
 
 const Container: React.FC<ContainerProps> = ({ hotelList, mapArea }) => {

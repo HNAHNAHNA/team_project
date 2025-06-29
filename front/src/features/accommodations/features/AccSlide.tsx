@@ -3,7 +3,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Autoplay } from "swiper/modules";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import type { AccSlideProps } from "../../../types/HotelList";
 import type SwiperCore from "swiper";
 

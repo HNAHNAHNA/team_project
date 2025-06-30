@@ -18,7 +18,7 @@ function DetailPage() {
 
     const fetchHotelId = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/get-hotel-id?hotelNo=${hotelNo}`);
+        const res = await fetch(`http://localhost:8000/api/fastapi/get-hotel-id?hotelNo=${hotelNo}`);
         const data = await res.json();
 
         if (res.ok) {

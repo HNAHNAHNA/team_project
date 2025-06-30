@@ -5,7 +5,7 @@ from app.models.accommodation import Accommodation
 from app.schemas.accommodation import AccommodationOut
 from typing import List
 
-router = APIRouter()
+router = APIRouter(prefix="/api/fastapi")
 
 @router.get("/accommodations", response_model=List[AccommodationOut])
 def get_all_accommodations(db: Session = Depends(get_db)):

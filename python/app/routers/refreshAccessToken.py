@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Body
 from pydantic import BaseModel
 import requests
 
-router = APIRouter()
+router = APIRouter(prefix="/api/fastapi")
 SPRING_REFRESH_URL = 'http://localhost:8091/api/v1/auth/reissue'
 
 class RefreshTokenRequest(BaseModel):

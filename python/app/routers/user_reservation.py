@@ -9,7 +9,7 @@ from app.schemas.accommodation import AccommodationOut
 from app.schemas.user_reservations import ReservationRequest, ReservationResponse, UserReservationOUT
 from app.utils.generate_booking_id import generate_booking_id
 
-router = APIRouter()
+router = APIRouter(prefix="/api/fastapi")
 
 @router.post("/reservations", response_model=ReservationResponse)
 def create_reservation(

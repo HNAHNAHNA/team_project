@@ -15,6 +15,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t ghcr.io/${{ github.repository }}/staynguide-spring:latest ./back
+
+      - name: Push to GHCR
+        run: docker push ghcr.io/${{ github.repository }}/staynguide-spring:latest
+
       - name: Copy SSH key
         run: |
           echo "${{ secrets.EC2_KEY }}" > ec2_key.pem
@@ -32,7 +44,7 @@ jobs:
           echo "$SPRING_ENV_B64" > encoded_props.txt
           scp -i ec2_key.pem encoded_props.txt ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:~/team_project/back/
 
-      - name: Deploy Spring Boot
+      - name: Deploy on EC2
         run: |
           ssh -i ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd ~/team_project/back
@@ -42,19 +54,16 @@ jobs:
             base64 -d encoded_props.txt > src/main/resources/application.properties
             rm encoded_props.txt
 
-            echo "✅ 디버그: application.properties 일부 확인"
-            head -n 5 src/main/resources/application.properties | sed 's/=.*/=*** (masked)/'
+            echo "✅ 도커 로그인"
+            echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
             echo "🛑 기존 컨테이너 중지 및 삭제"
             docker stop spring-back || true
             docker rm spring-back || true
 
-            echo "🧼 기존 이미지 삭제"
-            docker rmi staynguide-spring || true
-
-            echo "🐳 도커 이미지 빌드"
-            docker build --no-cache -t staynguide-spring .
+            echo "📥 GHCR에서 최신 이미지 pull"
+            docker pull ghcr.io/${{ github.repository }}/staynguide-spring:latest
 
             echo "🚀 새 컨테이너 실행"
-            docker run -d --name spring-back -p 8091:8091 staynguide-spring
+            docker run -d --name spring-back -p 8091:8091 ghcr.io/${{ github.repository }}/staynguide-spring:latest
           EOF

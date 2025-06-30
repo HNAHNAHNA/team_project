@@ -69,6 +69,7 @@ function ReservationAccommodations() {
 
     useEffect(() => {
         const fetchReservations = async () => {
+            console.log('야호 안녕!')
             setLoading(true);
             const token = await validateAccessToken();
             if (!token) return;

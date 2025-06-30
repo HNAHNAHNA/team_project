@@ -47,7 +47,7 @@ def delete_favorite(
         
         db.delete(fav)
         db.commit()
-        return {"message": "찜이 성공적으로 삭제되었습니다."}
+        return {"message": "찜이 성공적으로 삭제되었습니다!"}
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=f"찜 삭제 중 오류 발생: {e}")

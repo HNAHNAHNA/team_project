@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import type { AuthContextType } from '../types/AuthContextType';
-export declare const API_BASE = "http://localhost:8091/api/v1/auth";
+export declare const API_BASE = "/api/v1/auth";
 declare const AuthContext: import("react").Context<AuthContextType | null>;
 export declare const AuthProvider: ({ children }: {
     children: ReactNode;

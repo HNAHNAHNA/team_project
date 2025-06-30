@@ -18,7 +18,7 @@ function DetailPage() {
 
     const fetchHotelId = async () => {
       try {
-        const res = await fetch(`http://15.164.129.209/api/fastapi/get-hotel-id?hotelNo=${hotelNo}`);
+        const res = await fetch(`/api/fastapi/get-hotel-id?hotelNo=${hotelNo}`);
         const data = await res.json();
 
         if (res.ok) {
@@ -46,7 +46,7 @@ function DetailPage() {
       return;
     }
 
-    const res = await fetch("http://15.164.129.209/reservations", {
+    const res = await fetch("api/fastapi/reservations", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,

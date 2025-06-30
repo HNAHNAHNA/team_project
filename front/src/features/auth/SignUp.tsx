@@ -27,7 +27,7 @@ function SignUp() {
     }
 
     try {
-      const response = await fetch("http://localhost:8091/api/v1/users/join", {
+      const response = await fetch("/api/v1/users/join", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

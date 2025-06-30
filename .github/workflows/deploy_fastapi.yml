@@ -43,7 +43,7 @@ jobs:
             docker build -t staynguide-fastapi .
 
             echo "🚀 새 컨테이너 실행"
-            docker run -d --name fastapi-back -p 8000:8000 staynguide-fastapi
+            docker run --env-file .env -d --name fastapi-back -p 8000:8000 staynguide-fastapi
           EOF
         env:
           PYTHON_ENV: ${{ secrets.PYTHON_ENV }}

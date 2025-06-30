@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, useRef } from 'react';
 import type{ ReactNode } from 'react';
 import type { AuthContextType, User } from '../types/AuthContextType';
 
-export const API_BASE = 'http://localhost:8091/api/v1/auth';
+export const API_BASE = '/api/v1/auth';
 
 interface TokenResponse {
   accessToken: string;
@@ -115,7 +115,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       try {
-        const res = await fetch("http://15.164.129.209/api/fastapi/refresh", {
+        const res = await fetch("/api/fastapi/refresh", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ refreshToken }),

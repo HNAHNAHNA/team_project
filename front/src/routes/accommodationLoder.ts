@@ -3,7 +3,7 @@ import type { AccommodationOut } from "../types/HotelList.d.ts";
 
 // export const detailLoader: LoaderFunction = async ({ params }) => {
 //   const hotelNo = Number(params.hotelNo);
-//   const res = await fetch("http://15.164.129.209/hotels/all");
+//   const res = await fetch("/hotels/all");
 //   const hotels: AccommodationOut[] = await res.json();
 
 //   const hotel = hotels.find(h => h.hotel_no === hotelNo);
@@ -17,7 +17,7 @@ import type { AccommodationOut } from "../types/HotelList.d.ts";
 
 export const detailLoader = async ({ params }: any) => {
   const hotelNo = Number(params.hotelNo);
-  const res = await fetch("http://15.164.129.209/api/fastapi/hotels/all");
+  const res = await fetch("/api/fastapi/hotels/all");
   const hotels: AccommodationOut[] = await res.json();
   const hotel = hotels.find(h => h.hotel_no === hotelNo);
   if (!hotel) throw new Response("Not Found", { status: 404 });

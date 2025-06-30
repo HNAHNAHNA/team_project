@@ -153,6 +153,6 @@ public class UserController {
 
         log.info("회원 탈퇴 요청: {}", customUserDetails.getUsername());
         userService.withdrawUser(customUserDetails.getUsername(), request); // 서비스 호출
-        return ResponseEntity.ok("회원 탈퇴가 성공적으로 완료되었습니다.");
+        return ResponseEntity.ok("회원 탈퇴가 성공적으로 완료되었습니다!");
     }
 }

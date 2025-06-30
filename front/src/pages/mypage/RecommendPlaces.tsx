@@ -22,7 +22,7 @@ function ReservationAccommodations() {
 
     const getHotelLocation = async (accommodationId: number) => {
         try {
-            const res = await fetch("http://15.164.129.209/get-hotel-location", {
+            const res = await fetch("/api/fastapi/get-hotel-location", {
                 method: "GET",
                 headers: {
                     "accommodation-id": accommodationId.toString(),
@@ -36,7 +36,7 @@ function ReservationAccommodations() {
             const hotelAddress = hotelData.address;
 
             const getRecommandedPlace = await fetch(
-                `http://localhost:8091/api/places/recommendations?hotelName=${encodeURIComponent(hotelName)}&region=${encodeURIComponent(hotelAddress)}`
+                `/api/places/recommendations?hotelName=${encodeURIComponent(hotelName)}&region=${encodeURIComponent(hotelAddress)}`
             );
 
             if (!getRecommandedPlace.ok) throw new Error("추천 장소 요청 실패");
@@ -60,7 +60,7 @@ function ReservationAccommodations() {
     const favoriteModalToDetailPage = async () => {
         if (!selectedData) return;
         const res = await fetch(
-            `http://15.164.129.209/api/fastapi/favorites/hotel-no?accommodation_id=${selectedData.accommodation.accommodation_id}`
+            `/api/fastapi/favorites/hotel-no?accommodation_id=${selectedData.accommodation.accommodation_id}`
         );
         const data = await res.json();
         navigate(`/detail/${data.hotel_no}`);
@@ -73,7 +73,7 @@ function ReservationAccommodations() {
             if (!token) return;
 
             try {
-                const res = await fetch("http://15.164.129.209/api/fastapi/get-user-reservation-data", {
+                const res = await fetch("/api/fastapi/get-user-reservation-data", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",

@@ -25,10 +25,10 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
       
-      - name: Check FASTAPI_ENV value
+      - name: Check TESTENV value
         run: |
           echo "== START ENV VALUE =="
-          echo "$FASTAPI_ENV"
+          echo "$TESTENV"
           echo "== END ENV VALUE =="
 
       - name: Deploy FastAPI to EC2

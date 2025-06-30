@@ -33,8 +33,9 @@ jobs:
           docker build -f back/Dockerfile -t $IMAGE_ID ./back
 
       - name: Push to GHCR
+        env:
+          IMAGE_ID: ghcr.io/hnahnahna/team_project/staynguide-spring:latest
         run: |
-          IMAGE_ID="ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/team_project/staynguide-spring:latest"
           docker push $IMAGE_ID
 
       - name: Copy SSH key
@@ -72,8 +73,8 @@ jobs:
             docker rm spring-back || true
 
             echo "📥 GHCR에서 최신 이미지 pull"
-            docker pull ghcr.io/${{ github.repository }}/staynguide-spring:latest
+            docker pull ghcr.io/hnahnahna/staynguide-spring:latest
 
             echo "🚀 새 컨테이너 실행"
-            docker run -d --name spring-back -p 8091:8091 ghcr.io/${{ github.repository }}/staynguide-spring:latest
+            docker run -d --name spring-back -p 8091:8091 ghcr.io/hnahnahna/staynguide-spring:latest
           EOF

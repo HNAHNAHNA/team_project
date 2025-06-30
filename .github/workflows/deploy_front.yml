@@ -37,6 +37,11 @@ jobs:
           echo "${{ secrets.EC2_KEY }}" > ec2_key.pem
           chmod 600 ec2_key.pem
 
+      - name: Add EC2 host to known_hosts
+  	run: |
+    	  mkdir -p ~/.ssh
+    	  ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
       - name: Deploy dist to EC2
         run: |
           scp -i ec2_key.pem -r ./front/dist ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/team_project/front/

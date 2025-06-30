@@ -33,7 +33,7 @@ function HotelMap() {
     const fetchAllAccommodations = async () => {
       try {
         setLoading(true);
-        const response = await fetch("http://localhost:8000/accommodations");
+        const response = await fetch("http://localhost:8000/api/fastapi/accommodations");
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data: AccommodationOut[] = await response.json();
         setAllAccommodations(data);
@@ -55,7 +55,7 @@ function HotelMap() {
       if (!token) return;
 
       try {
-        const res = await fetch(`http://localhost:8000/api/v1/favorites/user/${user.id}`);
+        const res = await fetch(`http://localhost:8000/api/fastapi/favorites/user/${user.id}`);
         const data = await res.json();
         console.log("📦 받아온 favorites 데이터:", data);
         const map: Record<number, boolean> = {};
@@ -87,13 +87,13 @@ function HotelMap() {
     try {
       if (isFav) {
         const res = await fetch(
-          `http://localhost:8000/api/v1/favorites/delete?user_id=${user.id}&accommodation_id=${hotelId}`,
+          `http://localhost:8000/api/fastapi/favorites/delete?user_id=${user.id}&accommodation_id=${hotelId}`,
           { method: 'DELETE' }
         );
         if (!res.ok) throw new Error("찜 해제 실패");
         setFavoriteMap((prev) => ({ ...prev, [hotelId]: false }));
       } else {
-        const res = await fetch("http://localhost:8000/api/v1/favorites", {
+        const res = await fetch("http://localhost:8000/api/fastapi/favorites", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ user_id: user.id, accommodation_id: hotelId }),

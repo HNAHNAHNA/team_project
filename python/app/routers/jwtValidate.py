@@ -4,7 +4,7 @@ import requests
 from jose import jwt, JWTError
 from app.config import settings
 
-router = APIRouter()
+router = APIRouter(prefix="/api/fastapi")
 SPRING_VALIDATE_URL = "http://localhost:8091/api/v1/auth/validate"
 
 @router.get("/validate")

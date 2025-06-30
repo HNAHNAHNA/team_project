@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, ReactNode, useEffect, useRef } from 'react';
+import { createContext, useContext, useState, useEffect, useRef } from 'react';
+import type{ ReactNode } from 'react';
 import type { AuthContextType, User } from '../types/AuthContextType';
 
 export const API_BASE = 'http://localhost:8091/api/v1/auth';
@@ -114,7 +115,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       try {
-        const res = await fetch("http://localhost:8000/refresh", {
+        const res = await fetch("http://localhost:8000/api/fastapi/refresh", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ refreshToken }),
@@ -176,3 +177,5 @@ export const useAuth = (): AuthContextType => {
   if (!ctx) throw new Error("useAuth must be inside AuthProvider");
   return ctx;
 };
+
+export { AuthContext };

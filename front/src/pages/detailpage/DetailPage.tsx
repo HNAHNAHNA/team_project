@@ -18,7 +18,7 @@ function DetailPage() {
 
     const fetchHotelId = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/get-hotel-id?hotelNo=${hotelNo}`);
+        const res = await fetch(`http://localhost:8000/api/fastapi/get-hotel-id?hotelNo=${hotelNo}`);
         const data = await res.json();
 
         if (res.ok) {
@@ -74,7 +74,7 @@ function DetailPage() {
       <div className="w-full h-auto overflow-hidden rounded-xl relative">
         <div className="flex flex-row mt-5 p-6 bg-neutral-50 rounded-2xl gap-10 shadow-md">
           <img
-            src={hotel.image_url}
+            src={hotel.image_url ?? undefined}
             alt={hotel.name}
             className="w-1/2 object-cover rounded-2xl"
           />

@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import EditUserInfo from "./EditUserInfo";
 import RecommendPlaces from "./RecommendPlaces";
-import PaymentHistory from "./PaymentHistory";
+// import PaymentHistory from "./PaymentHistory";
 import UserFavorites from "./UserFavorites";
 import ReservationAccommodations from "./ReservationAccommodations";
 
@@ -63,7 +63,7 @@ function MyPageMain() {
       </div>
 
       <div className="flex border-b mb-4">
-        {["profile", "reservations", "favorites", "RecommandedPlace","payments"].map(tab => (
+        {["profile", "reservations", "favorites", "RecommandedPlace", "payments"].map(tab => (
           <button
             key={tab}
             className={`px-4 py-2 text-sm font-semibold ${activeTab === tab
@@ -97,7 +97,7 @@ function MyPageMain() {
         {activeTab === "favorites" && (
           <>
             <h3 className="text-lg font-bold mb-4">いいね！</h3>
-            <UserFavorites userId={user.id} />
+            {user && <UserFavorites userId={user.id} />}
           </>
         )}
         {activeTab === "RecommandedPlace" && (
@@ -109,7 +109,7 @@ function MyPageMain() {
         {activeTab === "payments" && (
           <>
             <h3 className="text-lg font-bold mb-4">결제 내역</h3>
-            <PaymentHistory />
+            {/* <PaymentHistory /> */}
           </>
         )}
       </div>

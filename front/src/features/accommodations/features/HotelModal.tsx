@@ -40,7 +40,7 @@ function HotelModal({ selectedData, setSelectedData, handleDetailButtonClick }: 
                             </button>
                             <div className='flex flex-row gap-4'>
                                 <img
-                                    src={selectedData.image_url}
+                                    src={selectedData.image_url ?? undefined}
                                     alt={selectedData.name}
                                     className="w-1/2 h-1/2 max-h object-cover rounded mb-4"
                                 />

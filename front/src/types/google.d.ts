@@ -1,12 +1,7 @@
-export {};
+export {}; // 파일이 모듈로 인식되도록 함
 
 declare global {
   interface Window {
-    google: typeof google;
-  }
-
-  // 이 줄을 추가해야 "google" 네임스페이스 에러가 사라짐
-  namespace google {
-    export = google;
+    google: typeof google.maps;
   }
 }

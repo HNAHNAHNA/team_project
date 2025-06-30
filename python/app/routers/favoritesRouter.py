@@ -8,9 +8,9 @@ from app.models.accommodation import Accommodation
 from app.models.favorites import Favorite
 from app.schemas.favorites import FavoriteCreate, FavoriteOut
 
-router = APIRouter()
+router = APIRouter(prefix="/api/fastapi")
 
-@router.post("/api/v1/favorites", response_model=FavoriteOut)
+@router.post("/favorites", response_model=FavoriteOut)
 def create_favorite(fav: FavoriteCreate, db: Session = Depends(get_db)):
     try:
         new_fav = Favorite(
@@ -26,7 +26,7 @@ def create_favorite(fav: FavoriteCreate, db: Session = Depends(get_db)):
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"찜 등록 중 오류 발생: {e}")
     
-@router.get("/api/v1/favorites/user/{user_id}", response_model=List[FavoriteOut])
+@router.get("/favorites/user/{user_id}", response_model=List[FavoriteOut])
 def get_user_favorites(user_id: int, db: Session = Depends(get_db)):
     try:
         favorites = db.query(Favorite).filter_by(user_id=user_id).all()
@@ -34,7 +34,7 @@ def get_user_favorites(user_id: int, db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"찜 목록 조회 중 오류 발생: {e}")
 
-@router.delete("/api/v1/favorites/delete")
+@router.delete("/favorites/delete")
 def delete_favorite(
     user_id: int = Query(..., description="유저 ID"),
     accommodation_id: int = Query(..., description="숙소 ID"),
@@ -65,7 +65,7 @@ def get_favorites(user_id: int, db: Session = Depends(get_db)):
 class HotelNoResponse(BaseModel):
     hotel_no: int
 
-@router.get("/api/v1/favorites/hotel-no", response_model=HotelNoResponse)
+@router.get("/favorites/hotel-no", response_model=HotelNoResponse)
 def get_hotel_number(
     accommodation_id: int = Query(..., description="숙소 ID"),
     db: Session = Depends(get_db)

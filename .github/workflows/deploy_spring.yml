@@ -53,7 +53,7 @@ jobs:
             docker rmi staynguide-spring || true
 
             echo "🐳 도커 이미지 빌드"
-            docker build -t staynguide-spring .
+            docker build --no-cache -t staynguide-spring .
 
             echo "🚀 새 컨테이너 실행"
             docker run -d --name spring-back -p 8091:8080 staynguide-spring

@@ -25,25 +25,36 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy to EC2 via SSH
+      - name: Send base64-encoded application.properties to EC2
+        env:
+          SPRING_ENV_B64: ${{ secrets.SPRING_ENV_B64 }}
+        run: |
+          echo "$SPRING_ENV_B64" > encoded_props.txt
+          scp -i ec2_key.pem encoded_props.txt ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:~/team_project/back/
+
+      - name: Deploy Spring Boot
         run: |
           ssh -i ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd ~/team_project/back
 
-            echo "$SPRING_ENV" > src/main/resources/application.properties
+            echo "📦 base64 복호화 → application.properties 생성"
+            mkdir -p src/main/resources
+            base64 -d encoded_props.txt > src/main/resources/application.properties
+            rm encoded_props.txt
 
-            echo "기존 컨테이너 중지 및 삭제"
+            echo "✅ 디버그: application.properties 일부 확인"
+            head -n 5 src/main/resources/application.properties | sed 's/=.*/=*** (masked)/'
+
+            echo "🛑 기존 컨테이너 중지 및 삭제"
             docker stop spring-back || true
             docker rm spring-back || true
 
-            echo "이미지 파일 삭제"
+            echo "🧼 기존 이미지 삭제"
             docker rmi staynguide-spring || true
 
-            echo "도커 이미지 빌드"
+            echo "🐳 도커 이미지 빌드"
             docker build -t staynguide-spring .
 
-            echo "새 컨테이너 실행"
+            echo "🚀 새 컨테이너 실행"
             docker run -d --name spring-back -p 8091:8080 staynguide-spring
           EOF
-        env:
-          SPRING_ENV: ${{ secrets.SPRING_ENV }}

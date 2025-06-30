@@ -46,7 +46,7 @@ public class AuthController {
 		// 인증 서비스의 로그인 로직 호출
 		UserLoginResponse response = authService.login(request);
 
-		log.info("로그인 성공 및 토큰 발급: {}", request.getEmail());
+		log.info("로그인 성공 및 토큰 발급!: {}", request.getEmail());
 		log.info("유저 데이터 반환: {}", response);
 		// 성공 응답 반환 (HTTP 상태 코드 200 OK) 우왕
 		return ResponseEntity.ok(response);

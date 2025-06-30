@@ -30,7 +30,7 @@ function ReservationAccommodations() {
                 },
             });
 
-            if (!res.ok) throw new Error("위치찾기 실패!");
+            if (!res.ok) throw new Error("위치찾기 실패!!");
 
             const hotelData = await res.json();
             const hotelName = hotelData.name;

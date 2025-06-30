@@ -17,7 +17,7 @@ def refresh_access_token(request: RefreshTokenRequest) -> dict:
     refresh_token = request.refreshToken
     try:
         print('토큰 재발급!')
-        print('우와앙!')
+        print('우와앙!!')
         response = requests.post(
             SPRING_REFRESH_URL,
             json={"refreshToken": refresh_token},

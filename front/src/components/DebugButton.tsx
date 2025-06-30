@@ -2,7 +2,7 @@ function DebugButton() {
 
     const handleClick = async () => {
         const token = localStorage.getItem("accessToken");
-        const res = await fetch("http://localhost:8000/api/fastapi/reservations/debug", {
+        const res = await fetch("http://15.164.129.209/api/fastapi/reservations/debug", {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

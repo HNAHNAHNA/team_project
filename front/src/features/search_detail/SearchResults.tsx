@@ -35,7 +35,7 @@ const SearchResults = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:8000/api/fastapi/accommodations");
+      const res = await fetch("http://15.164.129.209/api/fastapi/accommodations");
       if (!res.ok) throw new Error("숙소 데이터를 불러오지 못했습니다.");
 
       const accommodations = await res.json();

@@ -17,7 +17,7 @@ const UserFavorites = ({ userId }: { userId: number }) => {
 
         if (!selectedData) return;
         
-        const res = await fetch(`http://localhost:8000/api/fastapi/favorites/hotel-no?accommodation_id=${selectedData.accommodation.accommodation_id}`);
+        const res = await fetch(`http://15.164.129.209/api/fastapi/favorites/hotel-no?accommodation_id=${selectedData.accommodation.accommodation_id}`);
         const data = await res.json();
         navigate(`/detail/${data.hotel_no}`);
     }
@@ -26,7 +26,7 @@ const UserFavorites = ({ userId }: { userId: number }) => {
         const fetchFavorites = async () => {
             setLoading(true);
             try {
-                const res = await fetch(`http://localhost:8000/api/fastapi/favorites/${userId}`);
+                const res = await fetch(`http://15.164.129.209/api/fastapi/favorites/${userId}`);
                 if (!res.ok) throw new Error("찜 목록 불러오기 실패");
 
                 const data: Favorite[] = await res.json();
@@ -43,7 +43,7 @@ const UserFavorites = ({ userId }: { userId: number }) => {
 
     const deleteFavoriteButtonClickHandler = async (userId: number, selectedData: Favorite) => {
         try {
-            const res = await fetch(`http://localhost:8000/api/fastapi/favorites/delete?user_id=${userId}&accommodation_id=${selectedData.accommodation.accommodation_id}`,
+            const res = await fetch(`http://15.164.129.209/api/fastapi/favorites/delete?user_id=${userId}&accommodation_id=${selectedData.accommodation.accommodation_id}`,
                 { method: "DELETE" }
             );
             if (!res.ok) throw new Error("削除失敗！")

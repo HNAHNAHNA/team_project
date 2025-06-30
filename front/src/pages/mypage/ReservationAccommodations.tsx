@@ -23,7 +23,7 @@ function ReservationAccommodations() {
 
     const getHotelLocation = async (accommodationId: number) => {
         try {
-            const res = await fetch("http://localhost:8000/api/fastapi/get-hotel-location", {
+            const res = await fetch("http://15.164.129.209/api/fastapi/get-hotel-location", {
                 method: "GET",
                 headers: {
                     "accommodation-id": accommodationId.toString(),
@@ -61,7 +61,7 @@ function ReservationAccommodations() {
     const favoriteModalToDetailPage = async () => {
         if (!selectedData) return;
         const res = await fetch(
-            `http://localhost:8000/api/fastapi/favorites/hotel-no?accommodation_id=${selectedData.accommodation.accommodation_id}`
+            `http://15.164.129.209/api/fastapi/favorites/hotel-no?accommodation_id=${selectedData.accommodation.accommodation_id}`
         );
         const data = await res.json();
         navigate(`/detail/${data.hotel_no}`);
@@ -74,7 +74,7 @@ function ReservationAccommodations() {
             if (!token) return;
 
             try {
-                const res = await fetch("http://localhost:8000/api/fastapi/get-user-reservation-data", {
+                const res = await fetch("http://15.164.129.209/api/fastapi/get-user-reservation-data", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",

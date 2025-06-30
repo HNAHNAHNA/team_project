@@ -23,7 +23,7 @@ jobs:
       
       - name: Build Docker image
         env:
-          IMAGE_ID: ghcr.io/${{ github.repository_owner }}/team_project/staynguide-spring:latest
+          IMAGE_ID: ghcr.io/hnahnahna/team_project/staynguide-spring:latest
         run: |
           docker build -f back/Dockerfile -t $IMAGE_ID ./back
 

@@ -20,7 +20,12 @@ jobs:
 
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-      
+      - name: List all files
+        run: ls -R
+
+      - name: List back folder
+        run: ls -al back
+
       - name: Build Docker image
         env:
           IMAGE_ID: ghcr.io/hnahnahna/team_project/staynguide-spring:latest

@@ -13,7 +13,7 @@ import lombok.AllArgsConstructor;
 public class TokenReissueRequest {
 
 	/*
-	 * JWT Access Token 재발급 기능 구현 이 기능은 클라이언트가 만료된 Access Token 대신 Refresh Token을
+	 * !JWT Access Token 재발급 기능 구현 이 기능은 클라이언트가 만료된 Access Token 대신 Refresh Token을
 	 * 보내면, 서버가 이를 검증하고 새로운 Access Token을 발급해주는 역할을 합니다.
 	 */
 	

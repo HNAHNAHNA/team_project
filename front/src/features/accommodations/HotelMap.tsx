@@ -33,7 +33,7 @@ function HotelMap() {
     const fetchAllAccommodations = async () => {
       try {
         setLoading(true);
-        const response = await fetch("http://localhost:8000/accommodations");
+        const response = await fetch("http://localhost:8000/api/fastapi/accommodations");
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data: AccommodationOut[] = await response.json();
         setAllAccommodations(data);

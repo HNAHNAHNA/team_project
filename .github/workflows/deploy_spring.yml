@@ -23,12 +23,12 @@ jobs:
 
       - name: Build Docker image
         run: |
-          IMAGE_ID="ghcr.io/$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')/team_project/staynguide-spring:latest"
+          IMAGE_ID="ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/team_project/staynguide-spring:latest"
           docker build -t $IMAGE_ID ./back
 
       - name: Push to GHCR
         run: |
-          IMAGE_ID="ghcr.io/$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')/team_project/staynguide-spring:latest"
+          IMAGE_ID="ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/team_project/staynguide-spring:latest"
           docker push $IMAGE_ID
 
       - name: Copy SSH key

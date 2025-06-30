@@ -24,4 +24,8 @@ dist-ssr
 *.sln
 *.sw?
 
+<<<<<<< HEAD
 **.tsbuildinfo
+=======
+*.tsbuildinfo
+>>>>>>> 1134cc5414509257dc3013950f49b9ee127f0850

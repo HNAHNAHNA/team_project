@@ -1,0 +1,42 @@
+name: Deploy Frontend
+
+on:
+  push:
+    paths:
+      - 'front/**'
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./front
+
+      - name: Build frontend
+        run: npm run build
+        working-directory: ./front
+
+      - name: Write .env file for Vite
+        run: echo "${{ secrets.FRONT_ENV }}" > .env
+        working-directory: ./front
+
+      - name: Copy SSH key
+        run: |
+          echo "${{ secrets.EC2_KEY }}" > ec2_key.pem
+          chmod 600 ec2_key.pem
+
+      - name: Deploy dist to EC2
+        run: |
+          scp -i ec2_key.pem -r ./front/dist ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/team_project/front/

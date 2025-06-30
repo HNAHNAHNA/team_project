@@ -26,11 +26,13 @@ jobs:
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy FastAPI to EC2
+        env:
+          FASTAPI_ENV: ${{ secrets.FASTAPI_ENV }}
         run: |
+          echo "$FASTAPI_ENV" | ssh -i ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} 'cat > ~/team_project/python/.env'
+
           ssh -i ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd ~/team_project/python
-
-            echo "$PYTHON_ENV" > .env
 
             echo "🛑 기존 컨테이너 중지 및 삭제"
             docker stop fastapi-back || true
@@ -45,5 +47,3 @@ jobs:
             echo "🚀 새 컨테이너 실행"
             docker run --env-file .env -d --name fastapi-back -p 8000:8000 staynguide-fastapi
           EOF
-        env:
-          PYTHON_ENV: ${{ secrets.PYTHON_ENV }}

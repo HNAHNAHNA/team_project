@@ -1,0 +1,16 @@
+name: Test ENV Print
+
+on:
+  workflow_dispatch:
+
+jobs:
+  print-env:
+    runs-on: ubuntu-latest
+    env:
+      TESTENV: ${{ secrets.TESTENV }}
+    steps:
+      - name: Show TESTENV value
+        run: |
+          echo "== START ENV VALUE =="
+          echo "$TESTENV"
+          echo "== END ENV VALUE =="

@@ -24,10 +24,16 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+      
+      - name: Check FASTAPI_ENV value
+        run: |
+          echo "== START ENV VALUE =="
+          echo "$FASTAPI_ENV"
+          echo "== END ENV VALUE =="
 
       - name: Deploy FastAPI to EC2
         env:
-          FASTAPI_ENV: ${{ secrets.FASTAPI_ENV }}
+          FASTAPI_ENV: ${{ secrets.FASTAPI_ENV }} 
         run: |
           echo "$FASTAPI_ENV" | ssh -i ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} 'cat > ~/team_project/python/.env'
 

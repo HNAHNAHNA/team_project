@@ -24,21 +24,25 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-      
-      - name: Check TESTENV value
-        run: |
-          echo "== START ENV VALUE =="
-          echo "$TESTENV"
-          echo "== END ENV VALUE =="
 
-      - name: Deploy FastAPI to EC2
+      - name: Send .env to EC2 via base64
         env:
-          FASTAPI_ENV: ${{ secrets.FASTAPI_ENV }} 
+          FASTAPI_ENV_B64: ${{ secrets.FASTAPI_ENV_B64 }}
         run: |
-          echo "$FASTAPI_ENV" | ssh -i ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} 'cat > ~/team_project/python/.env'
+          echo "$FASTAPI_ENV_B64" > encoded_env.txt
+          scp -i ec2_key.pem encoded_env.txt ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:~/team_project/python/
 
+      - name: Deploy FastAPI
+        run: |
           ssh -i ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd ~/team_project/python
+
+            echo "📦 base64 복호화 후 .env 생성"
+            base64 -d encoded_env.txt > .env
+            rm encoded_env.txt
+
+            echo "✅ 디버그: .env 내용 일부 확인"
+            head -n 5 .env | sed 's/=.*/=*** (masked)/'
 
             echo "🛑 기존 컨테이너 중지 및 삭제"
             docker stop fastapi-back || true

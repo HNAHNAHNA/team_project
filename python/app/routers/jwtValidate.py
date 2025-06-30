@@ -11,7 +11,7 @@ SPRING_VALIDATE_URL = "http://localhost:8091/api/v1/auth/validate"
 def validate_jwt_token(token: str = Query(...)) -> dict:
     """
     /auth/validate?token=... 으로 요청 시,
-    JWT를 검증하고 payload를 반환합니다.
+    JWT를 검증하고 payload를 반환합니다..
     """
     try:
         headers = {

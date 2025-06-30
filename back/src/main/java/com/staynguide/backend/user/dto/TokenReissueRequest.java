@@ -17,6 +17,6 @@ public class TokenReissueRequest {
 	 * 보내면, 서버가 이를 검증하고 새로운 Access Token을 발급해주는 역할을 합니다.
 	 */
 	
-    @NotBlank(message = "Refresh Token은 필수 값입니다.")
+    @NotBlank(message = "Refresh Token은 필수 값입니다!")
     private String refreshToken; // 재발급 요청에 사용될 Refresh Token
 }

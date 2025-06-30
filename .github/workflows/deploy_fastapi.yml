@@ -1,0 +1,49 @@
+name: Deploy FastAPI
+
+on:
+  push:
+    paths:
+      - 'python/**'
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Copy SSH key
+        run: |
+          echo "${{ secrets.EC2_KEY }}" > ec2_key.pem
+          chmod 600 ec2_key.pem
+
+      - name: Add EC2 host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy FastAPI to EC2
+        run: |
+          ssh -i ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            cd ~/team_project/python
+
+            echo "$PYTHON_ENV" > .env
+
+            echo "🛑 기존 컨테이너 중지 및 삭제"
+            docker stop fastapi-back || true
+            docker rm fastapi-back || true
+
+            echo "🧼 기존 이미지 삭제"
+            docker rmi staynguide-fastapi || true
+
+            echo "🐳 도커 이미지 빌드"
+            docker build -t staynguide-fastapi .
+
+            echo "🚀 새 컨테이너 실행"
+            docker run -d --name fastapi-back -p 8000:8000 staynguide-fastapi
+          EOF
+        env:
+          PYTHON_ENV: ${{ secrets.PYTHON_ENV }}

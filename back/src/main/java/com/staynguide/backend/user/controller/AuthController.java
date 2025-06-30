@@ -48,7 +48,7 @@ public class AuthController {
 
 		log.info("로그인 성공 및 토큰 발급: {}", request.getEmail());
 		log.info("유저 데이터 반환: {}", response);
-		// 성공 응답 반환 (HTTP 상태 코드 200 OK)
+		// 성공 응답 반환 (HTTP 상태 코드 200 OK) 우왕
 		return ResponseEntity.ok(response);
 	}
 

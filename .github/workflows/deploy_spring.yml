@@ -56,5 +56,5 @@ jobs:
             docker build --no-cache -t staynguide-spring .
 
             echo "🚀 새 컨테이너 실행"
-            docker run -d --name spring-back -p 8091:8080 staynguide-spring
+            docker run -d --name spring-back -p 8091:8091 staynguide-spring
           EOF

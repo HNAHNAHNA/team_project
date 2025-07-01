@@ -18,7 +18,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# app.include_router(accommodations_insert.router)!!
+# app.include_router(accommodations_insert.router)!!!
 
 # 이건 홈화면 호텔들 슬라이드 띄우기
 app.include_router(accommodationRouter)

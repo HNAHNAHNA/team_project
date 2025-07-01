@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useRef } from 'react';
-import type{ ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import type { AuthContextType, User } from '../types/AuthContextType';
 
 export const API_BASE = '/api/v1/auth';
@@ -24,6 +24,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const [validated, setValidated] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
   const validatingRef = useRef(false); // 중복 실행 방지용
 
   const login = async (email: string, password: string): Promise<User | null> => {
@@ -152,7 +153,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // 앱이 처음 실행될 때 accessToken 유효성 1회 체크
   useEffect(() => {
-    validateAccessToken();
+    validatingRef.current = true; // ✅ 중복 실행 방지
+    validateAccessToken()
+      .then((token) => {
+        if (token) setValidated(true);
+      })
+      .finally(() => {
+        validatingRef.current = false;
+        setAuthLoading(false); // ✅ 로딩 완료
+      });
   }, []);
 
   return (
@@ -165,6 +174,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         login,
         logout,
         validateAccessToken,
+        authLoading,
       }}
     >
       {children}

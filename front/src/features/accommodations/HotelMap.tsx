@@ -21,7 +21,7 @@ interface FavoriteOut {
 
 function HotelMap() {
   const navigate = useNavigate();
-  const { user, isLoggedIn, validateAccessToken } = useAuth();
+  const { user, isLoggedIn, validateAccessToken, authLoading  } = useAuth();
   const [selectedData, setSelectedData] = useState<HotelBasicInfo | null>(null);
   const [allAccommodations, setAllAccommodations] = useState<AccommodationOut[]>([]);
   const [favoriteMap, setFavoriteMap] = useState<Record<number, boolean>>({});
@@ -50,7 +50,7 @@ function HotelMap() {
 
   useEffect(() => {
     const fetchFavorites = async () => {
-      if (!user || !isLoggedIn) return;
+      if (authLoading || !user || !isLoggedIn) return;
       const token = await validateAccessToken();
       if (!token) return;
 

@@ -122,9 +122,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           body: JSON.stringify({ refreshToken }),
         });
 
-        const text = await res.text();
-        console.log("📦 응답 내용:", text);
-
         if (res.ok) {
           const data = await res.json();
           console.log("DEBUG: 토큰 재발급 성공", data);
@@ -156,17 +153,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // 앱이 처음 실행될 때 accessToken 유효성 1회 체크
   useEffect(() => {
-    validatingRef.current = true; // ✅ 중복 실행 방지
+    validatingRef.current = true;
     validateAccessToken()
       .then((token) => {
-        if (token) setValidated(true);
+        setValidated(!!token); // ← null이 오면 false로
+      })
+      .catch((err) => {
+        console.error("validateAccessToken 중 오류 발생:", err);
+        setValidated(false);  // ✅ 명시적으로 false 설정
       })
       .finally(() => {
         validatingRef.current = false;
-        setAuthLoading(false); // ✅ 로딩 완료
+        setAuthLoading(false);
       });
   }, []);
-
+  
   return (
     <AuthContext.Provider
       value={{

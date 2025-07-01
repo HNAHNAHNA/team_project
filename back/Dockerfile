@@ -12,5 +12,6 @@ RUN ./gradlew build -x test
 FROM eclipse-temurin:17-jre
 WORKDIR /app
 
-COPY --from=builder /app/build/libs/*SNAPSHOT.jar app.jar
+COPY --from=builder /app/build/libs/backend-0.0.1-SNAPSHOT.jar app.jar
+RUN test -f app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]

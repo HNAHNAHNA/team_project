@@ -46,7 +46,7 @@ function DetailPage() {
       return;
     }
 
-    const res = await fetch("api/fastapi/reservations", {
+    const res = await fetch("/api/fastapi/reservations", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,

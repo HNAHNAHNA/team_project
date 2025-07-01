@@ -45,8 +45,7 @@ jobs:
             head -n 5 .env | sed 's/=.*/=*** (masked)/'
 
             echo "🛑 기존 컨테이너 중지 및 삭제"
-            docker stop fastapi-back || true
-            docker rm fastapi-back || true
+            docker rm -f fastapi-back || true
 
             echo "🧼 기존 이미지 삭제"
             docker rmi staynguide-fastapi || true

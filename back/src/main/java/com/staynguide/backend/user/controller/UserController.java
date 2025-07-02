@@ -96,7 +96,7 @@ public class UserController {
     /**
      * 로그인된 사용자 본인의 정보를 수정합니다.
      * @param customUserDetails 현재 로그인된 사용자 객체 (Access Token 기반으로 Security Context에서 주입)
-     * @param request 수정할 정보를 담은 UserUpdateRequest DTO
+     * @param request 수정할 정보를 담은 UserUpdateRequest DTO!
      * @return 수정된 사용자 정보를 담은 UserResponseDto DTO
      */
     @PutMapping("/me") // <<< 이 메서드를 추가합니다. PUT /api/v1/users/me 요청 처리

@@ -55,7 +55,7 @@ function MyPageMain() {
           />
         </div>
         <div className="flex flex-col gap-1 text-start sm:text-left">
-          <h3 className="text-xl font-semibold">{user?.username}</h3>
+          <h3 className="text-xl font-semibold">{user?.userName}</h3>
           <p className="text-gray-600 text-sm">{user?.email}</p>
           <p className="text-gray-600 text-sm">{user?.phoneNumber}</p>
         </div>

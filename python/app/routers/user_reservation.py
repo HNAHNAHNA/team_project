@@ -57,58 +57,34 @@ def get_hotel_id(hotelNo: int = Query(...), db: Session = Depends(get_db)):
     print(f"✅ hotel_id = {hotel.accommodation_id}")
     return { "hotel_id": hotel.accommodation_id }
 
-@router.get("/get-user-reservation-data", response_model=List[UserReservationOUT])
+@router.get("/get-user-reservation-data", response_model = List[UserReservationOUT])
 def get_reservation_data(
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user)
 ):
-    try:
-        print("🔥 current_user:", current_user)
-        user_id = current_user["user_id"]
+    print("✅ current_user:", current_user)
+    user_id = current_user["user_id"]
+    print("✅ user_id:", user_id)
 
-        reservations = (
-            db.query(UserReservation)
-            .join(Accommodation)
-            .filter(UserReservation.user_id == user_id)
-            .all()
-        )
+    reservations = (
+        db.query(UserReservation)
+        .join(Accommodation)
+        .filter(UserReservation.user_id == user_id)
+        .all()
+    )
 
-        result = []
-        for r in reservations:
-            result.append({
-                "reservation_id": r.reservation_id,
-                "u_booking_id": r.u_booking_id,
-                "hotel_id": r.hotel_id,
-                "reserved_at": r.reserved_at.isoformat() if r.reserved_at else None,
-                "check_in_date": r.check_in_date.isoformat(),
-                "check_out_date": r.check_out_date.isoformat(),
-                "user_id": r.user_id,
-                "accommodation": {
-                    "accommodation_id": r.accommodation.accommodation_id,
-                    "name": r.accommodation.name,
-                    "address": r.accommodation.address,
-                    "description": r.accommodation.description,
-                    "image_url": r.accommodation.image_url,
-                    "created_at": r.accommodation.created_at.isoformat() if r.accommodation.created_at else None,
-                    "host_user_id": r.accommodation.host_user_id,
-                    "charge": r.accommodation.charge,
-                    "latitude": r.accommodation.latitude,
-                    "longitude": r.accommodation.longitude,
-                    "review_count": r.accommodation.review_count,
-                    "review_average": r.accommodation.review_average,
-                    "checkin_time": r.accommodation.checkin_time,
-                    "checkout_time": r.accommodation.checkout_time,
-                    "telephone": r.accommodation.telephone,
-                    "hotel_no": r.accommodation.hotel_no,
-                }
-            })
-
-        return result
-    except Exception as e:
-        import traceback
-        print("❌ 예약 정보 오류:", e)
-        traceback.print_exc()
-        raise HTTPException(status_code=500, detail=str(e))
+    result = []
+    for r in reservations:
+        result.append({
+            "check_in_date": r.check_in_date.isoformat(),
+            "check_out_date": r.check_out_date.isoformat(),
+            "hotel": {
+                "accommodation_id": r.accommodation.accommodation_id,
+                "name": r.accommodation.name,
+                "image_url": r.accommodation.image_url,
+            }
+        })
+    return reservations
 
 @router.get("/get-hotel-location", response_model = AccommodationOut)
 def get_hotel_location (accommodation_id: int = Header(...), db: Session = Depends(get_db)):

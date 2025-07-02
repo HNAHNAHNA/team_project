@@ -1,3 +1,5 @@
+import type { AccommodationOut } from "./HotelList";
+
 export interface Accommodation {
   accommodation_id: number;
   name: string;
@@ -7,6 +9,6 @@ export interface Accommodation {
 
 export interface Favorite {
   favorite_id: number;
-  accommodation: Accommodation;
+  accommodation: AccommodationOut;
   created_at: string;
 }

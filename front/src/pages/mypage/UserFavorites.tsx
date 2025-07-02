@@ -16,10 +16,7 @@ const UserFavorites = ({ userId }: { userId: number }) => {
         console.log("👉 accommodation_id:", selectedData?.accommodation?.accommodation_id);
 
         if (!selectedData) return;
-        
-        const res = await fetch(`/api/fastapi/favorites/hotel-no?accommodation_id=${selectedData.accommodation.accommodation_id}`);
-        const data = await res.json();
-        navigate(`/detail/${data.hotel_no}`);
+        navigate(`/detail/${selectedData.accommodation.hotel_no}`);
     }
 
     useEffect(() => {

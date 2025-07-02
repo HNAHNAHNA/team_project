@@ -4,8 +4,10 @@ import Container from "./Container";
 import StayButton from "../../components/StayButton";
 import DebugButton from "../../components/DebugButton";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 
 function DetailPage() {
+  const { validateAccessToken } = useAuth();
   const { hotelNo } = useParams();
   const hotel = useLoaderData() as AccommodationOut;
   const navigate = useNavigate();
@@ -33,14 +35,15 @@ function DetailPage() {
 
     fetchHotelId();
   }, [hotelNo]);
+
   const reservationButtonHandler = async () => {
-    const accessToken = localStorage.getItem("accessToken");
+    const token = await validateAccessToken(); // ✅ 만료 시 자동 재발급
     const user = JSON.parse(localStorage.getItem("user") || "{}");
-    if (!accessToken) {
+    if (!token) {
       alert("로그인이 필요합니다.")
       return navigate("/login")
     }
-    console.log("입력정보 >>>>>> ",hotelId,checkInDate,checkOutDate)
+    console.log("입력정보 >>>>>> ", hotelId, checkInDate, checkOutDate)
     if (!hotelId || !checkInDate || !checkOutDate) {
       alert("입력값이 부족합니다.");
       return;
@@ -49,12 +52,12 @@ function DetailPage() {
     const res = await fetch("/api/fastapi/reservations", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         hotel_id: hotelId,
-        user_id: user.id,
+        user_id: user.userId,
         check_in_date: checkInDate,
         check_out_date: checkOutDate,
       }),

@@ -36,6 +36,7 @@ function HotelMap() {
         const response = await fetch("/api/fastapi/accommodations");
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data: AccommodationOut[] = await response.json();
+        console.log("🏨 받아온 숙소:", data); // 이거 추가
         setAllAccommodations(data);
       } catch (error) {
         console.error("숙소 데이터 로딩 실패:", error);
@@ -49,18 +50,31 @@ function HotelMap() {
   }, []);
 
   useEffect(() => {
+    if (authLoading) return;
+
     const fetchFavorites = async () => {
-      if (authLoading || !user || !isLoggedIn) {
-        setFavoritesLoaded(true); // ← 여기 추가
+      // 로그인 안 한 경우라도 favoritesLoaded는 true로!
+      if (!user || !isLoggedIn) {
+        console.warn("⛔ 로그인되지 않음 - 즐겨찾기 건너뜀");
+        setFavoritesLoaded(true); // ✅ 여기 꼭 있어야 함!
         return;
       }
+
       const token = await validateAccessToken();
-      if (!token) return;
+      if (!token) {
+        setFavoritesLoaded(true); // ❗ 토큰 없을 때도 true로
+        return;
+      }
 
       try {
-        const res = await fetch(`/api/fastapi/favorites/user/${user.id}`);
+        const res = await fetch(`/api/fastapi/favorites/user/${user.userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await res.json();
         console.log("📦 받아온 favorites 데이터:", data);
+        console.log("userData >>>>> ",user)
         const map: Record<number, boolean> = {};
         (data as FavoriteOut[]).forEach((fav) => {
           const accId = fav.accommodation?.accommodation_id;
@@ -68,17 +82,16 @@ function HotelMap() {
             map[accId] = true;
           }
         });
-
         setFavoriteMap(map);
       } catch (err) {
-        console.error("찜 목록 불러오기 실패:", err);
+        console.error("즐겨찾기 가져오기 실패", err);
       } finally {
-        setFavoritesLoaded(true); // ✅ 이게 중요
+        setFavoritesLoaded(true); // ✅ 무조건 true
       }
     };
 
     fetchFavorites();
-  }, [user?.id, isLoggedIn, authLoading]);
+  }, [authLoading, isLoggedIn, user]);
 
   const toggleFavorite = async (hotelId: number) => {
     if (!user || !isLoggedIn) return;

@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException, Header, Query
+from fastapi import APIRouter, Body, Depends, HTTPException, Header, Query
 from sqlalchemy.orm import Session
 from app.database.connection import get_db
 from app.dependencies.auth import get_current_user
@@ -99,3 +99,28 @@ def get_hotel_location (accommodation_id: int = Header(...), db: Session = Depen
     if not accommodation:
         raise HTTPException(status_code=404, detail="accommodation NOT FOUND!")
     return accommodation
+
+@router.delete("/delete-reservation")
+def delete_reservation(
+    user_id: int = Body(...),
+    accommodation_id: int = Body(...),
+    check_in_date: str = Body(...),  # YYYY-MM-DD
+    db: Session = Depends(get_db)
+):
+    reservation = (
+        db.query(UserReservation)
+        .filter(
+            UserReservation.user_id == user_id,
+            UserReservation.hotel_id == accommodation_id,
+            UserReservation.check_in_date == check_in_date  # 정확한 예약
+        )
+        .first()
+    )
+
+    if not reservation:
+        raise HTTPException(status_code=404, detail="해당 예약을 찾을 수 없습니다.")
+
+    db.delete(reservation)
+    db.commit()
+
+    return {"message": "예약이 성공적으로 삭제되었습니다."}

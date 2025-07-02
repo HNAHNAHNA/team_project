@@ -1,7 +1,8 @@
 export interface User {
-  id: number;
-  name: string;
+  userId: number;            // ✅ 서버 응답에 맞게 수정
+  userName: string;
   email: string;
+  phoneNumber: string;
   role: 'ADMIN' | 'USER' | 'HOST';
 }
 

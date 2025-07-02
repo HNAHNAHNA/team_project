@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import type { UserReservations } from "../../types/User_Reservation";
 import Skeleton from "react-loading-skeleton";
@@ -20,6 +20,31 @@ function ReservationAccommodations() {
     const navigate = useNavigate();
 
     const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
+
+    const fetchReservations = useCallback(async () => {
+        setLoading(true);
+        const token = await validateAccessToken();
+        if (!token) return;
+
+        try {
+            const res = await fetch("/api/fastapi/get-user-reservation-data", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (!res.ok) throw new Error(`서버 오류: ${res.status}`);
+            const data = await res.json();
+            setReservationHotels(data);
+            setSkeletonCount(data.length);
+        } catch (err) {
+            console.error("예약 정보 가져오기 실패:", err);
+        } finally {
+            setLoading(false);
+        }
+    }, [validateAccessToken]);
 
     const getHotelLocation = async (accommodationId: number) => {
         try {
@@ -60,42 +85,12 @@ function ReservationAccommodations() {
 
     const favoriteModalToDetailPage = async () => {
         if (!selectedData) return;
-        const res = await fetch(
-            `/api/fastapi/favorites/hotel-no?accommodation_id=${selectedData.accommodation.accommodation_id}`
-        );
-        const data = await res.json();
-        navigate(`/detail/${data.hotel_no}`);
+        navigate(`/detail/${selectedData.accommodation.hotel_no}`);
     };
 
     useEffect(() => {
-        const fetchReservations = async () => {
-            console.log('야호 안녕!')
-            setLoading(true);
-            const token = await validateAccessToken();
-            if (!token) return;
-
-            try {
-                const res = await fetch("/api/fastapi/get-user-reservation-data", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-
-                if (!res.ok) throw new Error(`서버 오류: ${res.status}`);
-                const data = await res.json();
-                setReservationHotels(data);
-                setSkeletonCount(data.length);
-            } catch (err) {
-                console.error("예약 정보 가져오기 실패:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchReservations();
-    }, [validateAccessToken]);
+    }, [fetchReservations]);
 
     useEffect(() => {
         if (mapInstance && placeData) {
@@ -106,6 +101,57 @@ function ReservationAccommodations() {
             });
         }
     }, [mapInstance, placeData]);
+
+    const deleteButtonClick = async () => {
+        const confirmDelete = window.confirm("정말로 이 예약을 취소하시겠습니까?");
+        if (!confirmDelete) return;
+
+        const accessToken = localStorage.getItem("accessToken");
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+        if (!accessToken) {
+            alert("로그인이 필요합니다");
+            return;
+        }
+        console.log(selectedData?.accommodation.checkin_time)
+        const res = await fetch("/api/fastapi/delete-reservation", {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                user_id: user.userId,
+                accommodation_id: selectedData?.accommodation.accommodation_id,
+                check_in_date: selectedData?.check_in_date,
+            }),
+        });
+
+        let data;
+        const isJson = res.headers.get("content-type")?.includes("application/json");
+
+        if (isJson) {
+            data = await res.json();
+        } else {
+            data = await res.text(); // 내부 서버 에러 메시지
+        }
+
+        if (res.ok) {
+            alert("✅ 예약이 삭제되었습니다");
+            setSelectedData(null);
+            setShowDetail(false);
+            setMapCenter(null);
+            setPlaceData(null);
+
+            // ✅ 호텔 목록 다시 불러오기
+            fetchReservations();
+        } else {
+            console.error("예약 삭제 실패:", data);
+            alert("❌ 예약 삭제 실패");
+        }
+
+        setShowDetail(false);
+    };
 
     return (
         <div>
@@ -190,8 +236,8 @@ function ReservationAccommodations() {
                                             alt={selectedData.accommodation.name}
                                             className="w-full h-48 object-cover rounded mb-4"
                                         />
-                                        <div className="mb-3">
-                                            <button onClick={favoriteModalToDetailPage} className="mr-3 bg-blue-500 text-white px-3 py-1 rounded">호텔 정보</button>
+                                        <div className="flex flex-row justify-between">
+                                            <button onClick={favoriteModalToDetailPage} className="mr-3 bg-blue-500 text-white px-3 py-1 rounded">ホテル情報</button>
                                             <button
                                                 onClick={() => {
                                                     setShowDetail(true);
@@ -201,7 +247,12 @@ function ReservationAccommodations() {
                                                 }}
                                                 className="bg-green-500 text-white px-3 py-1 rounded"
                                             >
-                                                주변 장소 보기
+                                                周り探索
+                                            </button>
+                                            <button
+                                                className="bg-black/70 text-white px-3 py-1 rounded"
+                                                onClick={deleteButtonClick}>
+                                                予約キャンセル
                                             </button>
                                         </div>
                                     </>

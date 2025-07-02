@@ -61,7 +61,7 @@ function UserMenu() {
                         ">
                     {isLoggedIn ?
                         <div>
-                            {user?.name}さん！こんいちは！
+                            {user?.userName}さん！こんいちは！
                         </div>
                         : <div>
                             ログインしてね！

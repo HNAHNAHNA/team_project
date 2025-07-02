@@ -76,7 +76,7 @@ public class SecurityConfig {
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true); // 세션/쿠키 공유 허용
 
-        System.out.println("✅ CORS 설정 적용됨: localhost:5173 허용");
+        System.out.println("✅ CORS 설정 적용됨");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config); // 모든 경로에 적용

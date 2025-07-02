@@ -12,7 +12,7 @@ class RefreshTokenRequest(BaseModel):
 def refresh_access_token(request: RefreshTokenRequest) -> dict:
     """
     클라이언트로부터 Refresh Token을 받아 Spring 서버에 토큰 재발급 요청을 보냅니다.
-    성공 시 새로운 Access Token과 Refresh Token을 반환합니다.
+    성공 시! 새로운 Access Token과 Refresh Token을 반환합니다.
     """
     refresh_token = request.refreshToken
     try:

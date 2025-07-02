@@ -21,34 +21,14 @@ jobs:
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Build & Push Spring Image
+      - name: Build Docker image
         env:
           IMAGE_ID: ghcr.io/hnahnahna/team_project/staynguide-spring:latest
         run: |
           docker build -f back/Dockerfile -t $IMAGE_ID ./back
+
+      - name: Push to GHCR
+        env:
+          IMAGE_ID: ghcr.io/hnahnahna/team_project/staynguide-spring:latest
+        run: |
           docker push $IMAGE_ID
-
-      - name: Copy SSH key
-        run: |
-          echo "${{ secrets.EC2_KEY }}" > ec2_key.pem
-          chmod 600 ec2_key.pem
-
-      - name: Add EC2 host to known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-
-      - name: Compose up Spring via Docker Compose
-        run: |
-          ssh -i ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-            cd ~/team_project
-
-            echo "🛑 spring-back 컨테이너 정리"
-            docker rm -f spring-back || true
-
-            echo "📥 Spring 최신 이미지 pull"
-            docker compose pull spring-back
-
-            echo "🚀 Docker Compose로 실행"
-            docker compose up -d
-          EOF

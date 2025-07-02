@@ -32,10 +32,6 @@ jobs:
           ssh -i ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd ~/team_project
 
-            echo "📥 .env, application.properties 복호화"
-            echo "$FASTAPI_ENV_B64" | base64 -d > python/.env
-            echo "$SPRING_ENV_B64" | base64 -d > back/src/main/resources/application.properties
-
             echo "🛑 컨테이너 강제 제거 (중복 에러 방지)"
             docker rm -f spring-back || true
             docker rm -f fastapi-back || true
@@ -46,6 +42,3 @@ jobs:
             echo "🚀 Docker Compose 재시작"
             docker compose up --build -d
           EOF
-        env:
-          FASTAPI_ENV_B64: ${{ secrets.FASTAPI_ENV_B64 }}
-          SPRING_ENV_B64: ${{ secrets.SPRING_ENV_B64 }}

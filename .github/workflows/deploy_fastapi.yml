@@ -1,11 +1,13 @@
-name: Deploy FastAPI
+name: Deploy Backend via Compose
 
 on:
   push:
-    paths:
-      - 'python/**'
     branches:
       - master
+    paths:
+      - 'python/**'
+      - 'back/**'
+      - 'docker-compose.yml'
 
 jobs:
   deploy:
@@ -25,34 +27,24 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Send .env to EC2 via base64
-        env:
-          FASTAPI_ENV_B64: ${{ secrets.FASTAPI_ENV_B64 }}
-        run: |
-          echo "$FASTAPI_ENV_B64" > encoded_env.txt
-          scp -i ec2_key.pem encoded_env.txt ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:~/team_project/python/
-
-      - name: Deploy FastAPI
+      - name: Deploy to EC2
         run: |
           ssh -i ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-            cd ~/team_project/python
+            cd ~/team_project
 
-            echo "📦 base64 복호화 후 .env 생성"
-            base64 -d encoded_env.txt > .env
-            rm encoded_env.txt
+            echo "📥 .env, application.properties 복호화"
+            echo "$FASTAPI_ENV_B64" | base64 -d > python/.env
+            echo "$SPRING_ENV_B64" | base64 -d > back/src/main/resources/application.properties
 
-            echo "✅ 디버그: .env 내용 일부 확인"
-            head -n 5 .env | sed 's/=.*/=*** (masked)/'
+            echo "📥 Spring 이미지 Pull"
+            docker compose pull spring-back
 
-            echo "🛑 기존 컨테이너 중지 및 삭제"
-            docker rm -f fastapi-back || true
+            echo "🛑 기존 컨테이너 종료"
+            docker compose down
 
-            echo "🧼 기존 이미지 삭제"
-            docker rmi staynguide-fastapi || true
-
-            echo "🐳 도커 이미지 빌드"
-            docker build --no-cache -t staynguide-fastapi .
-
-            echo "🚀 새 컨테이너 실행"
-            docker run --env-file .env -d --name fastapi-back -p 8000:8000 staynguide-fastapi
+            echo "🚀 Docker Compose 재시작"
+            docker compose up --build -d
           EOF
+        env:
+          FASTAPI_ENV_B64: ${{ secrets.FASTAPI_ENV_B64 }}
+          SPRING_ENV_B64: ${{ secrets.SPRING_ENV_B64 }}

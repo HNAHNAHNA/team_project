@@ -137,7 +137,7 @@ function ReservationAccommodations() {
         }
 
         if (res.ok) {
-            alert("✅ 예약이 삭제되었습니다");
+            alert("✅ 예약이 삭제되었습니다!");
             setSelectedData(null);
             setShowDetail(false);
             setMapCenter(null);

@@ -5,7 +5,7 @@ from jose import jwt, JWTError
 from app.config import settings
 
 router = APIRouter(prefix="/api/fastapi")
-SPRING_VALIDATE_URL = "http://localhost:8091/api/v1/auth/validate"
+SPRING_VALIDATE_URL = "http://spring-back:8091/api/v1/auth/validate"
 
 @router.get("/validate")
 def validate_jwt_token(token: str = Query(...)) -> dict:

@@ -25,9 +25,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const [validated, setValidated] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
-  const validatingRef = useRef(false); // 중복 실행 방지용
+  const validatingRef = useRef(false); // 중복 실행 방지
 
-  const login = async (email: string, password: string): Promise<User | null> => {
+  const login = async (
+    email: string,
+    password: string
+  ): Promise<User | null> => {
     const res = await fetch(`${API_BASE}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -47,17 +50,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = async () => {
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
     const token = localStorage.getItem("accessToken");
 
-    if (user?.email && token) {
+    if (storedUser?.email && token) {
       await fetch(`${API_BASE}/logout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ email: user.email }),
+        body: JSON.stringify({ email: storedUser.email }),
       });
     }
 
@@ -83,6 +86,37 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (e) {
       console.error("DEBUG: JWT 파싱 실패", e);
       return {};
+    }
+  };
+
+  // ✅ 토큰 유효 시 사용자 정보 최신화
+  const fetchUserInfo = async (token: string): Promise<User | null> => {
+    try {
+      const res = await fetch("/api/v1/users/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        const raw = await res.json();
+        const userData: User = {
+          userId: raw.userId,
+          userName: raw.username,
+          email: raw.email,
+          phoneNumber: raw.phoneNumber,
+          role: raw.role,
+        };
+        localStorage.setItem("user", JSON.stringify(userData));
+        setUser(userData);
+        return userData;
+      } else {
+        console.warn("유저 정보 조회 실패");
+        return null;
+      }
+    } catch (err) {
+      console.error("유저 정보 조회 중 에러:", err);
+      return null;
     }
   };
 
@@ -130,6 +164,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setAccessToken(data.accessToken);
           setValidated(true);
           validatingRef.current = false;
+
+          await fetchUserInfo(data.accessToken); // ✅ 최신 사용자 정보 반영
           return data.accessToken;
         } else {
           console.log("DEBUG: refreshToken 유효하지 않음. 로그아웃 처리");
@@ -148,26 +184,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     console.log("DEBUG: accessToken 유효함");
     setValidated(true);
     validatingRef.current = false;
+
+    await fetchUserInfo(token); // ✅ accessToken이 유효하면 유저 정보 최신화
     return token;
   };
 
-  // 앱이 처음 실행될 때 accessToken 유효성 1회 체크
   useEffect(() => {
     validatingRef.current = true;
     validateAccessToken()
       .then((token) => {
-        setValidated(!!token); // ← null이 오면 false로
+        setValidated(!!token);
       })
       .catch((err) => {
         console.error("validateAccessToken 중 오류 발생:", err);
-        setValidated(false);  // ✅ 명시적으로 false 설정
+        setValidated(false);
       })
       .finally(() => {
         validatingRef.current = false;
         setAuthLoading(false);
       });
   }, []);
-  
+
   return (
     <AuthContext.Provider
       value={{

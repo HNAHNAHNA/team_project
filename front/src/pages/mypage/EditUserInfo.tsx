@@ -1,115 +1,192 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function EditUserInfo() {
   const navigate = useNavigate();
+
+  const [username, setUsername] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [zipcode, setZipcode] = useState("");
+  const [addressMain, setAddressMain] = useState("");
+  const [addressDetail, setAddressDetail] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("accessToken");
+
+      if (!token) {
+        alert("로그인이 필요합니다.");
+        navigate("/login");
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/v1/users/me", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("사용자 정보를 가져오지 못했습니다.");
+        }
+
+        const user = await response.json();
+
+        setUsername(user.username || "");
+        setPhoneNumber(user.phoneNumber || "");
+        setEmail(user.email || "");
+        setZipcode(user.zipcode || "");
+        setAddressMain(user.addressMain || "");
+        setAddressDetail(user.addressDetail || "");
+      } catch (error) {
+        console.error("사용자 정보 조회 실패", error);
+        alert("로그인 상태를 확인해주세요.");
+        navigate("/login");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [navigate]);
+
+  const handleUpdate = async () => {
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/v1/users/me", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          username,
+          phoneNumber,
+          zipcode,
+          addressMain,
+          addressDetail,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "수정 실패");
+      }
+
+      alert("정보가 성공적으로 수정되었습니다.");
+    } catch (error) {
+      console.error("정보 수정 실패", error);
+      alert("정보 수정에 실패했습니다.");
+    }
+  };
+
+  if (loading) return <p className="text-center mt-10">불러오는 중...</p>;
 
   return (
     <section className="max-w-[1100px] m-auto mt-5">
       <div className="p-3 bg-white rounded-md shadow-md my-2">
         <table className="sm:w-8/12 w-11/12 m-auto text-left text-sm">
           <tbody>
-            <tr className="h-[60px] w-full">
-              <th className="p-3 bg-neutral-100 sm:text-sm text-xs font-semibold sm:w-4/12 w-5/12">
-                아이디
-              </th>
+            {/* 이메일 (ID) */}
+            <tr className="h-[60px]">
+              <th className="p-3 bg-neutral-100 font-semibold w-5/12">이메일</th>
               <td className="py-3 w-8/12">
                 <input
-                  className="bg-gray-300 my-2 mx-2 sm:w-[350px] w-[150px] rounded-md border border-gray-200 border-t-[3px] h-[45px] p-3"
                   type="text"
-                  value="sampleId"
+                  value={email}
                   readOnly
+                  className="bg-gray-300 mx-2 w-[250px] rounded-md border border-gray-200 h-[45px] p-3"
                 />
               </td>
             </tr>
 
-            <tr className="border-t-[1px] h-[160px] w-full">
-              <th className="p-3 bg-neutral-100 sm:text-sm text-xs font-semibold sm:w-4/12 w-5/12">
-                이미지
-              </th>
-              <td className="py-3 w-8/12">
-                {/* 이미지 컴포넌트 자리 */}
-                <div className="w-24 h-24 bg-gray-200 rounded-full" />
-              </td>
-            </tr>
-
-            <tr className="border-t-[1px] h-[60px] w-full">
-              <th className="p-3 bg-neutral-100 sm:text-sm text-xs font-semibold sm:w-4/12 w-5/12">
-                사용자명
-              </th>
-              <td className="py-3 w-8/12">
+            {/* 사용자명 */}
+            <tr className="border-t h-[60px]">
+              <th className="p-3 bg-neutral-100 font-semibold">이름</th>
+              <td className="py-3">
                 <input
-                  className="my-2 mx-2 sm:w-[350px] w-[150px] rounded-md border border-gray-200 border-t-[3px] h-[45px] p-3"
                   type="text"
-                  value="홍길동"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="mx-2 w-[250px] rounded-md border border-gray-200 h-[45px] p-3"
                 />
               </td>
             </tr>
 
-            <tr className="border-t-[1px] h-[60px] w-full">
-              <th className="p-3 bg-neutral-100 sm:text-sm text-xs font-semibold sm:w-4/12 w-5/12">
-                비밀번호변경
-              </th>
-              <td className="py-3 w-8/12">
+            {/* 휴대폰번호 */}
+            <tr className="border-t h-[60px]">
+              <th className="p-3 bg-neutral-100 font-semibold">휴대폰번호</th>
+              <td className="py-3">
                 <input
-                  className="my-2 mx-2 sm:w-[350px] w-[150px] rounded-md border border-gray-200 border-t-[3px] h-[45px] p-3"
-                  type="password"
-                  value=""
-                />
-                <p className="pl-3 text-gray-600 font-sans text-xs font-bold">
-                  비밀번호 변경을 원하시면 입력해주세요
-                </p>
-              </td>
-            </tr>
-
-            <tr className="border-t-[1px] h-[60px] w-full">
-              <th className="p-3 bg-neutral-100 sm:text-sm text-xs font-semibold sm:w-4/12 w-5/12">
-                비밀번호확인
-              </th>
-              <td className="py-3 w-8/12">
-                <input
-                  className="my-2 mx-2 sm:w-[350px] w-[150px] rounded-md border border-gray-200 border-t-[3px] h-[45px] p-3"
-                  type="password"
-                  value=""
-                />
-              </td>
-            </tr>
-
-            <tr className="border-t-[1px] h-[60px] w-full">
-              <th className="p-3 bg-neutral-100 sm:text-sm text-xs font-semibold sm:w-4/12 w-5/12">
-                휴대폰번호
-              </th>
-              <td className="py-3 w-8/12">
-                <input
-                  className="my-2 mx-2 sm:w-[350px] w-[150px] rounded-md border border-gray-200 border-t-[3px] h-[45px] p-3"
                   type="text"
-                  value="010-1234-5678"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  className="mx-2 w-[250px] rounded-md border border-gray-200 h-[45px] p-3"
                 />
               </td>
             </tr>
 
-            <tr className="border-t-[1px] h-[60px] w-full">
-              <th className="p-3 bg-neutral-100 sm:text-sm text-xs font-semibold sm:w-4/12 w-5/12">
-                이메일
-              </th>
-              <td className="py-3 w-8/12">
+            {/* 우편번호 */}
+            <tr className="border-t h-[60px]">
+              <th className="p-3 bg-neutral-100 font-semibold">우편번호</th>
+              <td className="py-3">
                 <input
-                  className="my-2 mx-2 sm:w-[350px] w-[150px] rounded-md border border-gray-200 border-t-[3px] h-[45px] p-3"
                   type="text"
-                  value="user@example.com"
+                  value={zipcode}
+                  onChange={(e) => setZipcode(e.target.value)}
+                  className="mx-2 w-[250px] rounded-md border border-gray-200 h-[45px] p-3"
                 />
               </td>
             </tr>
 
+            {/* 주소 */}
+            <tr className="border-t h-[60px]">
+              <th className="p-3 bg-neutral-100 font-semibold">기본주소</th>
+              <td className="py-3">
+                <input
+                  type="text"
+                  value={addressMain}
+                  onChange={(e) => setAddressMain(e.target.value)}
+                  className="mx-2 w-[250px] rounded-md border border-gray-200 h-[45px] p-3"
+                />
+              </td>
+            </tr>
+
+            <tr className="border-t h-[60px]">
+              <th className="p-3 bg-neutral-100 font-semibold">상세주소</th>
+              <td className="py-3">
+                <input
+                  type="text"
+                  value={addressDetail}
+                  onChange={(e) => setAddressDetail(e.target.value)}
+                  className="mx-2 w-[250px] rounded-md border border-gray-200 h-[45px] p-3"
+                />
+              </td>
+            </tr>
+
+            {/* 버튼 영역 */}
             <tr>
-              <td className="flex gap-2 mt-2 text-center">
+              <td colSpan={2} className="flex justify-center gap-4 mt-6">
                 <button
-                  className="sm:w-6/12 w-5/12 bg-blue-500 h-[45px] text-white sm:font-bold font-semibold sm:text-sm text-[10px] py-2 px-2 rounded-md hover:bg-blue-600"
+                  onClick={handleUpdate}
+                  className="bg-blue-500 text-white font-semibold py-2 px-6 rounded-md hover:bg-blue-600"
                 >
                   수정
                 </button>
                 <button
-                  onClick={() => navigate('/')}
-                  className="sm:w-6/12 w-5/12 bg-blue-500 h-[45px] text-white sm:font-bold font-semibold sm:text-sm text-[10px] py-2 px-2 rounded-md hover:bg-blue-600"
+                  onClick={() => navigate("/")}
+                  className="bg-gray-400 text-white font-semibold py-2 px-6 rounded-md hover:bg-gray-500"
                 >
                   HOME
                 </button>
@@ -122,4 +199,4 @@ function EditUserInfo() {
   );
 }
 
-export default EditUserInfo
+export default EditUserInfo;

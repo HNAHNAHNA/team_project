@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import EditUserInfo from "./EditUserInfo";
-import RecommendPlaces from "./RecommendPlaces";
 // import PaymentHistory from "./PaymentHistory";
 import UserFavorites from "./UserFavorites";
 import ReservationAccommodations from "./ReservationAccommodations";
@@ -56,14 +55,14 @@ function MyPageMain() {
           />
         </div>
         <div className="flex flex-col gap-1 text-start sm:text-left">
-          <h3 className="text-xl font-semibold">{user?.name}</h3>
+          <h3 className="text-xl font-semibold">{user?.username}</h3>
           <p className="text-gray-600 text-sm">{user?.email}</p>
-          <p className="text-gray-600 text-sm">010-1234-5678</p>
+          <p className="text-gray-600 text-sm">{user?.phoneNumber}</p>
         </div>
       </div>
 
       <div className="flex border-b mb-4">
-        {["profile", "reservations", "favorites", "RecommandedPlace", "payments"].map(tab => (
+        {["profile", "reservations", "favorites", "payments"].map(tab => (
           <button
             key={tab}
             className={`px-4 py-2 text-sm font-semibold ${activeTab === tab
@@ -75,7 +74,6 @@ function MyPageMain() {
             {tab === "profile" && "정보수정"}
             {tab === "reservations" && "예약 내역"}
             {tab === "favorites" && "いいね！"}
-            {tab === "RecommandedPlace" && "추천지역"}
             {tab === "payments" && "결제 내역"}
           </button>
         ))}
@@ -97,13 +95,7 @@ function MyPageMain() {
         {activeTab === "favorites" && (
           <>
             <h3 className="text-lg font-bold mb-4">いいね！</h3>
-            {user && <UserFavorites userId={user.id} />}
-          </>
-        )}
-        {activeTab === "RecommandedPlace" && (
-          <>
-            <h3 className="text-lg font-bold mb-4">추천지역</h3>
-            <RecommendPlaces />
+            {user && <UserFavorites userId={user.userId} />}
           </>
         )}
         {activeTab === "payments" && (

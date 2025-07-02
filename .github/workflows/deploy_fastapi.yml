@@ -36,11 +36,12 @@ jobs:
             echo "$FASTAPI_ENV_B64" | base64 -d > python/.env
             echo "$SPRING_ENV_B64" | base64 -d > back/src/main/resources/application.properties
 
+            echo "🛑 컨테이너 강제 제거 (중복 에러 방지)"
+            docker rm -f spring-back || true
+            docker rm -f fastapi-back || true
+
             echo "📥 Spring 이미지 Pull"
             docker compose pull spring-back
-
-            echo "🛑 기존 컨테이너 종료"
-            docker compose down
 
             echo "🚀 Docker Compose 재시작"
             docker compose up --build -d

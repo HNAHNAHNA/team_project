@@ -184,7 +184,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     console.log("DEBUG: accessToken 유효함");
     setValidated(true);
     validatingRef.current = false;
-
+    console.log("토큰 결과:", token);
     await fetchUserInfo(token); // ✅ accessToken이 유효하면 유저 정보 최신화
     return token;
   };

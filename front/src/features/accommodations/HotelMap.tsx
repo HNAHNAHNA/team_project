@@ -103,7 +103,7 @@ function HotelMap() {
     try {
       if (isFav) {
         const res = await fetch(
-          `/api/fastapi/favorites/delete?user_id=${user.id}&accommodation_id=${hotelId}`,
+          `/api/fastapi/favorites/delete?user_id=${user.userId}&accommodation_id=${hotelId}`,
           { method: 'DELETE' }
         );
         if (!res.ok) throw new Error("찜 해제 실패");
@@ -112,7 +112,7 @@ function HotelMap() {
         const res = await fetch("/api/fastapi/favorites", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_id: user.id, accommodation_id: hotelId }),
+          body: JSON.stringify({ user_id: user.userId, accommodation_id: hotelId }),
         });
         if (!res.ok) throw new Error("찜 등록 실패");
         setFavoriteMap((prev) => ({ ...prev, [hotelId]: true }));

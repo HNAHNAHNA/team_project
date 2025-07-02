@@ -51,7 +51,7 @@ jobs:
             docker rmi staynguide-fastapi || true
 
             echo "🐳 도커 이미지 빌드"
-            docker build -t staynguide-fastapi .
+            docker build --no-cache -t staynguide-fastapi .
 
             echo "🚀 새 컨테이너 실행"
             docker run --env-file .env -d --name fastapi-back -p 8000:8000 staynguide-fastapi

@@ -20,22 +20,12 @@ jobs:
 
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-      - name: List all files
-        run: ls -R
 
-      - name: List back folder
-        run: ls -al back
-
-      - name: Build Docker image
+      - name: Build & Push Spring Image
         env:
           IMAGE_ID: ghcr.io/hnahnahna/team_project/staynguide-spring:latest
         run: |
           docker build -f back/Dockerfile -t $IMAGE_ID ./back
-
-      - name: Push to GHCR
-        env:
-          IMAGE_ID: ghcr.io/hnahnahna/team_project/staynguide-spring:latest
-        run: |
           docker push $IMAGE_ID
 
       - name: Copy SSH key
@@ -48,33 +38,17 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Send base64-encoded application.properties to EC2
-        env:
-          SPRING_ENV_B64: ${{ secrets.SPRING_ENV_B64 }}
-        run: |
-          echo "$SPRING_ENV_B64" > encoded_props.txt
-          scp -i ec2_key.pem encoded_props.txt ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:~/team_project/back/
-
-      - name: Deploy on EC2
+      - name: Compose up Spring via Docker Compose
         run: |
           ssh -i ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-            cd ~/team_project/back
+            cd ~/team_project
 
-            echo "📦 base64 복호화 → application.properties 생성"
-            mkdir -p src/main/resources
-            base64 -d encoded_props.txt > src/main/resources/application.properties
-            rm encoded_props.txt
+            echo "🛑 spring-back 컨테이너 정리"
+            docker rm -f spring-back || true
 
-            echo "✅ 도커 로그인"
-            echo "${{ secrets.EC2_GHCR }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            echo "📥 Spring 최신 이미지 pull"
+            docker compose pull spring-back
 
-            echo "🛑 기존 컨테이너 중지 및 삭제"
-            docker stop spring-back || true
-            docker rm spring-back || true
-
-            echo "📥 GHCR에서 최신 이미지 pull"
-            docker pull ghcr.io/hnahnahna/team_project/staynguide-spring:latest
-
-            echo "🚀 새 컨테이너 실행"
-            docker run -d --name spring-back -p 8091:8091 ghcr.io/hnahnahna/team_project/staynguide-spring:latest
+            echo "🚀 Docker Compose로 실행"
+            docker compose up -d
           EOF

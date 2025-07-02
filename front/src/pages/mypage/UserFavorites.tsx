@@ -71,7 +71,7 @@ const UserFavorites = ({ userId }: { userId: number }) => {
                         <div key={fav.favorite_id} onClick={() => setSelectedData(fav)}>
                             <div className="flex flex-row bg-gray-300 cursor-pointer m-2 gap-4 hover:bg-neutral-300 rounded-xl border-1 justify-between items-center p-4 ">
                                 <div className="w-[40%] min-w-[120px] rounded-xl p-2 overflow-hidden">
-                                    <img src={fav.accommodation.image_url}
+                                    <img src={fav.accommodation.image_url ?? undefined}
                                         className="w-full h-[160px] object-cover rounded-xl" />
                                 </div>
                                 <div className="text-right mr-5">
@@ -112,7 +112,7 @@ const UserFavorites = ({ userId }: { userId: number }) => {
 
                                 <h2 className="text-2xl font-bold mb-3">{selectedData.accommodation.name}</h2>
                                 <img
-                                    src={selectedData.accommodation.image_url}
+                                    src={selectedData.accommodation.image_url ?? undefined}
                                     alt={selectedData.accommodation.name}
                                     className="w-full h-48 object-cover rounded mb-4"
                                 />

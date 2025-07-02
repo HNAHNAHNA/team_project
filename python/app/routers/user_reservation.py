@@ -62,24 +62,24 @@ def get_reservation_data(
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user)
 ):
-    print("✅ current_user:", current_user)
-    user_id = current_user["user_id"]
-    print("✅ user_id:", user_id)
+    try:
+        print("🔥 current_user:", current_user)
+        user_id = current_user["user_id"]
 
-    reservations = (
-        db.query(UserReservation)
-        .join(Accommodation)
-        .filter(UserReservation.user_id == user_id)
-        .all()
-    )
+        reservations = (
+            db.query(UserReservation)
+            .join(Accommodation)
+            .filter(UserReservation.user_id == user_id)
+            .all()
+        )
 
-    result = []
-    for r in reservations:
-        try:
+        result = []
+        for r in reservations:
             result.append({
                 "reservation_id": r.reservation_id,
                 "u_booking_id": r.u_booking_id,
                 "hotel_id": r.hotel_id,
+                "reserved_at": r.reserved_at.isoformat() if r.reserved_at else None,
                 "check_in_date": r.check_in_date.isoformat(),
                 "check_out_date": r.check_out_date.isoformat(),
                 "user_id": r.user_id,
@@ -102,12 +102,13 @@ def get_reservation_data(
                     "hotel_no": r.accommodation.hotel_no,
                 }
             })
-        except Exception as e:
-            print("❌ 데이터 가공 중 에러 발생:", e)
-            raise
 
-    print("📦 최종 반환 데이터:", result)
-    return result
+        return result
+    except Exception as e:
+        import traceback
+        print("❌ 예약 정보 오류:", e)
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/get-hotel-location", response_model = AccommodationOut)
 def get_hotel_location (accommodation_id: int = Header(...), db: Session = Depends(get_db)):

@@ -20,6 +20,10 @@ jobs:
         with:
           node-version: 20
 
+      - name: Write .env file for Vite
+        run: echo "${{ secrets.FRONT_ENV }}" > .env
+        working-directory: ./front
+
       - name: Install dependencies
         run: npm install
         working-directory: ./front
@@ -28,9 +32,6 @@ jobs:
         run: npm run build
         working-directory: ./front
 
-      - name: Write .env file for Vite
-        run: echo "${{ secrets.FRONT_ENV }}" > .env
-        working-directory: ./front
 
       - name: Copy SSH key
         run: |

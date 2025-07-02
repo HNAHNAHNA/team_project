@@ -11,7 +11,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/places")
-@CrossOrigin(origins = "15.164.229.102")
+@CrossOrigin(origins = "localhost:5173")
 public class PlaceController{
 
     private final PlaceRepository placeRepository;

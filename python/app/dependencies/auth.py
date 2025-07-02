@@ -1,7 +1,7 @@
 from fastapi import Depends, Header, HTTPException
 import requests
 
-SPRING_VALIDATE_URL = "http://spring-back:8091/api/v1/auth/validate"
+SPRING_VALIDATE_URL = "http://localhost:8091/api/v1/auth/validate"
 
 def get_current_user(authorization: str = Header(...)):
     print("🔐 Authorization Header:", authorization)

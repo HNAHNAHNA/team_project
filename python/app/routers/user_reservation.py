@@ -116,6 +116,8 @@ def delete_reservation(
         )
         .first()
     )
+    
+    print(reservation)
 
     if not reservation:
         raise HTTPException(status_code=404, detail="해당 예약을 찾을 수 없습니다.")

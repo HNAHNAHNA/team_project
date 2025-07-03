@@ -23,3 +23,6 @@ bin/
 # Auto-generated type files
 *.d.ts
 !src/types/*.d.ts
+
+back/src/main/resources/application.properties
+front/.env

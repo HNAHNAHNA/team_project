@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import MapComponent from "../../features/map/MapComponent";
 import type { PlaceInfo } from "../../types/Recommendation";
 import CreatePlaceMarker from "../../features/map/CreatePlaceMarker";
+import ReviewAverage from "../../features/accommodations/features/icons/reviewAverage";
+import { ArrowLeft, X } from "lucide-react";
 
 function ReservationAccommodations() {
     const [reservationHotels, setReservationHotels] = useState<UserReservations[]>([]);
@@ -16,6 +18,7 @@ function ReservationAccommodations() {
     const [showDetail, setShowDetail] = useState(false);
     const [mapCenter, setMapCenter] = useState<google.maps.LatLngLiteral | null>(null);
     const [placeData, setPlaceData] = useState<{ restaurants: PlaceInfo[]; attractions: PlaceInfo[] } | null>(null);
+    const [selectedPlace, setSelectedPlace] = useState<PlaceInfo | null>(null);
     const { validateAccessToken } = useAuth();
     const navigate = useNavigate();
 
@@ -93,13 +96,59 @@ function ReservationAccommodations() {
     }, [fetchReservations]);
 
     useEffect(() => {
-        if (mapInstance && placeData) {
-            [...placeData.restaurants, ...placeData.attractions].forEach((place) => {
-                CreatePlaceMarker(place, mapInstance, (clicked) => {
-                    console.log("✅ 마커 클릭됨:", clicked.name);
-                });
+        console.log("🧪 mapInstance:", mapInstance);
+        console.log("🧪 placeData:", placeData);
+        if (!mapInstance || !placeData) return;
+        console.log("🍥 마커 생성 시작"); // 이거 추가
+
+        placeData.restaurants.forEach((place) => {
+            // CreatePlaceMarker(
+            //     {
+            //         name: place.name,
+            //         address: place.address,
+            //         imageurl: place.imageurl || "",
+            //         latitude: place.latitude,
+            //         longitude: place.longitude,
+            //         rating: place.rating,
+            //         reviewCount: place.reviewCount,
+            //         website: place.website
+            //     },
+            //     mapInstance,
+            //     (p) => {
+            //         console.log("음식점 마커 클릭: ", p.name);
+            //         if (p.website) {
+            //             window.open(p.website, "_blank");
+            //         } else (
+            //             console.log("웹사이트가 업는디용;;")
+            //         )
+            //     }
+            // );
+            CreatePlaceMarker(place, mapInstance, (p) => {
+                setSelectedPlace(p);
             });
-        }
+        });
+
+        placeData.attractions.forEach((place) => {
+            // CreatePlaceMarker(
+            //     {
+            //         name: place.name,
+            //         address: place.address,
+            //         imageurl: place.imageurl || "",
+            //         latitude: place.latitude,
+            //         longitude: place.longitude,
+            //         rating: place.rating,
+            //         reviewCount: place.reviewCount,
+            //         website: place.website
+            //     },
+            //     mapInstance,
+            //     () => {
+            //         console.log("관광지 마커 클릭: ", place.name);
+            //     }
+            // );
+            CreatePlaceMarker(place, mapInstance, (p) => {
+                setSelectedPlace(p);
+            });
+        });
     }, [mapInstance, placeData]);
 
     const deleteButtonClick = async () => {
@@ -216,7 +265,7 @@ function ReservationAccommodations() {
                             onClick={(e) => e.stopPropagation()}
                         >
                             <div className="flex-1">
-                                <button
+                                {/* <button
                                     onClick={() => {
                                         setSelectedData(null);
                                         setShowDetail(false);
@@ -226,7 +275,7 @@ function ReservationAccommodations() {
                                     className="absolute top-2 right-2 text-gray-400 hover:text-black cursor-pointer hover:shadow-md hover:bg-neutral-100"
                                 >
                                     ❌
-                                </button>
+                                </button> */}
 
                                 {!showDetail ? (
                                     <>
@@ -264,9 +313,9 @@ function ReservationAccommodations() {
                                                 setMapCenter(null);
                                                 setPlaceData(null);
                                             }}
-                                            className="mb-2 bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded"
+                                            className="p-2 rounded hover:bg-gray-200 transition"
                                         >
-                                            ← 뒤로가기
+                                            <ArrowLeft className="w-4 h-4" />
                                         </button>
                                         <h3 className="text-lg font-semibold mb-2">주변 추천 장소</h3>
                                         <div className="max-h-[300px] overflow-y-auto text-sm space-y-2 pr-2">
@@ -302,18 +351,69 @@ function ReservationAccommodations() {
                             </div>
 
                             {showDetail && (
-                                <div className="ml-4 w-1/2 h-[400px] transition-opacity duration-500 ease-in-out">
-                                    {mapCenter ? (
-                                        <MapComponent
-                                            center={mapCenter}
-                                            onMapLoad={(map) => {
-                                                console.log("Map loaded!", map);
-                                                setMapInstance(map);
-                                            }}
-                                        />
-                                    ) : (
-                                        <Skeleton height="100%" />
-                                    )}
+                                <div className="ml-4 w-1/2 h-[400px] relative overflow-hidden">
+                                    <AnimatePresence mode="wait">
+                                        {!selectedPlace ? (
+                                            <motion.div
+                                                key="map"
+                                                initial={{ x: -50, opacity: 0 }}
+                                                animate={{ x: 0, opacity: 1 }}
+                                                exit={{ x: 50, opacity: 0 }}
+                                                transition={{ duration: 0.22 }}
+                                                className="absolute w-full h-full"
+                                            >
+                                                {mapCenter ? (
+                                                    <MapComponent
+                                                        center={mapCenter}
+                                                        onMapLoad={(map) => {
+                                                            console.log("Map loaded!", map);
+                                                            setMapInstance(map);
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <Skeleton height="100%" />
+                                                )}
+                                            </motion.div>
+                                        ) : (
+                                            <motion.div
+                                                key="place"
+                                                initial={{ x: 50, opacity: 0 }}
+                                                animate={{ x: 0, opacity: 1 }}
+                                                exit={{ x: -50, opacity: 0 }}
+                                                transition={{ duration: 0.22 }}
+                                                className="absolute w-full h-full bg-white overflow-y-auto p-4 rounded-xl shadow"
+                                            >
+                                                <div className="flex justify-end mb-2">
+                                                    <button
+                                                        onClick={() => setSelectedPlace(null)}
+                                                        className="p-2 rounded hover:bg-gray-200 transition"
+                                                        aria-label="닫기"
+                                                    >
+                                                        <X className="w-5 h-5 text-gray-600 hover:text-black" />
+                                                    </button>
+                                                </div>
+                                                <h4 className="text-lg font-bold mb-1">{selectedPlace.name}</h4>
+                                                <p className="text-sm text-gray-700 mb-1">{selectedPlace.address}</p>
+
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <ReviewAverage />
+                                                    <span className="text-sm font-medium">{selectedPlace.rating}</span>
+                                                </div>
+
+                                                <p className="text-sm text-gray-600">리뷰: {selectedPlace.reviewCount}</p>
+                                                {selectedPlace.website && (
+                                                    <p>
+                                                        <a href={selectedPlace.website} target="_blank" className="text-blue-600 underline">
+                                                            웹사이트 이동
+                                                        </a>
+                                                    </p>
+                                                )}
+                                                {selectedPlace.imageurl && (
+                                                    <img src={selectedPlace.imageurl} alt={selectedPlace.name} className="mt-2 rounded-lg" />
+                                                )}
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
                             )}
                         </motion.div>

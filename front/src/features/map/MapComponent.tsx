@@ -1,5 +1,4 @@
 import { GoogleMap, useLoadScript } from "@react-google-maps/api";
-import { useEffect } from "react";
 
 const LIBRARIES: ("places")[] = ["places"];
 
@@ -15,9 +14,6 @@ const MapComponent = ({
         googleMapsApiKey: GOOGLE_API_KEY,
        libraries: LIBRARIES,
     });
-    useEffect(() => {
-        console.log("✅ MapComponent 렌더링됨");
-    }, []);
 
     if (loadError) return <div>지도를 불러오는데 실패했습니다.</div>;
     if (!isLoaded) return <div>지도 로딩 중...</div>;

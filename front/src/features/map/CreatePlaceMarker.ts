@@ -21,6 +21,7 @@ export default function createPlaceMarker(
 
             this.div.addEventListener("click", () => {
                 onClick(place);
+                console.log("place 전달 확인!", place)
             });
 
             const panes = this.getPanes();

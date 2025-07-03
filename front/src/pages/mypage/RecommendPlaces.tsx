@@ -115,6 +115,7 @@ function ReservationAccommodations() {
                 },
                 mapInstance,
                 () => {
+                    console.log(place.website)
                     console.log("음식점 마커 클릭: ", place.name);
                 }
             );
@@ -135,6 +136,7 @@ function ReservationAccommodations() {
                 mapInstance,
                 () => {
                     console.log("관광지 마커 클릭: ", place.name);
+                    console.log(place.website)
                 }
             );
         });

@@ -1,4 +1,4 @@
-name: Deploy Backend via Compose
+name: Deploy FastAPI
 
 on:
   push:
@@ -6,7 +6,6 @@ on:
       - master
     paths:
       - 'python/**'
-      - 'back/**'
       - 'docker-compose.yml'
 
 jobs:
@@ -27,18 +26,14 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy to EC2
+      - name: Deploy FastAPI to EC2
         run: |
           ssh -i ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd ~/team_project
 
-            echo "🛑 컨테이너 강제 제거 (중복 에러 방지)"
-            docker rm -f spring-back || true
+            echo "🛑 FastAPI 컨테이너 중지 및 삭제"
             docker rm -f fastapi-back || true
 
-            echo "📥 Spring 이미지 Pull"
-            docker compose pull spring-back
-
-            echo "🚀 Docker Compose 재시작"
-            docker compose up --build -d
+            echo "🚀 FastAPI 재배포"
+            docker compose up --build -d fastapi-back
           EOF

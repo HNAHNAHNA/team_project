@@ -1,14 +1,16 @@
-name: Deploy Spring Boot
+name: Build & Deploy Spring with Docker Compose
 
 on:
   push:
     paths:
       - 'back/**'
+      - 'python/**'
+      - 'docker-compose.yml'
     branches:
       - master
 
 jobs:
-  deploy:
+  build-and-push-spring:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,14 +23,48 @@ jobs:
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Build Docker image
+      - name: Build Docker image for Spring
         env:
           IMAGE_ID: ghcr.io/hnahnahna/team_project/staynguide-spring:latest
         run: |
           docker build -f back/Dockerfile -t $IMAGE_ID ./back
 
-      - name: Push to GHCR
+      - name: Push Docker image to GHCR
         env:
           IMAGE_ID: ghcr.io/hnahnahna/team_project/staynguide-spring:latest
         run: |
           docker push $IMAGE_ID
+
+  deploy-to-ec2:
+    needs: build-and-push-spring  # 💡 반드시 Spring 빌드 후 실행되도록 지정
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Copy SSH key
+        run: |
+          echo "${{ secrets.EC2_KEY }}" > ec2_key.pem
+          chmod 600 ec2_key.pem
+
+      - name: Add EC2 host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy via SSH
+        run: |
+          ssh -i ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            cd ~/team_project
+
+            echo "🛑 컨테이너 강제 제거 (중복 에러 방지)"
+            docker rm -f spring-back || true
+            docker rm -f fastapi-back || true
+
+            echo "📥 Spring 이미지 Pull"
+            docker compose pull spring-back
+
+            echo "🚀 Docker Compose 재시작"
+            docker compose up --build -d
+          EOF

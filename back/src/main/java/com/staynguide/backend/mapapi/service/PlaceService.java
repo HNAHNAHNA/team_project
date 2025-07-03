@@ -30,7 +30,7 @@ public class PlaceService {
         this.recommendationRepository = recommendationRepository;
     }
 
-    // 🚩 호텔명+지역 → 맛집·관광지 10개씩 반환!!!!
+    // 🚩 호텔명+지역 → 맛집·관광지 10개씩 반환!!!!!
     public Map<String, List<PlaceInfo>> getSplitRecommendations(String hotelName, String region) {
         // 1. 호텔 위도/경도 얻기 (텍스트 검색)
         PlaceInfo hotelInfo = findHotelLocation(hotelName, region);

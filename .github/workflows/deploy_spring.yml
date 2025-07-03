@@ -23,6 +23,10 @@ jobs:
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
+      - name: Write application.properties from secret
+        run: echo "${{ secrets.SPRING_ENV_B64 }}" | base64 -d > src/main/resources/application.properties
+        working-directory: ./back
+
       - name: Build Docker image for Spring
         env:
           IMAGE_ID: ghcr.io/hnahnahna/team_project/staynguide-spring:latest

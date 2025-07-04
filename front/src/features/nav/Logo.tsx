@@ -1,3 +1,5 @@
+import logo from '../images/staynguide_logo_transparent.png';
+
 function Logo () {
     return (
         <a 
@@ -5,7 +7,7 @@ function Logo () {
             className="flex items-center h-full"
         >
             <img 
-            src="/home/ubuntu/team_project/front/src/images/staynguide_logo_transparent.png"
+            src={logo}
             className="h-26 w-auto object-contain"
             ></img>
         </a>

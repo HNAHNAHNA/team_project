@@ -106,7 +106,7 @@ function SignUp() {
             onChange={handleChange}
             className="border px-4 py-2 rounded-lg"
           />
-          <input
+          {/* <input
             type="text"
             name="zipcode"
             placeholder="우편번호"
@@ -129,7 +129,7 @@ function SignUp() {
             value={form.addressDetail}
             onChange={handleChange}
             className="border px-4 py-2 rounded-lg"
-          />
+          /> */}
 
           <button
             type="submit"

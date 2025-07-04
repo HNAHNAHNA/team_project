@@ -1,4 +1,4 @@
-import logo from '../images/staynguide_logo_transparent.png';
+import logo from '../../../public/staynguide_logo_transparent.png'
 
 function Logo () {
     return (

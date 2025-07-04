@@ -12,6 +12,7 @@ interface HotelModalProps {
 }
 
 function HotelModal({ selectedData, setSelectedData, handleDetailButtonClick }: HotelModalProps) {
+    console.log(selectedData?.totalCharge)
     return (
         <div>
             <AnimatePresence>

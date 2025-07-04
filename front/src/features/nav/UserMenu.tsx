@@ -125,7 +125,7 @@ function UserMenu() {
                                         }}
                                         label="予約情報"
                                     />
-                                    <MenuItem 
+                                    <MenuItem
                                         onClick={() => {
                                             setIsOpen(false)
                                             navigate('/mypage?tab=favorites')
@@ -138,13 +138,22 @@ function UserMenu() {
                                     />
                                 </>
                             ) : (
-                                <MenuItem
-                                    onClick={() => {
-                                        setIsOpen(false);
-                                        navigate('/login')
-                                    }}
-                                    label="ログイン"
-                                />
+                                <>
+                                    <MenuItem
+                                        onClick={() => {
+                                            setIsOpen(false);
+                                            navigate('/login')
+                                        }}
+                                        label="ログイン"
+                                    />
+                                    <MenuItem
+                                        onClick={() => {
+                                            setIsOpen(false)
+                                            navigate('/signup')
+                                        }}
+                                        label="会員登録"
+                                    />
+                                </>
                             )}
                         </>
                     </div>

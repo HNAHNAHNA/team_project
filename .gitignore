@@ -4,6 +4,7 @@ __pycache__/
 *.pyc
 venv/
 .env
+settings.py
 
 
 
@@ -18,7 +19,6 @@ dist/
 .project
 .classpath
 bin/
-# 으앙
 *.tsbuildinfo
 # Auto-generated type files
 *.d.ts

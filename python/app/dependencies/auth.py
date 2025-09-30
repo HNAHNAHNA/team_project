@@ -1,10 +1,11 @@
 from fastapi import Depends, Header, HTTPException
+from app.settings import SPRING_BASE_URL
 import requests
 
-SPRING_VALIDATE_URL = "http://spring-back:8091/api/v1/auth/validate"
-
 def get_current_user(authorization: str = Header(...)):
-    print("🔐 Authorization Header:", authorization)
+    # print("🔐 Authorization Header:", authorization)
+
+    url = f"{SPRING_BASE_URL}/api/v1/auth/validate"
 
     if not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="잘못된 인증 헤더 형식입니다.")
@@ -12,7 +13,7 @@ def get_current_user(authorization: str = Header(...)):
     token = authorization.split(" ")[1]
 
     try:
-        res = requests.get(SPRING_VALIDATE_URL, headers={"Authorization": f"Bearer {token}"})
+        res = requests.get(url, headers={"Authorization": f"Bearer {token}"})
         print("📡 Spring 응답:", res.status_code, res.text)
 
         if res.status_code != 200:

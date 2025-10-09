@@ -139,7 +139,7 @@ function ReservationAccommodations() {
         try {
             const result = await getRouteByHotelName({
                 hotelName: selectedData.accommodation.name,
-                region: selectedData.accommodation.region || selectedData.accommodation.address,
+                region: selectedData.accommodation.region || selectedData.accommodation.address || '',
                 destLat: selectedPlace.latitude,
                 destLng: selectedPlace.longitude,
                 mode: 'walking',

@@ -9,7 +9,6 @@ import CreatePlaceMarker from "../../features/map/CreatePlaceMarker";
 import type { PlaceInfo } from "../../types/Recommendation";
 import { getRouteByHotelName, type RouteResponse } from "../../types/Route";
 import { drawEncodedPolylineOnMap } from "../../features/map/drawRoute";
-import { REGION_MAP } from "../../constants/regionMap";
 import { ArrowLeft, X } from "lucide-react";
 
 function ReservationAccommodations() {
@@ -202,7 +201,6 @@ function ReservationAccommodations() {
         setSelectedPlace(null);
         setIsMapExpanded(false);
         setRouteInfo(null);
-        setSelectedTravelMode("");
     };
 
     const PlaceItem = ({ place }: { place: PlaceInfo }) => (

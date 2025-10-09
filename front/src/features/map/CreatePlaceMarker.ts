@@ -13,6 +13,7 @@ export default function createPlaceMarker(
 
     class PlaceMarker extends GoogleOverlayView {
         div: HTMLDivElement | null = null;
+        placeName?: string;
 
         onAdd() {
             this.div = document.createElement("div");

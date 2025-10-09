@@ -40,6 +40,7 @@ export interface AccommodationOut {
   accommodation_id: number;
   name: string;
   address: string | null;
+  region?: string;
   description: string | null;
   image_url: string | null;
   created_at: string | null;

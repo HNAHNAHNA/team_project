@@ -17,6 +17,7 @@ class AccommodationOut(BaseModel):
     host_user_id: int
     name: str
     address: str | None = None
+    region: str | None = None
     description: str | None = None
     image_url: str | None = None
     created_at: datetime | None = None

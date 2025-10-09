@@ -19,7 +19,7 @@ def create_reservation(
     if data.check_out_date <= data.check_in_date:
         raise HTTPException(status_code=400, detail="체크아웃 날짜는 체크인 날짜보다 이후여야 합니다.")
 
-    # ✅ 중복 예약 검사!!!
+    # 중복 예약 검사!!!
     overlapping_reservation = db.query(UserReservation).filter(
         UserReservation.hotel_id == data.hotel_id,
         UserReservation.check_out_date > data.check_in_date,
@@ -29,7 +29,7 @@ def create_reservation(
     if overlapping_reservation:
         raise HTTPException(status_code=400, detail="해당 날짜에는 이미 예약이 존재합니다.")
 
-    # ✅ 예약 생성
+    # 예약 생성
     new_reservation = UserReservation(
         u_booking_id=generate_booking_id(),
         hotel_id=data.hotel_id,
@@ -49,12 +49,12 @@ def create_reservation(
 
 @router.get("/get-hotel-id")
 def get_hotel_id(hotelNo: int = Query(...), db: Session = Depends(get_db)):
-    print(f"📌 hotelNo 요청 들어옴: {hotelNo}")
+    print(f" hotelNo 요청 들어옴: {hotelNo}")
     hotel = db.query(Accommodation).filter(Accommodation.hotel_no == hotelNo).first()
     if not hotel:
-        print("❌ hotel 정보 없음")
+        print(" hotel 정보 없음")
         raise HTTPException(status_code=404, detail="해당 hotelNo에 대한 호텔을 찾을 수 없습니다.")
-    print(f"✅ hotel_id = {hotel.accommodation_id}")
+    print(f" hotel_id = {hotel.accommodation_id}")
     return { "hotel_id": hotel.accommodation_id }
 
 @router.get("/get-user-reservation-data", response_model = List[UserReservationOUT])
@@ -62,9 +62,9 @@ def get_reservation_data(
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user)
 ):
-    print("✅ current_user:", current_user)
+    print(" current_user:", current_user)
     user_id = current_user["user_id"]
-    print("✅ user_id:", user_id)
+    print(" user_id:", user_id)
 
     reservations = (
         db.query(UserReservation)
@@ -73,17 +73,6 @@ def get_reservation_data(
         .all()
     )
 
-    result = []
-    for r in reservations:
-        result.append({
-            "check_in_date": r.check_in_date.isoformat(),
-            "check_out_date": r.check_out_date.isoformat(),
-            "hotel": {
-                "accommodation_id": r.accommodation.accommodation_id,
-                "name": r.accommodation.name,
-                "image_url": r.accommodation.image_url,
-            }
-        })
     return reservations
 
 @router.get("/get-hotel-location", response_model = AccommodationOut)

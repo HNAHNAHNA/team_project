@@ -6,6 +6,7 @@ from app.routers.jwtValidate import router as jwtvalidate
 from app.routers.refreshAccessToken import router as refreshToken
 from app.routers.favoritesRouter import router as favo
 from app.routers.user_reservation import router as reservations
+from app.routers.recommendedRoute import router as recommended
 from app.models import *
 
 app = FastAPI()
@@ -30,3 +31,5 @@ app.include_router(refreshToken)
 app.include_router(favo)
 # 유저 예약
 app.include_router(reservations)
+# 거리계산
+app.include_router(recommended)

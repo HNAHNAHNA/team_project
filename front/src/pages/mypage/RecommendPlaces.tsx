@@ -8,7 +8,7 @@ import MapComponent from "../../features/map/MapComponent";
 import CreatePlaceMarker from "../../features/map/CreatePlaceMarker";
 import type { PlaceInfo } from "../../types/Recommendation";
 
-function ReservationAccommodations() {
+function RecommendPlaces() {
     const [reservationHotels, setReservationHotels] = useState<UserReservations[]>([]);
     const [loading, setLoading] = useState(false);
     const [skeletonCount, setSkeletonCount] = useState(5);
@@ -317,4 +317,4 @@ function ReservationAccommodations() {
     );
 }
 
-export default ReservationAccommodations;
+export default RecommendPlaces;

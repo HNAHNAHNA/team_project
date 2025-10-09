@@ -26,3 +26,5 @@ bin/
 
 back/src/main/resources/application.properties
 front/.env
+
+*.txt

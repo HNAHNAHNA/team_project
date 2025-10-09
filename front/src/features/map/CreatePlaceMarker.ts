@@ -53,4 +53,5 @@ export default function createPlaceMarker(
 
     const marker = new PlaceMarker();
     marker.setMap(map);
+    return marker;
 }

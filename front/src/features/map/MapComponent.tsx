@@ -1,6 +1,6 @@
 import { GoogleMap, useLoadScript } from "@react-google-maps/api";
 
-const LIBRARIES: ("places")[] = ["places"];
+const LIBRARIES: ("places" | "geometry")[] = ["places", "geometry"];
 
 const MapComponent = ({
     center,
@@ -12,7 +12,7 @@ const MapComponent = ({
     const GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY
     const { isLoaded, loadError } = useLoadScript({
         googleMapsApiKey: GOOGLE_API_KEY,
-       libraries: LIBRARIES,
+        libraries: LIBRARIES,
     });
 
     if (loadError) return <div>지도를 불러오는데 실패했습니다.</div>;

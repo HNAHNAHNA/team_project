@@ -4,6 +4,9 @@ import com.staynguide.backend.mapapi.dto.PlaceInfo;
 import com.staynguide.backend.mapapi.entity.Place;
 import com.staynguide.backend.mapapi.repository.PlaceRepository;
 import com.staynguide.backend.mapapi.service.PlaceService;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,6 +37,16 @@ public class PlaceController{
     public Map<String, List<PlaceInfo>> getSplitRecommendations(@RequestParam String hotelName, @RequestParam String region) {
         return placeService.getSplitRecommendations(hotelName, region);
     }
-
+        @GetMapping("/hotel-location")
+    public ResponseEntity<PlaceInfo> getHotelLocation(
+            @RequestParam String hotelName,
+            @RequestParam String region
+    ) {
+        PlaceInfo info = placeService.findHotelLocation(hotelName, region);
+        if (info == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(info);
+    }
 
 }

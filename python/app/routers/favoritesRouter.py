@@ -20,6 +20,8 @@ def create_favorite(fav: FavoriteCreate, db: Session = Depends(get_db)):
         db.add(new_fav)
         db.commit()
         db.refresh(new_fav)
+        print("찜목록 추가 완료")
+        
         return new_fav
     except Exception as e:
         db.rollback()

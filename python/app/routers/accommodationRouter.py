@@ -9,7 +9,6 @@ router = APIRouter(prefix="/api/fastapi")
 
 @router.get("/accommodations", response_model=List[AccommodationOut])
 def get_all_accommodations(db: Session = Depends(get_db)):
-    print("FIXしました！うおあああああ！")
     return db.query(Accommodation).all()
 
 @router.get("/hotels/all", response_model=List[AccommodationOut])

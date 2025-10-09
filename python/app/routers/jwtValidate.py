@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException, Query
 from app.config import Settings
 import requests
-from jose import jwt, JWTError
 from app.settings import SPRING_BASE_URL
 
 router = APIRouter(prefix="/api/fastapi")

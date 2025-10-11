@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException, Query
-from app.config import Settings
+from app.config import Settings, SPRING_URL
 import requests
-from app.settings import SPRING_BASE_URL
 
 router = APIRouter(prefix="/api/fastapi")
 
@@ -12,7 +11,7 @@ def validate_jwt_token(token: str = Query(...)) -> dict:
     JWT를 검증하고 payload를 반환합니다..
     """
 
-    url = f"{SPRING_BASE_URL}/api/v1/auth/validate"
+    url = f"{SPRING_URL}/api/v1/auth/validate"
 
     try:
         headers = {

@@ -63,12 +63,15 @@ jobs:
             echo "🔄 2. 최신 코드로 강제 업데이트"
             git reset --hard origin/master
 
-            echo "📥 3. 최신 Spring 이미지 Pull"
+            echo "📝 3. 백엔드 .env 파일 생성 (decoding base64)"
+            echo "${{ secrets.FASTAPI_ENV_B64 }}" | base64 -d > ./python/.env
+
+            echo "📥 4. 최신 Spring 이미지 Pull"
             docker compose pull spring-back
 
-            echo "🚀 4. 모든 서비스 재시작 (FastAPI는 필요시 빌드)"
+            echo "🚀 5. 모든 서비스 재시작 (FastAPI는 필요시 빌드)"
             docker compose up --build -d
 
-            echo "🧹 5. 불필요한 Docker 이미지 정리"
+            echo "🧹 6. 불필요한 Docker 이미지 정리"
             docker image prune -f
           EOF

@@ -71,7 +71,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://3.35.16.250", "http://localhost:5173", "http://localhost:8000")); // 프론트 주소
+        config.setAllowedOrigins(List.of("http://3.35.16.250", "http://localhost:5173", "http://localhost:8000"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true); // 세션/쿠키 공유 허용

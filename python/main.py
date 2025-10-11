@@ -19,9 +19,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# app.include_router(accommodations_insert.router)!!!
+# app.include_router(accommodations_insert.router)
 
-# 이건 홈화면 호텔들 슬라이드 띄우기!
+# 이건 홈화면 호텔들 슬라이드 띄우기
 app.include_router(accommodationRouter)
 # 이건 jwt 유효성 검사
 app.include_router(jwtvalidate)

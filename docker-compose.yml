@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  spring-back:
+    container_name: spring-back
+    image: ghcr.io/hnahnahna/team_project/staynguide-spring:latest
+    pull_policy: always
+    ports:
+      - "8091:8080"
+    restart: always
+
+  fastapi-back:
+    container_name: fastapi-back
+    build:
+      context: ./python
+    ports:
+      - "8000:8000"
+    restart: always

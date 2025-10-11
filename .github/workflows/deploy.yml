@@ -32,7 +32,7 @@ jobs:
           docker build -f back/Dockerfile -t $IMAGE_ID ./back
           docker push $IMAGE_ID
 
-deploy:
+  deploy:
     needs: build-spring
     runs-on: ubuntu-latest
     steps:

@@ -57,15 +57,18 @@ jobs:
             echo "🐞 디버깅: 원격 저장소 주소 확인"
             git remote -v
 
-            echo "🔄 1. 최신 코드로 업데이트"
+            echo "📡 1. 원격 저장소 최신 정보 가져오기"
+            git fetch origin
+
+            echo "🔄 2. 최신 코드로 강제 업데이트"
             git reset --hard origin/master
 
-            echo "📥 2. 최신 Spring 이미지 Pull"
+            echo "📥 3. 최신 Spring 이미지 Pull"
             docker compose pull spring-back
 
-            echo "🚀 3. 모든 서비스 재시작 (FastAPI는 필요시 빌드)"
+            echo "🚀 4. 모든 서비스 재시작 (FastAPI는 필요시 빌드)"
             docker compose up --build -d
 
-            echo "🧹 4. 불필요한 Docker 이미지 정리"
+            echo "🧹 5. 불필요한 Docker 이미지 정리"
             docker image prune -f
           EOF

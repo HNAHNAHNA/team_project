@@ -77,7 +77,7 @@ def get_reservation_data(
 
 @router.get("/get-hotel-location", response_model = AccommodationOut)
 def get_hotel_location (accommodation_id: int = Header(...), db: Session = Depends(get_db)):
-    print("request 일단 연결 성공!")
+    print("request!")
 
     accommodation = (
         db.query(Accommodation)

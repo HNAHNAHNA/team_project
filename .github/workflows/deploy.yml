@@ -54,6 +54,9 @@ jobs:
           ssh -i ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd ~/team_project
 
+            echo "🐞 디버깅: 원격 저장소 주소 확인"
+            git remote -v
+
             echo "🔄 1. 최신 코드로 업데이트"
             git reset --hard origin/master
 

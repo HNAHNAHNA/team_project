@@ -8,7 +8,7 @@ RUN ./gradlew build -x test || true  # 의존성 캐시 유도
 COPY . .
 RUN ./gradlew build -x test
 
-# 2단계: Run!!!!
+# 2단계: Run
 FROM eclipse-temurin:17-jre
 WORKDIR /app
 

@@ -1,0 +1,10 @@
+fastapi==0.115.14
+pydantic==2.11.7
+pydantic_settings==2.10.1
+python-dotenv==1.1.1
+Requests==2.32.4
+SQLAlchemy==2.0.41
+python-jose[cryptography]
+PyMySQL
+uvicorn[standard]
+httpx

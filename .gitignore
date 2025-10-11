@@ -1,32 +1,79 @@
-0application.properties
-# Python
-__pycache__/
-*.pyc
-venv/
-.env
-settings.py
+# =================================================================
+# General / OS
+# =================================================================
+.DS_Store
+*.log
+*.swp
+*.bak
+.github/workflows/*.txt
+.github/workflows/*.md
 
-
-
-# Node
-node_modules/
-dist/
-
-# IDE/에디터
+# =================================================================
+# IDEs / Editors
+# =================================================================
 .idea/
 .vscode/
+!.vscode/extensions.json
 .settings/
-.project
 .classpath
-bin/
-*.tsbuildinfo
-# Auto-generated type files
-*.d.ts
-!src/types/*.d.ts
+.project
+.factorypath
+.springBeans
+.sts4-cache
 
-back/src/main/resources/application.properties
-front/.env
+# =================================================================
+# Java / Gradle (back)
+# =================================================================
+/back/.gradle/
+/back/build/
+/back/bin/
+/back/out/
+/back/*.jar
+/back/*.war
+# NetBeans
+/back/nbproject/private/
+/back/nbbuild/
+/back/dist/
+/back/nbdist/
+/back/.nb-gradle/
 
-*.txt
-*.md
-.github/workflows/*.bak
+
+# =================================================================
+# Node.js / Vite (front)
+# =================================================================
+node_modules
+/front/node_modules/
+/front/dist/
+/front/dist-ssr/
+/front/.vite/
+/front/*.local
+/front/npm-debug.log*
+/front/yarn-debug.log*
+/front/yarn-error.log*
+/front/pnpm-debug.log*
+/front/lerna-debug.log*
+/front/**.tsbuildinfo
+# Auto-generated type files, excluding custom types
+/front/**/*.d.ts
+!/front/src/types/**/*.d.ts
+
+
+# =================================================================
+# Python (python)
+# =================================================================
+/python/**/__pycache__/
+/python/*.pyc
+/python/venv/
+/python/**.tsbuildinfo
+
+# =================================================================
+# Sensitive Files (!!! IMPORTANT !!!)
+# =================================================================
+# General .env files
+.env
+.env.*
+!/.env.example
+
+# Specific config files
+/back/src/main/resources/application.properties
+/python/app/settings.py

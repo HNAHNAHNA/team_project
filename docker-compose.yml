@@ -6,7 +6,7 @@ services:
     image: ghcr.io/hnahnahna/team_project/staynguide-spring:latest
     pull_policy: always
     ports:
-      - "8091:8080"
+      - "8091:8091"
     restart: always
 
   fastapi-back:

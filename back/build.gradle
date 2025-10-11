@@ -51,7 +51,7 @@ dependencies {
     /*developmentOnly 'org.springframework.boot:spring-boot-devtools'*/
     // 테스트 의존성
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-        // JWT 라이브러리 추가
+    // JWT 라이브러리 추가
     implementation 'io.jsonwebtoken:jjwt-api:0.12.5' // 최신 버전 확인
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5' // JSON 파싱을 위한 Jackson 연동

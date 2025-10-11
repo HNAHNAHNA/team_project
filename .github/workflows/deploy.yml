@@ -1,18 +1,16 @@
-name: Build & Deploy Spring with Docker Compose
+name: Build and Deploy All Services
 
 on:
   push:
+    branches: [ master ]
     paths:
       - 'back/**'
       - 'python/**'
       - 'docker-compose.yml'
-    branches:
-      - master
 
 jobs:
-  build-and-push-spring:
+  build-spring:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,22 +25,16 @@ jobs:
         run: echo "${{ secrets.SPRING_ENV_B64 }}" | base64 -d > src/main/resources/application.properties
         working-directory: ./back
 
-      - name: Build Docker image for Spring
+      - name: Build and push Spring image to GHCR
         env:
           IMAGE_ID: ghcr.io/hnahnahna/team_project/staynguide-spring:latest
         run: |
           docker build -f back/Dockerfile -t $IMAGE_ID ./back
-
-      - name: Push Docker image to GHCR
-        env:
-          IMAGE_ID: ghcr.io/hnahnahna/team_project/staynguide-spring:latest
-        run: |
           docker push $IMAGE_ID
 
-  deploy-to-ec2:
-    needs: build-and-push-spring  # 💡 반드시 Spring 빌드 후 실행되도록 지정
+deploy:
+    needs: build-spring
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -57,18 +49,20 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy via SSH
+      - name: Deploy to EC2
         run: |
           ssh -i ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd ~/team_project
 
-            echo "🛑 컨테이너 강제 제거 (중복 에러 방지)"
-            docker rm -f spring-back || true
-            docker rm -f fastapi-back || true
+            echo "🔄 1. 최신 코드로 업데이트"
+            git reset --hard origin/master
 
-            echo "📥 Spring 이미지 Pull"
+            echo "📥 2. 최신 Spring 이미지 Pull"
             docker compose pull spring-back
 
-            echo "🚀 Docker Compose 재시작"
+            echo "🚀 3. 모든 서비스 재시작 (FastAPI는 필요시 빌드)"
             docker compose up --build -d
+
+            echo "🧹 4. 불필요한 Docker 이미지 정리"
+            docker image prune -f
           EOF

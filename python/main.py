@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.config import settings
 from app.database import accommodations_insert
 from app.routers.accommodationRouter import router as accommodationRouter
 from app.routers.jwtValidate import router as jwtvalidate
@@ -7,13 +8,16 @@ from app.routers.refreshAccessToken import router as refreshToken
 from app.routers.favoritesRouter import router as favo
 from app.routers.user_reservation import router as reservations
 from app.routers.recommendedRoute import router as recommended
+from app.routers.paymentRouter import router as paymentRouter
 from app.models import *
 
 app = FastAPI()
 
+
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -34,3 +38,5 @@ app.include_router(favo)
 app.include_router(reservations)
 # 거리계산
 app.include_router(recommended)
+# 결제
+app.include_router(paymentRouter)

@@ -10,6 +10,7 @@ import type { PlaceInfo } from "../../types/Recommendation";
 import { getRouteByHotelName, type RouteResponse } from "../../types/Route";
 import { drawEncodedPolylineOnMap } from "../../features/map/drawRoute";
 import { ArrowLeft, X } from "lucide-react";
+import PaymentModal from '../../features/payment/modals/PaymentModal'; // ADDED THIS IMPORT
 
 function ReservationAccommodations() {
     const [reservationHotels, setReservationHotels] = useState<UserReservations[]>([]);
@@ -22,6 +23,7 @@ function ReservationAccommodations() {
     const [placeData, setPlaceData] = useState<{ restaurants: PlaceInfo[]; attractions: PlaceInfo[] } | null>(null);
     const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
     const [markers, setMarkers] = useState<any[]>([]);
+    const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const { validateAccessToken } = useAuth();
     const navigate = useNavigate();
 
@@ -36,6 +38,7 @@ function ReservationAccommodations() {
             });
             if (!res.ok) throw new Error(`서버 오류: ${res.status}`);
             const data = await res.json();
+            console.log("API 응답 데이터:", data);
             setReservationHotels(data);
             setSkeletonCount(data.length > 0 ? data.length : 5);
         } catch (err) {
@@ -43,7 +46,7 @@ function ReservationAccommodations() {
         } finally {
             setLoading(false);
         }
-    }, [validateAccessToken]);
+    }, []);
 
     const getHotelLocation = async (accommodationId: number) => {
         try {
@@ -171,29 +174,41 @@ function ReservationAccommodations() {
         const confirmDelete = window.confirm("정말로 이 예약을 취소하시겠습니까?");
         if (!confirmDelete) return;
 
-        const accessToken = localStorage.getItem("accessToken");
-        if (!accessToken) {
-            alert("로그인이 필요합니다");
-            return;
-        }
-
-        const res = await fetch("/api/fastapi/delete-reservation", {
-            method: "DELETE",
-            headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json" },
-            body: JSON.stringify({ u_booking_id: selectedData.u_booking_id }),
-        });
-
-        if (res.ok) {
-            alert(" 예약이 삭제되었습니다!");
-            resetAndClose();
-            fetchReservations();
-        } else {
-            const errorData = await res.json().catch(() => null);
-            console.error("예약 삭제 실패:", errorData);
-            alert(` 예약 삭제 실패: ${errorData?.detail || '서버 오류'}`);
+        try {
+            const token = await validateAccessToken();
+            if (!token) {
+                alert("로그인이 필요합니다");
+                return;
+            }
+    
+            const res = await fetch("/api/fastapi/delete-reservation", {
+                method: "DELETE",
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+                body: JSON.stringify({ u_booking_id: selectedData.u_booking_id }),
+            });
+    
+            if (res.ok) {
+                alert(" 예약이 삭제되었습니다!");
+                resetAndClose();
+                fetchReservations();
+            } else {
+                const errorData = await res.json().catch(() => null);
+                console.error("예약 삭제 실패:", errorData);
+                alert(` 예약 삭제 실패: ${errorData?.detail || '서버 오류'}`);
+            }
+        } catch (error) {
+            console.error("예약 삭제 중 오류 발생:", error);
+            alert("예약 삭제 중 오류가 발생했습니다.");
         }
     };
     
+    const handlePaymentModalClose = (isSuccess: boolean) => {
+        setIsPaymentModalOpen(false);
+        if (isSuccess) {
+            fetchReservations();
+        }
+    };
+
     const resetAndClose = () => {
         setSelectedData(null);
         setShowDetail(false);
@@ -201,6 +216,7 @@ function ReservationAccommodations() {
         setSelectedPlace(null);
         setIsMapExpanded(false);
         setRouteInfo(null);
+        setIsPaymentModalOpen(false);
     };
 
     const PlaceItem = ({ place }: { place: PlaceInfo }) => (
@@ -288,6 +304,11 @@ function ReservationAccommodations() {
                                         <button onClick={favoriteModalToDetailPage} className="flex-1 bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600">호텔 정보</button>
                                         <button onClick={() => { setShowDetail(true); getHotelLocation(selectedData.accommodation.accommodation_id); }} className="flex-1 bg-green-500 text-white px-4 py-2 rounded-lg shadow hover:bg-green-600">주변 장소 보기</button>
                                         <button onClick={deleteButtonClick} className="flex-1 bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600">예약 취소</button>
+                                        {selectedData.status === 'PENDING_PAYMENT' ? (
+                                            <button onClick={() => setIsPaymentModalOpen(true)} className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">결제하기</button>
+                                        ) : selectedData.status === 'COMPLETED' ? (
+                                            <button className="flex-1 bg-gray-400 text-white px-4 py-2 rounded-lg cursor-not-allowed" disabled>결제 완료</button>
+                                        ) : null}
                                     </div>
                                 </>
                             ) : (
@@ -344,6 +365,14 @@ function ReservationAccommodations() {
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            {isPaymentModalOpen && selectedData && (
+              <PaymentModal
+                isOpen={isPaymentModalOpen}
+                onClose={handlePaymentModalClose}
+                reservationId={selectedData.reservation_id}
+              />
+            )}
         </div>
     );
 }

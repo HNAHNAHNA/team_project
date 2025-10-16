@@ -39,8 +39,13 @@ public class JwtTokenProvider {
 
     @PostConstruct
     public void init() {
-        this.signingKey = Keys.hmacShaKeyFor(secretKey.getBytes()); // byte[]에서 SecretKey 생성
+        this.signingKey = Keys.hmacShaKeyFor(secretKey.getBytes());
         log.info("JWT Secret Key initialized.");
+        log.debug("DEBUG: [JwtTokenProvider] Injected secretKey (first 10 chars): {}", secretKey.substring(0, Math.min(secretKey.length(), 10)));
+        log.info("DEBUG: [JwtTokenProvider] Injected accessTokenExpirationInMinutes: {}", accessTokenExpirationInMinutes);
+        log.info("DEBUG: [JwtTokenProvider] Injected refreshTokenExpirationInDays: {}", refreshTokenExpirationInDays);
+        log.info("DEBUG: [JwtTokenProvider] Injected accessTokenExpirationInMinutes: {}", accessTokenExpirationInMinutes);
+        log.info("DEBUG: [JwtTokenProvider] Injected refreshTokenExpirationInDays: {}", refreshTokenExpirationInDays);
     }
 
     // Access Token 생성
@@ -49,6 +54,8 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + accessTokenExpirationInMinutes * 60 * 1000);
 
+        log.debug("DEBUG: [AccessToken] Using accessTokenExpirationInMinutes: {}", accessTokenExpirationInMinutes);
+        log.debug("DEBUG: [AccessToken] now: {}, expiryDate: {}", now, expiryDate);
         String jti = UUID.randomUUID().toString(); // <<< 이 라인 그대로
         log.debug("DEBUG: [AccessToken] JTI 생성됨: {}", jti); // <<< 이 디버그 로그 추가 (확인용)
         
@@ -67,6 +74,7 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + refreshTokenExpirationInDays * 24 * 60 * 60 * 1000);
         
+        log.debug("DEBUG: [RefreshToken] now: {}, expiryDate: {}", now, expiryDate);
         String jti = UUID.randomUUID().toString(); // <<< 이 라인 그대로
         log.debug("DEBUG: [RefreshToken] JTI 생성됨: {}", jti); // <<< 이 디버그 로그 추가 (확인용)
 
@@ -93,18 +101,19 @@ public class JwtTokenProvider {
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser()
-                    .verifyWith(signingKey) // key 대신 signingKey 사용
+                    .verifyWith(signingKey)
+                    .clockSkewSeconds(5) // Allow 5 seconds clock skew
                     .build()
                     .parseSignedClaims(authToken);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("Invalid JWT Token", e);
+            log.debug("DEBUG: [Validate] Invalid JWT Token: {}", authToken, e);
         } catch (ExpiredJwtException e) {
-            log.info("Expired JWT Token", e);
+            log.debug("DEBUG: [Validate] Expired JWT Token: {}", authToken, e);
         } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT Token", e);
+            log.debug("DEBUG: [Validate] Unsupported JWT Token: {}", authToken, e);
         } catch (IllegalArgumentException e) {
-            log.info("JWT claims string is empty.", e);
+            log.debug("DEBUG: [Validate] JWT claims string is empty: {}", authToken, e);
         }
         return false;
     }

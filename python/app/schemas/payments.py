@@ -40,3 +40,31 @@ class paymentsOUT (BaseModel):
 
     class config:
         orm_mode = True
+
+
+class PaymentPrepResponse(BaseModel):
+    reservation_id: int
+    hotel_name: str
+    hotel_address: str
+    check_in_date: str
+    check_out_date: str
+    amount: Money
+    buyer_name: str
+    buyer_phone: str
+
+    class Config:
+        orm_mode = True
+
+
+class PaymentHistoryItem(BaseModel):
+    payment_id: int
+    reservation_id: int
+    hotel_name: str
+    check_in_date: str
+    check_out_date: str
+    amount: Money
+    status: PaymentStatus
+    paid_at: datetime | None = None
+
+    class Config:
+        orm_mode = True

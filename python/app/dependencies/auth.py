@@ -3,7 +3,7 @@ from app.config import Settings, SPRING_URL
 import requests
 
 def get_current_user(authorization: str = Header(...)):
-    # print("🔐 Authorization Header:", authorization)
+    print("🔐 Authorization Header:", authorization)
 
     url = f"{SPRING_URL}/api/v1/auth/validate"
 

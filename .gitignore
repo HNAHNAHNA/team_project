@@ -36,6 +36,7 @@
 /back/dist/
 /back/nbdist/
 /back/.nb-gradle/
+/back/back_summary.txt
 
 
 # =================================================================

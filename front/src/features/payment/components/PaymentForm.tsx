@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { PaymentPrepResponse } from '../../../types/payments';
+import { useState } from 'react';
+import type { PaymentPrepResponse } from '../../../types/payments';
 
 interface PaymentFormProps {
   paymentData: PaymentPrepResponse;

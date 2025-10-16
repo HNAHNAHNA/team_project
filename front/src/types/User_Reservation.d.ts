@@ -8,5 +8,6 @@ export interface UserReservations {
     check_in_date: string,
     check_out_date: string,
     user_id: number,
+    status: string; 
     accommodation: AccommodationOut;
 }

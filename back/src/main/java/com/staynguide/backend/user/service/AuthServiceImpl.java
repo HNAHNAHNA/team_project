@@ -1,5 +1,7 @@
 package com.staynguide.backend.user.service;
 
+import jakarta.annotation.PostConstruct;
+
 import com.staynguide.backend.user.config.jwt.JwtTokenProvider;
 import com.staynguide.backend.user.dto.UserLoginRequest;
 import com.staynguide.backend.user.dto.UserLoginResponse;
@@ -34,6 +36,12 @@ public class AuthServiceImpl implements AuthService {
     @Value("${jwt.refresh-token-expiration-in-days}")
     private long refreshTokenExpirationInDays;
 
+    @PostConstruct
+    public void logExpirationValues() {
+        log.info("DEBUG: [AuthServiceImpl] Injected accessTokenExpirationInMinutes: {}", accessTokenExpirationInMinutes);
+        log.info("DEBUG: [AuthServiceImpl] Injected refreshTokenExpirationInDays: {}", refreshTokenExpirationInDays);
+    }
+
     @Override
     @Transactional
     public UserLoginResponse login(UserLoginRequest request) {
@@ -46,6 +54,8 @@ public class AuthServiceImpl implements AuthService {
             String accessToken = jwtTokenProvider.generateAccessToken(authentication);
             String refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
 
+            log.debug("DEBUG: [Login] 생성된 Refresh Token: {}", refreshToken);
+
             long expiresInSeconds = accessTokenExpirationInMinutes * 60;
 
             User user = userRepository.findByEmail(request.getEmail())
@@ -54,6 +64,8 @@ public class AuthServiceImpl implements AuthService {
             user.setRefreshToken(refreshToken);
             user.setTokenExpiryDate(LocalDateTime.now().plusDays(refreshTokenExpirationInDays));
             userRepository.save(user);
+
+            log.debug("DEBUG: [Login] DB에 저장된 Refresh Token: {}", user.getRefreshToken());
 
             log.info("로그인 성공 및 토큰 발급/저장 완료: {}", request.getEmail());
             return UserLoginResponse.builder()

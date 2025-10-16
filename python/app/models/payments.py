@@ -21,7 +21,7 @@ class Payment(Base):
 
     payment_id = Column(BigInteger, primary_key=True, autoincrement=True)
     reservation_id = Column(Integer, ForeignKey('user_reservations.reservation_id'), nullable=False)
-    user_id = Column(BigInteger, ForeignKey('users.user_id'), nullable=False)
+    user_id = Column(BigInteger, ForeignKey('users.u_user_id'), nullable=False)
     amount = Column(DECIMAL(10, 2), nullable=False)
     payment_method = Column(Enum(PaymentMethod), nullable=False) 
     status = Column(Enum(PaymentStatus), nullable=True, default=PaymentStatus.PENDING)

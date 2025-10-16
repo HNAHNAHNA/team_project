@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 function EditUserInfo() {
   const navigate = useNavigate();
+  const { validateAccessToken } = useAuth();
 
   const [username, setUsername] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -13,23 +15,22 @@ function EditUserInfo() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const token = localStorage.getItem("accessToken");
-
-      if (!token) {
-        alert("로그인이 필요합니다.");
-        navigate("/login");
-        return;
-      }
-
-      try {
-        const response = await fetch("/api/v1/users/me", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
+          const fetchUser = async () => {
+            const token = await validateAccessToken();
+    
+            if (!token) {
+              alert("로그인이 필요합니다.");
+              navigate("/login");
+              return;
+            }
+    
+            try {
+              const response = await fetch("/api/v1/users/me", {
+                method: "GET",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
         if (!response.ok) {
           throw new Error("사용자 정보를 가져오지 못했습니다.");
         }
@@ -55,7 +56,7 @@ function EditUserInfo() {
   }, [navigate]);
 
   const handleUpdate = async () => {
-    const token = localStorage.getItem("accessToken");
+    const token = await validateAccessToken();
 
     if (!token) {
       alert("로그인이 필요합니다.");

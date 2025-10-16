@@ -1,10 +1,11 @@
 from typing import List
 from fastapi import APIRouter, Body, Depends, HTTPException, Header, Query
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app.database.connection import get_db
 from app.dependencies.auth import get_current_user
 from app.models.accommodation import Accommodation 
 from app.models.user_reservations import UserReservation
+from app.models.payments import Payment
 from app.schemas.accommodation import AccommodationOut
 from app.schemas.user_reservations import ReservationRequest, ReservationResponse, UserReservationOUT
 from app.utils.generate_booking_id import generate_booking_id
@@ -66,14 +67,21 @@ def get_reservation_data(
     user_id = current_user["user_id"]
     print(" user_id:", user_id)
 
-    reservations = (
-        db.query(UserReservation)
-        .join(Accommodation)
+    results = (
+        db.query(UserReservation, Payment.status)
+        .outerjoin(Payment, UserReservation.reservation_id == Payment.reservation_id)
         .filter(UserReservation.user_id == user_id)
+        .options(joinedload(UserReservation.accommodation))
+        .order_by(UserReservation.check_in_date.desc())
         .all()
     )
 
-    return reservations
+    response_list = []
+    for reservation, payment_status in results:
+        reservation.payment_status = payment_status
+        response_list.append(reservation)
+        
+    return response_list
 
 @router.get("/get-hotel-location", response_model = AccommodationOut)
 def get_hotel_location (accommodation_id: int = Header(...), db: Session = Depends(get_db)):
@@ -90,28 +98,63 @@ def get_hotel_location (accommodation_id: int = Header(...), db: Session = Depen
     return accommodation
 
 @router.delete("/delete-reservation")
+
 def delete_reservation(
-    user_id: int = Body(...),
-    accommodation_id: int = Body(...),
-    check_in_date: str = Body(...),  # YYYY-MM-DD
-    db: Session = Depends(get_db)
+
+    payload: dict = Body(...),
+
+    db: Session = Depends(get_db),
+
+    current_user: dict = Depends(get_current_user)
+
 ):
+
+    u_booking_id = payload.get("u_booking_id")
+
+    user_id = current_user.get("user_id")
+
+
+
+    if not u_booking_id or not user_id:
+
+        raise HTTPException(status_code=400, detail="Booking ID is required.")
+
+
+
     reservation = (
+
         db.query(UserReservation)
+
         .filter(
-            UserReservation.user_id == user_id,
-            UserReservation.hotel_id == accommodation_id,
-            UserReservation.check_in_date == check_in_date  # 정확한 예약
+
+            UserReservation.u_booking_id == u_booking_id,
+
+            UserReservation.user_id == user_id
+
         )
+
         .first()
+
     )
 
-    print(reservation)
+
 
     if not reservation:
+
         raise HTTPException(status_code=404, detail="해당 예약을 찾을 수 없습니다!")
 
+
+
+    # Delete associated payment records first
+
+    db.query(Payment).filter(Payment.reservation_id == reservation.reservation_id).delete(synchronize_session=False)
+
+
+
     db.delete(reservation)
+
     db.commit()
+
+
 
     return {"message": "예약이 성공적으로 삭제되었습니다."}

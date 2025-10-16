@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     affiliate_ID: str
 
     SECRET_KEY: str
+    CORS_ORIGINS: list[str] = []
 
     model_config = ConfigDict(
         env_file=".env",

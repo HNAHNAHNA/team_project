@@ -29,4 +29,3 @@ class User(Base):
     u_token_expiry_date = Column(DateTime)
     u_created_at = Column(DateTime, server_default=func.now(), nullable=False)
     u_updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)
-    u_booking_id = Column(Integer, unique=True)

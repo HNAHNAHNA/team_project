@@ -14,4 +14,5 @@ class UserReservation(Base):
     check_in_date = Column(String(20))
     check_out_date = Column(String(20))
     user_id = Column(BigInteger, ForeignKey("users.u_user_id"), nullable=False)
+    status = Column(String(20), nullable=False, default='PENDING_PAYMENT')
     accommodation = relationship("Accommodation", backref="reservations")

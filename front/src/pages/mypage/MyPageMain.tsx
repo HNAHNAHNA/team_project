@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import EditUserInfo from "./EditUserInfo";
-// import PaymentHistory from "./PaymentHistory";
+import PaymentHistory from "./PaymentHistory";
 import UserFavorites from "./UserFavorites";
 import ReservationAccommodations from "./ReservationAccommodations";
 
@@ -101,7 +101,7 @@ function MyPageMain() {
         {activeTab === "payments" && (
           <>
             <h3 className="text-lg font-bold mb-4">결제 내역</h3>
-            {/* <PaymentHistory /> */}
+            <PaymentHistory />
           </>
         )}
       </div>

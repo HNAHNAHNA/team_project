@@ -1,9 +1,10 @@
 from fastapi import APIRouter, HTTPException, Body
 from pydantic import BaseModel
 import requests
+from app.config import SPRING_URL
 
 router = APIRouter(prefix="/api/fastapi")
-SPRING_REFRESH_URL = 'http://localhost:8091/api/v1/auth/reissue'
+SPRING_REFRESH_URL = f"{SPRING_URL}/api/v1/auth/reissue"
 
 class RefreshTokenRequest(BaseModel):
     refreshToken: str

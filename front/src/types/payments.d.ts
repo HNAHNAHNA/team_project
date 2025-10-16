@@ -12,6 +12,7 @@ export interface PaymentPrepResponse {
 }
 
 export interface PaymentHistoryItem {
+  payment_id: number;
   reservation_id: number;
   hotel_name: string;
   check_in_date: string;

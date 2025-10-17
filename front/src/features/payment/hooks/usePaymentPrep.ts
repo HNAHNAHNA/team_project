@@ -24,7 +24,7 @@ export const usePaymentPrep = (reservationId: number | null) => {
       }
 
       try {
-        const response = await fetch(`http://localhost:8000/api/fastapi/payments/prepare/${reservationId}`, {
+        const response = await fetch(`/api/fastapi/payments/prepare/${reservationId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },

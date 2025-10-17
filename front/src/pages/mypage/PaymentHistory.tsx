@@ -16,7 +16,7 @@ const PaymentHistory = () => {
         throw new Error('인증이 필요합니다.');
       }
 
-      const response = await fetch(`http://localhost:8000/api/fastapi/payments/cancel/${paymentId}`, {
+      const response = await fetch(`/api/fastapi/payments/cancel/${paymentId}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

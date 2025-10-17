@@ -18,7 +18,7 @@ export const usePaymentHistory = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/api/fastapi/payments/history', {
+      const response = await fetch('/api/fastapi/payments/history', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

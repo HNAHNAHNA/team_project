@@ -27,7 +27,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, reservatio
         throw new Error('인증 토큰을 가져올 수 없습니다.');
       }
 
-      const response = await fetch('http://localhost:8000/api/fastapi/payments/complete_virtual', {
+      const response = await fetch('/api/fastapi/payments/complete_virtual', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

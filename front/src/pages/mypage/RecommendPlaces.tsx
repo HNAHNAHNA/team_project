@@ -263,7 +263,7 @@ function RecommendPlaces() {
                                             }}
                                             className="mb-2 bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded"
                                         >
-                                            ← 뒤로가기
+                                            ←
                                         </button>
                                         <h3 className="text-lg font-semibold mb-2">おすすめスポット</h3>
                                         <div className="max-h-[300px] overflow-y-auto text-sm space-y-2 pr-2">

@@ -313,7 +313,7 @@ function ReservationAccommodations() {
                                 </>
                             ) : (
                                 <>
-                                    <button onClick={() => { setShowDetail(false); setPlaceData(null); setSelectedPlace(null); setIsMapExpanded(false); }} className="mb-3 flex items-center gap-1 text-sm bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded-md"><ArrowLeft size={16}/> 뒤로가기</button>
+                                    <button onClick={() => { setShowDetail(false); setPlaceData(null); setSelectedPlace(null); setIsMapExpanded(false); }} className="mb-3 flex items-center gap-1 text-sm hover:cursor-pointer py-1 rounded-md"><ArrowLeft size={16}/></button>
                                     <div className={`flex gap-4 ${isMapExpanded ? 'flex-row' : 'flex-col'}`}>
                                         <div className={`${isMapExpanded ? 'w-1/2' : 'w-full'}`}>
                                             <h3 className="text-xl font-semibold mb-3">おすすめスポット</h3>

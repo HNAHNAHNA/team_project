@@ -122,7 +122,7 @@ const UserFavorites = ({ userId }: { userId: number }) => {
                                         if (selectedData) favoriteModalToDetailPage();
                                     }}
                                 >
-                                    자세히보기
+                                    詳しく
                                 </div>
                                 <div
                                     onClick={() => deleteFavoriteButtonClickHandler(userId, selectedData)}

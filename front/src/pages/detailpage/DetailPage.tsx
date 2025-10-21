@@ -97,8 +97,8 @@ function DetailPage() {
                 colorClass="bg-neutral-100 hover:bg-gray-300/50"
                 onClick={reservationButtonHandler}
               />
-              <StayButton buttonName="相談したい" colorClass="bg-slate-400/70 hover:bg-gray-300/50" />
-              <DebugButton />
+              {/* <StayButton buttonName="相談したい" colorClass="bg-slate-400/70 hover:bg-gray-300/50" />
+              <DebugButton /> */}
             </div>
           </div>
         </div>

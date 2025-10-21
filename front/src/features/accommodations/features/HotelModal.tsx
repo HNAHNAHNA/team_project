@@ -52,7 +52,7 @@ function HotelModal({ selectedData, setSelectedData, handleDetailButtonClick }: 
                                     <button
                                         className=''
                                         onClick={() => handleDetailButtonClick(selectedData.accommodation_id)}>
-                                        자세히 보려면 클릭!
+                                        もっと詳しい情報はこちら！
                                     </button>
                                 </div>
                             </div>

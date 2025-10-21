@@ -170,7 +170,7 @@ const SearchResults = () => {
               <p><strong>Rating:</strong> {selectedData.rating}</p>
               <p><strong>charge:</strong> {selectedData.charge}￥</p>
               <button onClick={() => handleDetailButtonClick(selectedData.hotelNo)}>
-                자세히 보려면 클릭!
+                もっと詳しい情報はこちら！
               </button>
             </motion.div>
           </motion.div>

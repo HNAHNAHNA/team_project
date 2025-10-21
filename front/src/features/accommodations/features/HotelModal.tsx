@@ -12,7 +12,6 @@ interface HotelModalProps {
 }
 
 function HotelModal({ selectedData, setSelectedData, handleDetailButtonClick }: HotelModalProps) {
-    console.log(selectedData?.totalCharge)
     return (
         <div>
             <AnimatePresence>
@@ -48,7 +47,7 @@ function HotelModal({ selectedData, setSelectedData, handleDetailButtonClick }: 
                                 <div className='flex flex-col gap-4'>
                                     <h2 className="text-2xl font-bold mb-3">{selectedData.name}</h2>
                                     <p><strong>Rating:</strong> {selectedData.review_average}</p>
-                                    <p><strong>charge:</strong> {selectedData.totalCharge}￥</p>
+                                    <p><strong>charge:</strong> {selectedData.charge.toLocaleString()}￥</p>
                                     <button
                                         className=''
                                         onClick={() => handleDetailButtonClick(selectedData.accommodation_id)}>

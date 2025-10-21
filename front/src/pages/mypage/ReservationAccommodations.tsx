@@ -302,7 +302,7 @@ function ReservationAccommodations() {
                                     <img src={selectedData.accommodation.image_url ?? undefined} alt={selectedData.accommodation.name} className="w-full h-48 object-cover rounded-lg mb-4" />
                                     <div className="flex justify-between gap-2">
                                         <button onClick={favoriteModalToDetailPage} className="flex-1 bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600">ホテル情報</button>
-                                        <button onClick={() => { setShowDetail(true); getHotelLocation(selectedData.accommodation.accommodation_id); }} className="flex-1 bg-green-500 text-white px-4 py-2 rounded-lg shadow hover:bg-green-600">주변 장소 보기</button>
+                                        <button onClick={() => { setShowDetail(true); getHotelLocation(selectedData.accommodation.accommodation_id); }} className="flex-1 bg-green-500 text-white px-4 py-2 rounded-lg shadow hover:bg-green-600">おすすめスポット</button>
                                         <button onClick={deleteButtonClick} className="flex-1 bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600">キャンセル</button>
                                         {selectedData.status === 'PENDING_PAYMENT' ? (
                                             <button onClick={() => setIsPaymentModalOpen(true)} className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">お支払い</button>

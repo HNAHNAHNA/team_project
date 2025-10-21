@@ -57,7 +57,7 @@ const PaymentHistory = () => {
           </p>
           <div className="mt-2 flex justify-between items-center">
             <span className="text-lg font-semibold">
-              {new Intl.NumberFormat('ja-JP').format(item.amount)}원
+              {new Intl.NumberFormat('ja-JP').format(item.amount)}円
             </span>
             <div className="flex items-center space-x-4">
               <span

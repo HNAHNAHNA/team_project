@@ -248,7 +248,7 @@ function ReservationAccommodations() {
         >
             <b className="text-base">{place.name}</b>
             <br />
-            <span className="text-sm text-gray-600">평점: {place.rating} / 리뷰: {place.reviewCount}</span>
+            <span className="text-sm text-gray-600">rate: {place.rating} / review: {place.reviewCount}</span>
             {selectedPlace?.name === place.name && (
                 <div className="mt-3 text-center">
                     {place.website && (

@@ -238,7 +238,7 @@ function RecommendPlaces() {
                                                 onClick={favoriteModalToDetailPage}
                                                 className="mr-3 bg-blue-500 text-white px-3 py-1 rounded"
                                             >
-                                                호텔 정보
+                                                ホテル情報
                                             </button>
                                             <button
                                                 onClick={() => {
@@ -249,7 +249,7 @@ function RecommendPlaces() {
                                                 }}
                                                 className="bg-green-500 text-white px-3 py-1 rounded"
                                             >
-                                                주변 장소 보기
+                                                おすすめスポット
                                             </button>
                                         </div>
                                     </>
@@ -265,27 +265,27 @@ function RecommendPlaces() {
                                         >
                                             ← 뒤로가기
                                         </button>
-                                        <h3 className="text-lg font-semibold mb-2">주변 추천 장소</h3>
+                                        <h3 className="text-lg font-semibold mb-2">おすすめスポット</h3>
                                         <div className="max-h-[300px] overflow-y-auto text-sm space-y-2 pr-2">
                                             {placeData ? (
                                                 <>
                                                     <div>
-                                                        <h4 className="font-semibold">🍴 음식점</h4>
+                                                        <h4 className="font-semibold">🍴 飲食店</h4>
                                                         {placeData.restaurants.map((r, idx) => (
                                                             <div key={`r-${idx}`} className="border p-2 rounded mb-2">
                                                                 <b>{r.name}</b>
-                                                                <br />평점: {r.rating} / 리뷰: {r.reviewCount}
+                                                                <br />rate: {r.rating} / review: {r.reviewCount}
                                                                 <br />
                                                                 {r.review}
                                                             </div>
                                                         ))}
                                                     </div>
                                                     <div>
-                                                        <h4 className="font-semibold">🏞 관광지</h4>
+                                                        <h4 className="font-semibold">🏞 観光地</h4>
                                                         {placeData.attractions.map((a, idx) => (
                                                             <div key={`a-${idx}`} className="border p-2 rounded mb-2">
                                                                 <b>{a.name}</b>
-                                                                <br />평점: {a.rating} / 리뷰: {a.reviewCount}
+                                                                <br />rate: {a.rating} / review: {a.reviewCount}
                                                                 <br />
                                                                 {a.review}
                                                             </div>

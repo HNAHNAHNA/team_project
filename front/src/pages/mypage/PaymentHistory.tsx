@@ -75,13 +75,13 @@ const PaymentHistory = () => {
                   onClick={() => handleCancel(item.payment_id)}
                   className="px-3 py-1 text-sm bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
                 >
-                  결제 취소
+                  キャンセル
                 </button>
               )}
             </div>
           </div>
           <p className="text-xs text-gray-500 mt-1">
-            결제일: {item.paid_at ? new Date(item.paid_at).toLocaleString('ko-KR') : '-'}
+            支払い日: {item.paid_at ? new Date(item.paid_at).toLocaleString('ja-JP') : '-'}
           </p>
         </div>
       ))}

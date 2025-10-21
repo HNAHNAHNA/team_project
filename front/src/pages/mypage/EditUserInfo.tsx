@@ -101,7 +101,7 @@ function EditUserInfo() {
           <tbody>
             {/* 이메일 (ID) */}
             <tr className="h-[60px]">
-              <th className="p-3 bg-neutral-100 font-semibold w-5/12">이메일</th>
+              <th className="p-3 bg-neutral-100 font-semibold w-5/12">e-mail</th>
               <td className="py-3 w-8/12">
                 <input
                   type="text"
@@ -114,7 +114,7 @@ function EditUserInfo() {
 
             {/* 사용자명 */}
             <tr className="border-t h-[60px]">
-              <th className="p-3 bg-neutral-100 font-semibold">이름</th>
+              <th className="p-3 bg-neutral-100 font-semibold">名前</th>
               <td className="py-3">
                 <input
                   type="text"
@@ -127,7 +127,7 @@ function EditUserInfo() {
 
             {/* 휴대폰번호 */}
             <tr className="border-t h-[60px]">
-              <th className="p-3 bg-neutral-100 font-semibold">휴대폰번호</th>
+              <th className="p-3 bg-neutral-100 font-semibold">電話番号</th>
               <td className="py-3">
                 <input
                   type="text"
@@ -140,7 +140,7 @@ function EditUserInfo() {
 
             {/* 우편번호 */}
             <tr className="border-t h-[60px]">
-              <th className="p-3 bg-neutral-100 font-semibold">우편번호</th>
+              <th className="p-3 bg-neutral-100 font-semibold">郵便番号</th>
               <td className="py-3">
                 <input
                   type="text"
@@ -153,7 +153,7 @@ function EditUserInfo() {
 
             {/* 주소 */}
             <tr className="border-t h-[60px]">
-              <th className="p-3 bg-neutral-100 font-semibold">기본주소</th>
+              <th className="p-3 bg-neutral-100 font-semibold">住所</th>
               <td className="py-3">
                 <input
                   type="text"
@@ -164,7 +164,7 @@ function EditUserInfo() {
               </td>
             </tr>
 
-            <tr className="border-t h-[60px]">
+            {/* <tr className="border-t h-[60px]">
               <th className="p-3 bg-neutral-100 font-semibold">상세주소</th>
               <td className="py-3">
                 <input
@@ -174,7 +174,7 @@ function EditUserInfo() {
                   className="mx-2 w-[250px] rounded-md border border-gray-200 h-[45px] p-3"
                 />
               </td>
-            </tr>
+            </tr> */}
 
             {/* 버튼 영역 */}
             <tr>
@@ -183,7 +183,7 @@ function EditUserInfo() {
                   onClick={handleUpdate}
                   className="bg-blue-500 text-white font-semibold py-2 px-6 rounded-md hover:bg-blue-600"
                 >
-                  수정
+                  修正
                 </button>
                 <button
                   onClick={() => navigate("/")}

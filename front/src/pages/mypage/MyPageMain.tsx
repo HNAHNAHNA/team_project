@@ -5,6 +5,7 @@ import EditUserInfo from "./EditUserInfo";
 import PaymentHistory from "./PaymentHistory";
 import UserFavorites from "./UserFavorites";
 import ReservationAccommodations from "./ReservationAccommodations";
+import starImage from "../../images/star.png"
 
 function MyPageMain() {
   const location = useLocation();
@@ -45,12 +46,12 @@ function MyPageMain() {
 
   return (
     <section className="max-w-[1100px] m-auto mt-16">
-      <h2 className="text-3xl font-bold mb-8">마이페이지</h2>
+      <h2 className="text-3xl font-bold mb-8">マイページ</h2>
 
       <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-10 p-6 bg-white rounded-lg shadow-md">
         <div className="w-28 h-28 rounded-full border-[1px] overflow-hidden">
           <img
-            src="https://i.namu.wiki/i/KgEe6nU2GzM88i1I6XAy8tfCZuHfL0U94tmH7o5OhKQ7Bfgw3HuOXtcVnX7-7d204V5Ty7iFNr9xjLjhC1jryqLzXyPhTyyMBmf_YwyD6kBkOzL102uIdoaxE6wYhO2MfSJyQDHms8p03rrGaWqpmA.webp"
+            src={starImage}
             className="w-full h-full object-cover"
           />
         </div>
@@ -71,10 +72,10 @@ function MyPageMain() {
               }`}
             onClick={() => changeTab(tab)}
           >
-            {tab === "profile" && "정보수정"}
-            {tab === "reservations" && "예약 내역"}
+            {tab === "profile" && "個人情報"}
+            {tab === "reservations" && "予約情報"}
             {tab === "favorites" && "いいね！"}
-            {tab === "payments" && "결제 내역"}
+            {tab === "payments" && "決済情報"}
           </button>
         ))}
       </div>
@@ -82,13 +83,13 @@ function MyPageMain() {
       <div className="bg-white p-6 rounded-lg shadow-sm min-h-[300px]">
         {activeTab === "profile" && (
           <>
-            <h3 className="text-lg font-bold mb-4">회원정보 수정</h3>
+            <h3 className="text-lg font-bold mb-4">個人情報の修正</h3>
             <EditUserInfo />
           </>
         )}
         {activeTab === "reservations" && (
           <>
-            <h3 className="text-lg font-bold mb-4">예약 내역</h3>
+            <h3 className="text-lg font-bold mb-4">予約情報</h3>
             <ReservationAccommodations />
           </>
         )}
@@ -100,7 +101,7 @@ function MyPageMain() {
         )}
         {activeTab === "payments" && (
           <>
-            <h3 className="text-lg font-bold mb-4">결제 내역</h3>
+            <h3 className="text-lg font-bold mb-4">決済情報</h3>
             <PaymentHistory />
           </>
         )}

@@ -58,7 +58,7 @@ const UserFavorites = ({ userId }: { userId: number }) => {
 
     return (
         <div>
-            <h2>내 찜한 숙소</h2>
+            {/* <h2>내 찜한 숙소</h2> */}
             {loading ? (
                 Array.from({ length: skeletonCount }).map((_, idx) => (
                     <div key={idx} className="w-[95%] mb-4">

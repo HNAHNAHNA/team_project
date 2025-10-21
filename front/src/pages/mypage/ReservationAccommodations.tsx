@@ -256,7 +256,7 @@ function ReservationAccommodations() {
 
     return (
         <div>
-            <h2 className="text-2xl font-bold mb-4">예약한 숙소 목록</h2>
+            {/* <h2 className="text-2xl font-bold mb-4">예약한 숙소 목록</h2> */}
             {loading ? (
                 Array.from({ length: skeletonCount }).map((_, idx) => (
                     <div key={idx} className="w-[95%] mb-4"><Skeleton height={100} baseColor="#e0e0e0" highlightColor="#f5f5f5" className="rounded-xl" /></div>
@@ -272,8 +272,8 @@ function ReservationAccommodations() {
                                 <div className="text-right mr-5 space-y-2">
                                     <h3 className="font-semibold">{hotel.accommodation.name}</h3>
                                     <p className="text-sm">{hotel.accommodation.address}</p>
-                                    <p className="text-xs"><b>체크인</b>: {hotel.check_in_date}</p>
-                                    <p className="text-xs"><b>체크아웃</b>: {hotel.check_out_date}</p>
+                                    <p className="text-xs"><b>チェックイン日</b>: {hotel.check_in_date}</p>
+                                    <p className="text-xs"><b>チェックアウト日</b>: {hotel.check_out_date}</p>
                                 </div>
                             </div>
                         </div>
@@ -301,13 +301,13 @@ function ReservationAccommodations() {
                                     <h2 className="text-2xl font-bold mb-3">{selectedData.accommodation.name}</h2>
                                     <img src={selectedData.accommodation.image_url ?? undefined} alt={selectedData.accommodation.name} className="w-full h-48 object-cover rounded-lg mb-4" />
                                     <div className="flex justify-between gap-2">
-                                        <button onClick={favoriteModalToDetailPage} className="flex-1 bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600">호텔 정보</button>
+                                        <button onClick={favoriteModalToDetailPage} className="flex-1 bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600">ホテル情報</button>
                                         <button onClick={() => { setShowDetail(true); getHotelLocation(selectedData.accommodation.accommodation_id); }} className="flex-1 bg-green-500 text-white px-4 py-2 rounded-lg shadow hover:bg-green-600">주변 장소 보기</button>
-                                        <button onClick={deleteButtonClick} className="flex-1 bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600">예약 취소</button>
+                                        <button onClick={deleteButtonClick} className="flex-1 bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600">キャンセル</button>
                                         {selectedData.status === 'PENDING_PAYMENT' ? (
-                                            <button onClick={() => setIsPaymentModalOpen(true)} className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">결제하기</button>
+                                            <button onClick={() => setIsPaymentModalOpen(true)} className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">お支払い</button>
                                         ) : selectedData.status === 'COMPLETED' ? (
-                                            <button className="flex-1 bg-gray-400 text-white px-4 py-2 rounded-lg cursor-not-allowed" disabled>결제 완료</button>
+                                            <button className="flex-1 bg-gray-400 text-white px-4 py-2 rounded-lg cursor-not-allowed" disabled>支払い完了</button>
                                         ) : null}
                                     </div>
                                 </>
@@ -316,16 +316,16 @@ function ReservationAccommodations() {
                                     <button onClick={() => { setShowDetail(false); setPlaceData(null); setSelectedPlace(null); setIsMapExpanded(false); }} className="mb-3 flex items-center gap-1 text-sm bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded-md"><ArrowLeft size={16}/> 뒤로가기</button>
                                     <div className={`flex gap-4 ${isMapExpanded ? 'flex-row' : 'flex-col'}`}>
                                         <div className={`${isMapExpanded ? 'w-1/2' : 'w-full'}`}>
-                                            <h3 className="text-xl font-semibold mb-3">주변 추천 장소</h3>
+                                            <h3 className="text-xl font-semibold mb-3">おすすめスポット</h3>
                                             <div className={`overflow-y-auto text-sm space-y-2 pr-2 ${isMapExpanded ? 'max-h-[65vh]' : 'max-h-[40vh]'}`}>
                                                 {placeData ? (
                                                     <>
                                                         <div>
-                                                            <h4 className="font-bold text-base mb-2">🍴 음식점</h4>
+                                                            <h4 className="font-bold text-base mb-2">🍴 飲食店</h4>
                                                             {placeData.restaurants.map((r) => <PlaceItem key={r.name} place={r} />)}
                                                         </div>
                                                         <div className="mt-4">
-                                                            <h4 className="font-bold text-base mb-2">🏞 관광지</h4>
+                                                            <h4 className="font-bold text-base mb-2">🏞 観光地</h4>
                                                             {placeData.attractions.map((a) => <PlaceItem key={a.name} place={a} />)}
                                                         </div>
                                                     </>
@@ -342,12 +342,12 @@ function ReservationAccommodations() {
                                                         ) : <Skeleton height="100%" />}
                                                     </div>
                                                     <div className="p-4 bg-gray-50">
-                                                        <h4 className="font-semibold text-sm">경로 탐색: {selectedPlace?.name}</h4>
+                                                        <h4 className="font-semibold text-sm">経路探索: {selectedPlace?.name}</h4>
                                                         {routeInfo && (
                                                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-xs p-2 bg-gray-200 rounded space-y-2">
                                                                 <p><b>예상 시간</b>: {formatDuration(routeInfo.duration)}</p>
                                                                 <details className="text-xs">
-                                                                    <summary className="cursor-pointer">전체 데이터 보기</summary>
+                                                                    <summary className="cursor-pointer">データ</summary>
                                                                     <pre className="mt-2 p-2 bg-gray-800 text-white rounded-md text-[10px] max-h-40 overflow-auto">
                                                                         {JSON.stringify(routeInfo, null, 2)}
                                                                     </pre>

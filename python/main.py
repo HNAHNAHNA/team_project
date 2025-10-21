@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
-from app.database import accommodations_insert
 from app.routers.accommodationRouter import router as accommodationRouter
 from app.routers.jwtValidate import router as jwtvalidate
 from app.routers.refreshAccessToken import router as refreshToken
@@ -22,9 +21,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# 호텔 데이터 받아오는 router
-# app.include_router(accommodations_insert.router)
 
 # 이건 홈화면 호텔들 슬라이드 띄우기
 app.include_router(accommodationRouter)

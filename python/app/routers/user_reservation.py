@@ -100,61 +100,33 @@ def get_hotel_location (accommodation_id: int = Header(...), db: Session = Depen
 @router.delete("/delete-reservation")
 
 def delete_reservation(
-
     payload: dict = Body(...),
-
     db: Session = Depends(get_db),
-
     current_user: dict = Depends(get_current_user)
-
 ):
 
     u_booking_id = payload.get("u_booking_id")
-
     user_id = current_user.get("user_id")
 
-
-
     if not u_booking_id or not user_id:
-
         raise HTTPException(status_code=400, detail="Booking ID is required.")
 
-
-
     reservation = (
-
         db.query(UserReservation)
-
         .filter(
-
             UserReservation.u_booking_id == u_booking_id,
-
             UserReservation.user_id == user_id
-
         )
-
         .first()
-
     )
 
-
-
     if not reservation:
-
         raise HTTPException(status_code=404, detail="해당 예약을 찾을 수 없습니다!")
 
-
-
-    # Delete associated payment records first
-
     db.query(Payment).filter(Payment.reservation_id == reservation.reservation_id).delete(synchronize_session=False)
-
-
 
     db.delete(reservation)
 
     db.commit()
-
-
 
     return {"message": "예약이 성공적으로 삭제되었습니다."}

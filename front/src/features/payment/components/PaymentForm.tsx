@@ -26,7 +26,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ paymentData, onPaymentInitiat
         <p><strong>ユーザー名:</strong> {paymentData.buyer_name}</p>
         <p><strong>連絡先:</strong> {paymentData.buyer_phone}</p>
         <p className="text-lg font-bold text-right mt-4">
-          金額: {new Intl.NumberFormat('ko-KR').format(paymentData.amount)}원
+          金額: {new Intl.NumberFormat('ko-KR').format(paymentData.amount)}円
         </p>
       </div>
 
@@ -43,7 +43,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ paymentData, onPaymentInitiat
               className="form-radio h-4 w-4 text-blue-600"
               disabled={isSubmitting}
             />
-            <span>{method === 'CARD' ? '카드' : method === 'BANK_TRANSFER' ? '계좌이체' : method}</span>
+            <span>{method === 'CARD' ? 'カード' : method === 'BANK_TRANSFER' ? '銀行振込' : method}</span>
           </label>
         ))}
       </div>

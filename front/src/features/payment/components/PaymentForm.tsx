@@ -57,7 +57,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ paymentData, onPaymentInitiat
             : 'bg-blue-600 text-white hover:bg-blue-700'
         }`}
       >
-        {isSubmitting ? '결제 중...' : '결제하기'}
+        {isSubmitting ? '결제 중...' : 'OK'}
       </button>
     </div>
   );

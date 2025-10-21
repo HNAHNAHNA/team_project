@@ -77,7 +77,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, reservatio
               <X size={20} />
             </button>
 
-            <h2 className="text-2xl font-bold mb-4">결제하기</h2>
+            <h2 className="text-2xl font-bold mb-4">お支払い</h2>
 
             {isLoading && <div className="text-center py-8">결제 정보 로딩 중...</div>}
             {error && <div className="text-center py-8 text-red-500">에러: {error}</div>}

@@ -16,21 +16,21 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ paymentData, onPaymentInitiat
 
   return (
     <div className="p-4">
-      <h3 className="text-xl font-bold mb-4">주문 정보</h3>
+      <h3 className="text-xl font-bold mb-4">注文</h3>
 
       <div className="space-y-2 mb-6 text-sm">
-        <p><strong>호텔명:</strong> {paymentData.hotel_name}</p>
-        <p><strong>주소:</strong> {paymentData.hotel_address}</p>
-        <p><strong>체크인:</strong> {paymentData.check_in_date}</p>
-        <p><strong>체크아웃:</strong> {paymentData.check_out_date}</p>
-        <p><strong>구매자:</strong> {paymentData.buyer_name}</p>
-        <p><strong>연락처:</strong> {paymentData.buyer_phone}</p>
+        <p><strong>ホテル名:</strong> {paymentData.hotel_name}</p>
+        <p><strong>住所:</strong> {paymentData.hotel_address}</p>
+        <p><strong>チェックイン日:</strong> {paymentData.check_in_date}</p>
+        <p><strong>チェックアウト日:</strong> {paymentData.check_out_date}</p>
+        <p><strong>ユーザー名:</strong> {paymentData.buyer_name}</p>
+        <p><strong>連絡先:</strong> {paymentData.buyer_phone}</p>
         <p className="text-lg font-bold text-right mt-4">
-          총 결제 금액: {new Intl.NumberFormat('ko-KR').format(paymentData.amount)}원
+          金額: {new Intl.NumberFormat('ko-KR').format(paymentData.amount)}원
         </p>
       </div>
 
-      <h3 className="text-xl font-bold mb-4">결제 수단</h3>
+      <h3 className="text-xl font-bold mb-4">決済手段</h3>
       <div className="space-y-2 mb-6">
         {['CARD', 'BANK_TRANSFER', 'KAKAOPAY', 'NAVERPAY'].map((method) => (
           <label key={method} className="flex items-center space-x-2 cursor-pointer">

@@ -2,7 +2,6 @@ import { useLoaderData, useNavigate, useParams } from "react-router-dom";
 import type { AccommodationOut } from "../../types/HotelList";
 import Container from "./Container";
 import StayButton from "../../components/StayButton";
-import DebugButton from "../../components/DebugButton";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -97,8 +96,6 @@ function DetailPage() {
                 colorClass="bg-neutral-100 hover:bg-gray-300/50"
                 onClick={reservationButtonHandler}
               />
-              {/* <StayButton buttonName="相談したい" colorClass="bg-slate-400/70 hover:bg-gray-300/50" />
-              <DebugButton /> */}
             </div>
           </div>
         </div>

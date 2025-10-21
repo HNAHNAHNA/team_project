@@ -80,7 +80,7 @@ function ReservationAccommodations() {
         // Clean up old markers before creating new ones
         markers.forEach(marker => marker.setMap(null));
 
-        if (!mapInstance || !placeData) {
+        if (!mapInstance) {
             setMarkers([]);
             return;
         }
@@ -88,22 +88,44 @@ function ReservationAccommodations() {
         const createdMarkers: any[] = [];
         const newBounds = new window.google.maps.LatLngBounds();
 
-        const addMarker = (place: PlaceInfo) => {
-            const marker = CreatePlaceMarker(place, mapInstance, () => setSelectedPlace(place));
-            if (marker) {
-                marker.placeName = place.name;
-                createdMarkers.push(marker);
-                newBounds.extend(new window.google.maps.LatLng(place.latitude, place.longitude));
-            }
-        };
+        // Add hotel marker
+        if (selectedData) {
+            const hotelLatLng = { lat: selectedData.accommodation.latitude, lng: selectedData.accommodation.longitude };
+            const hotelMarker = new google.maps.Marker({
+                position: hotelLatLng,
+                map: mapInstance,
+                title: selectedData.accommodation.name,
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 8,
+                    fillColor: "#FF0000",
+                    fillOpacity: 1,
+                    strokeWeight: 2,
+                    strokeColor: "#FFFFFF"
+                }
+            });
+            createdMarkers.push(hotelMarker);
+            newBounds.extend(hotelLatLng);
+        }
 
-        if (selectedPlace) {
-            // If a place is selected, only show that marker
-            addMarker(selectedPlace);
-        } else {
-            // Otherwise, show all markers
-            placeData.restaurants.forEach(addMarker);
-            placeData.attractions.forEach(addMarker);
+        if (placeData) {
+            const addMarker = (place: PlaceInfo) => {
+                const marker = CreatePlaceMarker(place, mapInstance, () => setSelectedPlace(place));
+                if (marker) {
+                    marker.placeName = place.name;
+                    createdMarkers.push(marker);
+                    newBounds.extend(new window.google.maps.LatLng(place.latitude, place.longitude));
+                }
+            };
+
+            if (selectedPlace) {
+                // If a place is selected, only show that marker
+                addMarker(selectedPlace);
+            } else {
+                // Otherwise, show all markers
+                placeData.restaurants.forEach(addMarker);
+                placeData.attractions.forEach(addMarker);
+            }
         }
 
         setMarkers(createdMarkers);
@@ -120,15 +142,15 @@ function ReservationAccommodations() {
         return () => {
             createdMarkers.forEach(marker => marker.setMap(null));
         };
-    }, [mapInstance, placeData, selectedPlace]);
+    }, [mapInstance, placeData, selectedData, selectedPlace]);
 
     const formatDuration = (seconds: number) => {
         if (seconds < 60) {
-            return `${seconds}초`;
+            return `${seconds}秒`;
         }
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
-        return `${minutes}분 ${remainingSeconds}초`;
+        return `${minutes}分 ${remainingSeconds}秒`;
     };
 
     const [routeInfo, setRouteInfo] = useState<RouteResponse | null>(null);
@@ -237,7 +259,7 @@ function ReservationAccommodations() {
                             className="text-blue-600 hover:underline text-sm mr-4"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            웹사이트 방문
+                            公式サイト
                         </a>
                     )}
                     <button
@@ -247,7 +269,7 @@ function ReservationAccommodations() {
                         }}
                         className="bg-green-500 text-white px-3 py-1 rounded-md text-sm shadow hover:bg-green-600"
                     >
-                        경로 및 지도 보기
+                        経路・地図を見る
                     </button>
                 </div>
             )}
@@ -345,7 +367,7 @@ function ReservationAccommodations() {
                                                         <h4 className="font-semibold text-sm">経路探索: {selectedPlace?.name}</h4>
                                                         {routeInfo && (
                                                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-xs p-2 bg-gray-200 rounded space-y-2">
-                                                                <p><b>예상 시간</b>: {formatDuration(routeInfo.duration)}</p>
+                                                                <p><b>予想時間</b>: {formatDuration(routeInfo.duration)}</p>
                                                                 <details className="text-xs">
                                                                     <summary className="cursor-pointer">データ</summary>
                                                                     <pre className="mt-2 p-2 bg-gray-800 text-white rounded-md text-[10px] max-h-40 overflow-auto">
